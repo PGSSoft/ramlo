@@ -1,0 +1,35 @@
+#%RAML 1.0
+title: Pet shop
+version: 1
+baseUri: /shop
+
+types:
+  Pet:
+    properties:
+      name: string
+      kind: string
+      price: number
+    example:
+      name: "Snoopy"
+      kind: "Mammal"
+      price: 100
+
+/pets:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: Pet[]
+  post:
+    body:
+      application/json:
+        type: Pet
+  /{id}:
+    put:
+      body:
+        application/json:
+          type: Pet
+    delete:
+      responses:
+        204:
