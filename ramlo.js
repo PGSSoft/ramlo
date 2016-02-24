@@ -8,6 +8,8 @@ var raml = require('raml-1-parser');
 
 var fs = require('fs');
 
+var jade = require('jade');
+
 program
     .version(pkg.version)
     .option('-f, --file [path]', 'RAML file')
@@ -17,10 +19,12 @@ if (program.file) {
     var fName = path.resolve(process.cwd(), program.file);
     var api = raml.loadApiSync(fName);
     var apiResources = api.allResources();
+    var resources = [];
 
     apiResources.forEach(function(resource) {
         // console.log(resource.displayName());
         console.log(resource.kind() + ' : ' + resource.absoluteUri());
+        resources.push(resource.absoluteUri());
 
         resource.methods().forEach(function(method) {
             console.log('\t' + method.method());
@@ -30,6 +34,17 @@ if (program.file) {
             });
         });
     });
+
+    var locals = {
+        pageTitle: 'ramlo',
+        resources: resources
+    };
+
+    console.log(locals);
+
+    var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), locals);
+
+    fs.writeFile(path.resolve(process.cwd(), 'apidoc.html'), html);
 
      // console.log(JSON.stringify(api.toJSON(), null, 2));
 }

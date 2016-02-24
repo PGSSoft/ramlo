@@ -19,6 +19,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.2",
     "commander": "^2.9.0",
+    "jade": "^1.11.0",
     "raml-1-parser": "0.1.0-beta.6"
   },
   "preferGlobal": true,
