@@ -3,5 +3,55 @@
 
 body {
     font-family: "Open Sans", sans-serif;
-    color: #000;
+    font-weight: 400;
+    font-size: 13px;
+    color: #333;
+    background: #fff;
+}
+
+.header {
+    background: #e67e22;
+    color: #ecf0f1;
+    padding: 28px;
+
+    h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0;
+    }
+}
+
+.main {
+
+}
+
+.sidebar {
+    position: absolute;
+    bottom: 0;
+    top: 80px;
+    left: 0;
+    width: 200px;
+}
+
+.content {
+    padding-left: 200px;
+}
+
+.content-nav {
+    width: 40%;
+    margin-left: 60%;
+    background: #34495e;
+}
+
+.docs-content {
+    background-color: #fff;
+    width: 150%;
+    margin-left: -150%;
+    float: left;
+    border-left: 1px solid #34495e;
+}
+
+.docs-right {
+    padding: 40px;
+    vertical-align: top;
 }

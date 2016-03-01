@@ -1,24 +1,23 @@
 doctype html
 html(lang="en")
     head
+        meta(charset='utf-8')
         title= pageTitle
-        style
+        style(type='text/css')
             include main.css
     body
-        .container
+        header(class='header')
             h1 ramlo
-            #container.col
-                if youAreUsingJade
-                    p You are amazing
-                else
-                    p Get on it!
+        main(class='main')
+            .sidebar
                 p.
-                    Jade is a terse and simple
-                    templating language with a
-                    strong focus on performance
-                    and powerful features.
-                button(class='btn btn-danger') OK
-            h2 resources
-            ul
-                each resource in resources
-                    li= resource
+                    sidebar
+            .content
+                .content-nav
+                    .docs-content
+                        ul
+                            each resource in resources
+                                li= resource
+                    .docs-right
+                        p.
+                            foo
