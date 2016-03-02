@@ -1,57 +1,85 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
-@import "../node_modules/bootstrap/dist/css/bootstrap";
+@import "../node_modules/bootstrap/scss/bootstrap";
 
 body {
     font-family: "Open Sans", sans-serif;
     font-weight: 400;
-    font-size: 13px;
-    color: #333;
-    background: #fff;
+    font-size: $font-size-sm;
 }
 
 .header {
-    background: #e67e22;
-    color: #ecf0f1;
-    padding: 28px;
+    padding: $spacer * 2 0;
+}
 
-    h1 {
-        font-size: 22px;
-        font-weight: 700;
-        margin: 0;
+.header__title {
+    margin: 0;
+    font-size: $font-size-h3;
+    font-weight: 700;
+}
+
+.header__subtitle {
+    margin: 0;
+    padding: $spacer / 2 0 $spacer;
+    color: $gray-light;
+    border-bottom: 1px solid $gray-lighter;
+}
+
+.resources {
+
+}
+
+.resources__header {
+    font-size: $font-size-sm;
+    color: $gray-light;
+    text-transform: uppercase;
+}
+
+.resources__list {
+    padding: 0;
+    list-style: none;
+}
+
+.documentation {
+    margin: 0 0 $spacer * 4;
+}
+
+.documentation__header {
+    margin: 0 0 $spacer;
+    padding: 0 0 $spacer;
+    font-size: $font-size-base;
+    font-weight: 700;
+    border-bottom: 1px solid $gray-lighter;
+
+    .text-muted {
+        float: right;
+        font-size: $font-size-sm;
     }
 }
 
-.main {
+.documentation__endpoints {
+    list-style: none;
+    padding: 0;
+
+    .label {
+        text-transform: uppercase;
+        margin: 0 $spacer 0 0;
+    }
+}
+
+.documentation__subheader {
+    font-size: $font-size-base;
+    margin-top: $spacer * 2;
+}
+
+.documentation__parameters {
 
 }
 
-.sidebar {
-    position: absolute;
-    bottom: 0;
-    top: 80px;
-    left: 0;
-    width: 200px;
+.footer {
+    margin: $spacer * 6 0 0;
 }
 
-.content {
-    padding-left: 200px;
-}
-
-.content-nav {
-    width: 40%;
-    margin-left: 60%;
-    background: #34495e;
-}
-
-.docs-content {
-    background-color: #fff;
-    width: 150%;
-    margin-left: -150%;
-    float: left;
-    border-left: 1px solid #34495e;
-}
-
-.docs-right {
-    padding: 40px;
-    vertical-align: top;
+.footer__text {
+    padding: $spacer / 2 0;
+    border-top: 1px solid $gray-lighter;
 }
