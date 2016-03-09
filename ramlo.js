@@ -90,3 +90,6 @@ if (program.file) {
     // save html file with documentation
     fs.writeFileSync(path.resolve(process.cwd(), 'apidoc.html'), html);
 }
+else {
+    program.outputHelp();
+}
