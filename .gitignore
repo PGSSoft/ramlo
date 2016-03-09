@@ -1,3 +1,4 @@
 .idea/jsLibraryMappings.xml
 /.idea
 /node_modules
+/src/*.css
