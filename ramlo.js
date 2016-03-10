@@ -40,7 +40,7 @@ if (program.file) {
                 method: method.method(),
                 uri: resource.completeRelativeUri(),
                 description: method.description().value(),
-                example: JSON.stringify(example)
+                example: example
             });
         });
 
@@ -70,7 +70,7 @@ if (program.file) {
                     uri: resource.completeRelativeUri(),
                     description: method.description().value(),
                     uriParameters: uriParameters,
-                    example: JSON.stringify(example)
+                    example: example
                 });
             });
         });
@@ -85,7 +85,7 @@ if (program.file) {
     var locals = {
         ramlVersion: api.RAMLVersion(),
         apiTitle: api.title(),
-        apiDescription: api.description().value(),
+        apiDescription: api.description() && api.description().value(),
         apiBaseUri: api.baseUri().value().replace('{version}', api.version()),
         apiResources: apiResources
     };
@@ -106,10 +106,13 @@ if (program.file) {
     var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), locals);
 
     // save html file with documentation
-    fs.writeFileSync(path.resolve(process.cwd(), 'apidoc.html'), html);
+    fs.writeFileSync(path.resolve(process.cwd(), 'api.html'), html);
 }
 else {
     program.outputHelp();
 }
 
 console.timeEnd('ramlo');
+
+//resources
+//nestedResources

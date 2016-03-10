@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zkamil/ramlo.git"
+    "url": "git+https://github.com/PGSSoft/ramlo.git"
   },
   "author": "Kamil Zasada",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zkamil/ramlo/issues"
+    "url": "https://github.com/PGSSoft/ramlo/issues"
   },
-  "homepage": "https://github.com/zkamil/ramlo#readme",
+  "homepage": "https://github.com/PGSSoft/ramlo#readme",
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.2",
     "commander": "^2.9.0",
