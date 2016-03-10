@@ -1,6 +1,6 @@
 {
   "name": "ramlo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Documentation generator for RAML 1.0",
   "main": "ramlo.js",
   "scripts": {
