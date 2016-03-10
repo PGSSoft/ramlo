@@ -37,6 +37,26 @@ body {
 .resources__list {
     padding: 0;
     list-style: none;
+
+    li {
+        margin-bottom: $spacer-y;
+    }
+}
+
+.resources__list__endpoints {
+    font-size: $font-size-xs;
+    list-style: none;
+    padding-left: $spacer-x;
+
+    li {
+        margin-bottom: 0;
+    }
+
+    .label {
+        width: 40px;
+        text-transform: uppercase;
+        margin-right: $spacer-x / 2;
+    }
 }
 
 .documentation {
@@ -46,7 +66,7 @@ body {
 .documentation__header {
     margin: 0 0 $spacer;
     padding: 0 0 $spacer;
-    font-size: $font-size-base;
+    font-size: $font-size-h4;
     font-weight: 700;
     border-bottom: 1px solid $gray-lighter;
 
@@ -57,13 +77,33 @@ body {
 }
 
 .documentation__endpoints {
-    list-style: none;
     padding: 0;
+}
+
+.documentation__endpoints__name {
+    font-size: $font-size-lg;
+    margin-top: 3rem;
+
+    &:first-child {
+        margin-top: 0;
+    }
 
     .label {
+        width: 66px;
         text-transform: uppercase;
         margin: 0 $spacer 0 0;
     }
+}
+
+.documentation__endpoints__description {
+    padding-bottom: $spacer-y;
+    color: $gray-light;
+    border-bottom: 1px solid $gray-lighter;
+}
+
+samp {
+    width: 100%;
+    word-break: break-all;
 }
 
 .documentation__subheader {

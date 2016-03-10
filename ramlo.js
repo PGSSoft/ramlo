@@ -13,6 +13,8 @@ program
     .option('-f, --file [path]', 'RAML file')
     .parse(process.argv);
 
+console.time('ramlo');
+
 if (program.file) {
     var fName = path.resolve(process.cwd(), program.file);
     var api = raml.loadApiSync(fName);
@@ -20,58 +22,74 @@ if (program.file) {
     var apiResources = [];
     var resources = api.resources();
 
+    // create list of resources (root level)
     resources.forEach(function(resource) {
-        var apiMethods = [];
+        var endpoints = [];
 
+        // get methods of main resources
         resource.methods().forEach(function(method) {
-            var queryParameters = [];
+            var example = '';
 
-            method.queryParameters().forEach(function(parameter) {
-                queryParameters.push({
-                    name: parameter.name(),
-                    type: parameter.type()
+            method.responses().forEach(function(response) {
+                response.body().forEach(function(body) {
+                    example = body.toJSON().example;
                 });
             });
 
-            apiMethods.push({
-                name: method.method(),
-                parameters: queryParameters
+            endpoints.push({
+                method: method.method(),
+                uri: resource.completeRelativeUri(),
+                description: method.description().value(),
+                example: JSON.stringify(example)
+            });
+        });
+
+        // get methods of resources at 2. level
+        // TODO: refactor this function to use recursion
+        resource.resources().forEach(function(resource) {
+            var uriParameters = [];
+
+            resource.uriParameters().forEach(function(parameter) {
+                uriParameters.push({
+                    name: parameter.name(),
+                    description: parameter.description().value()
+                });
+            });
+
+            resource.methods().forEach(function(method) {
+                var example = '';
+
+                method.responses().forEach(function(response) {
+                    response.body().forEach(function(body) {
+                        example = body.toJSON().example;
+                    });
+                });
+
+                endpoints.push({
+                    method: method.method(),
+                    uri: resource.completeRelativeUri(),
+                    description: method.description().value(),
+                    uriParameters: uriParameters,
+                    example: JSON.stringify(example)
+                });
             });
         });
 
         apiResources.push({
             name: resource.displayName(),
-            uri: resource.completeRelativeUri(),
-            methods: apiMethods
+            endpoints: endpoints
         });
     });
-
-    /**
-    var apiResources = api.allResources();
-    var resources = [];
-    apiResources.forEach(function(resource) {
-        // console.log(resource.displayName());
-        //console.log(resource.kind() + ' : ' + resource.absoluteUri());
-        resources.push(resource.absoluteUri());
-
-        resource.methods().forEach(function(method) {
-            //console.log('\t' + method.method());
-
-            method.responses().forEach(function(response) {
-                //console.log('\t\t' + response.code().value());
-            });
-        });
-    });
-    **/
 
     // pass variables to jade template
     var locals = {
+        ramlVersion: api.RAMLVersion(),
         apiTitle: api.title(),
         apiDescription: api.description().value(),
-        ramlVersion: api.RAMLVersion(),
+        apiBaseUri: api.baseUri().value().replace('{version}', api.version()),
         apiResources: apiResources
     };
-    console.log(JSON.stringify(locals));
+    // console.log(JSON.stringify(locals));
 
     // compile sass styles
     var scss = sass.renderSync({
@@ -93,3 +111,5 @@ if (program.file) {
 else {
     program.outputHelp();
 }
+
+console.timeEnd('ramlo');

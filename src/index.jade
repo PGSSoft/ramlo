@@ -14,6 +14,7 @@ html(lang="en")
             .container
                 h1(class='header__title')= apiTitle
                 p(class='header__subtitle')= apiDescription
+                    span(class='text-primary pull-xs-right')= apiBaseUri
         main
             .container
                 .row
@@ -23,37 +24,63 @@ html(lang="en")
                             ul(class='resources__list')
                                 each resource in apiResources
                                     li= resource.name
+                                        ul(class='resources__list__endpoints')
+                                            each endpoint in resource.endpoints
+                                                li
+                                                    case endpoint.method
+                                                        when 'get': span(class='label label-primary')= endpoint.method
+                                                        when 'post': span(class='label label-success')= endpoint.method
+                                                        when 'put': span(class='label label-warning')= endpoint.method
+                                                        when 'delete': span(class='label label-danger')= endpoint.method
+                                                    = endpoint.uri
                     .col-md-9
                         .row
                             .col-md-8
                                 each resource in apiResources
                                     section(class='documentation')
                                         h1(class='documentation__header')= resource.name
-                                            span(class='text-muted')= resource.uri
 
-                                        each method in resource.methods
-                                            ul(class='documentation__endpoints')
-                                                li
-                                                    case method.name
-                                                        when 'get': span(class='label label-primary')= method.name
-                                                        when 'post': span(class='label label-success')= method.name
-                                                        when 'put': span(class='label label-warning')= method.name
-                                                        when 'delete': span(class='label label-danger')= method.name
-                                                    = resource.uri
+                                        div(class='documentation__endpoints')
+                                            each endpoint in resource.endpoints
+                                                p(class='documentation__endpoints__name')
+                                                    case endpoint.method
+                                                        when 'get': span(class='label label-primary')= endpoint.method
+                                                        when 'post': span(class='label label-success')= endpoint.method
+                                                        when 'put': span(class='label label-warning')= endpoint.method
+                                                        when 'delete': span(class='label label-danger')= endpoint.method
+                                                    = endpoint.uri
 
-                                            h2(class='documentation__subheader') Query Parameters
-                                            table(class='documentation__parameters table table-bordered table-striped')
-                                                thead
-                                                    tr
-                                                        th name
-                                                        th type
-                                                tbody
-                                                    tr
-                                                        each parameter in method.parameters
-                                                            td= parameter.name
-                                                            td= parameter.type
+                                                p(class='documentation__endpoints__description')= endpoint.description
+
+                                                if endpoint.uriParameters && endpoint.uriParameters.length
+                                                    table(class='documentation__parameters table table-bordered table-striped')
+                                                        thead
+                                                            tr
+                                                                th name
+                                                                th description
+                                                        tbody
+                                                            tr
+                                                                each parameter in endpoint.uriParameters
+                                                                    td= parameter.name
+                                                                    td= parameter.description
+
+                                                if endpoint.example
+                                                    p
+                                                        strong Example
+                                                    samp= endpoint.example
+
+
+
                             .col-md-4
                                 // TODO
         footer(class='footer')
             .container
                 p(class='footer__text') ramlo | &copy; 2016
+
+
+
+//                                        each method in resource.methods
+//
+//
+//                                            h2(class='documentation__subheader') Query Parameters
+//
