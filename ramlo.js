@@ -39,7 +39,7 @@ if (program.file) {
             endpoints.push({
                 method: method.method(),
                 uri: resource.completeRelativeUri(),
-                description: method.description().value(),
+                description: method.description() && method.description().value(),
                 example: example
             });
         });
@@ -48,19 +48,30 @@ if (program.file) {
         // TODO: refactor this function to use recursion
         resource.resources().forEach(function(resource) {
             var uriParameters = [];
+            var queryParameters = [];
 
             resource.uriParameters().forEach(function(parameter) {
                 uriParameters.push({
                     name: parameter.name(),
-                    description: parameter.description().value()
+                    description: parameter.description() && parameter.description().value()
                 });
             });
 
             resource.methods().forEach(function(method) {
                 var example = '';
+                var schema = '';
+
+                method.queryParameters().forEach(function(parameter) {
+                    queryParameters.push({
+                        name: parameter.name(),
+                        type: parameter.type(),
+                        description: parameter.description() && parameter.description().value()
+                    });
+                });
 
                 method.responses().forEach(function(response) {
                     response.body().forEach(function(body) {
+                        schema = body.schemaContent();
                         example = body.toJSON().example;
                     });
                 });
@@ -68,8 +79,10 @@ if (program.file) {
                 endpoints.push({
                     method: method.method(),
                     uri: resource.completeRelativeUri(),
-                    description: method.description().value(),
+                    description: method.description() && method.description().value(),
                     uriParameters: uriParameters,
+                    queryParameters: queryParameters,
+                    schema: schema,
                     example: example
                 });
             });

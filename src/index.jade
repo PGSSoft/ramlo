@@ -34,24 +34,24 @@ html(lang="en")
                                                         when 'delete': span(class='label label-danger')= endpoint.method
                                                     = endpoint.uri
                     .col-md-9
-                        .row
-                            .col-md-8
-                                each resource in apiResources
-                                    section(class='documentation')
-                                        h1(class='documentation__header')= resource.name
+                        each resource in apiResources
+                            section(class='documentation')
+                                h1(class='documentation__header')= resource.name
 
-                                        div(class='documentation__endpoints')
-                                            each endpoint in resource.endpoints
-                                                p(class='documentation__endpoints__name')
-                                                    case endpoint.method
-                                                        when 'get': span(class='label label-primary')= endpoint.method
-                                                        when 'post': span(class='label label-success')= endpoint.method
-                                                        when 'put': span(class='label label-warning')= endpoint.method
-                                                        when 'delete': span(class='label label-danger')= endpoint.method
-                                                    = endpoint.uri
+                                div(class='documentation__endpoints')
+                                    each endpoint in resource.endpoints
+                                        p(class='documentation__endpoints__name')
+                                            case endpoint.method
+                                                when 'get': span(class='label label-primary')= endpoint.method
+                                                when 'post': span(class='label label-success')= endpoint.method
+                                                when 'put': span(class='label label-warning')= endpoint.method
+                                                when 'delete': span(class='label label-danger')= endpoint.method
+                                            = endpoint.uri
 
-                                                p(class='documentation__endpoints__description')= endpoint.description
+                                        p(class='documentation__endpoints__description')= endpoint.description
 
+                                        .row
+                                            .col-md-8
                                                 if endpoint.uriParameters && endpoint.uriParameters.length
                                                     table(class='documentation__parameters table table-bordered table-striped')
                                                         thead
@@ -59,29 +59,36 @@ html(lang="en")
                                                                 th name
                                                                 th description
                                                         tbody
-                                                            tr
-                                                                each parameter in endpoint.uriParameters
+                                                            each parameter in endpoint.uriParameters
+                                                                tr
                                                                     td= parameter.name
                                                                     td= parameter.description
 
+                                                if endpoint.queryParameters && endpoint.queryParameters.length
+                                                    h2(class='documentation__subheader') Query Parameters
+                                                    table(class='documentation__parameters table table-bordered table-striped')
+                                                        thead
+                                                            tr
+                                                                th name
+                                                                th type
+                                                                th description
+                                                        tbody
+                                                            each parameter in endpoint.queryParameters
+                                                                tr
+                                                                    td= parameter.name
+                                                                    td= parameter.type
+                                                                    td= parameter.description
+
+                                                if endpoint.schema
+                                                    h2(class='documentation__subheader') Schema
+                                                    pre
+                                                        code !{endpoint.schema}
+
+                                            .col-md-4
                                                 if endpoint.example
-                                                    p
-                                                        strong Example
+                                                    h2(class='documentation__subheader') Example
                                                     pre
                                                         code !{endpoint.example}
-
-
-
-                            .col-md-4
-                                // TODO
         footer(class='footer')
             .container
                 p(class='footer__text') ramlo | &copy; 2016
-
-
-
-//                                        each method in resource.methods
-//
-//
-//                                            h2(class='documentation__subheader') Query Parameters
-//
