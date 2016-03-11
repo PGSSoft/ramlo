@@ -19,8 +19,20 @@ if (program.file) {
     var fName = path.resolve(process.cwd(), program.file);
     var api = raml.loadApiSync(fName);
 
+    var apiDocumentations = [];
+    var documentations = api.documentation();
+
     var apiResources = [];
     var resources = api.resources();
+
+    // get documentations
+    // TODO: use Markdown
+    documentations.forEach(function(documentation) {
+        apiDocumentations.push({
+            title: documentation.title(),
+            content: documentation.content() && documentation.content().value()
+        });
+    });
 
     // create list of resources (root level)
     resources.forEach(function(resource) {
@@ -100,6 +112,7 @@ if (program.file) {
         apiTitle: api.title(),
         apiDescription: api.description() && api.description().value(),
         apiBaseUri: api.baseUri().value().replace('{version}', api.version()),
+        apiDocumentations: apiDocumentations,
         apiResources: apiResources
     };
     // console.log(JSON.stringify(locals));

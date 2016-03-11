@@ -1,0 +1,24 @@
+.label {
+    background: none;
+    border: 3px solid $label-default-bg;
+}
+
+.label-primary {
+    color: $label-primary-bg;
+    border-color: $label-primary-bg;
+}
+
+.label-success {
+    color: $label-success-bg;
+    border-color: $label-success-bg;
+}
+
+.label-warning {
+    color: $label-warning-bg;
+    border-color: $label-warning-bg;
+}
+
+.label-danger {
+    color: $label-danger-bg;
+    border-color: $label-danger-bg;
+}

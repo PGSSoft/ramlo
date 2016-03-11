@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import "theme";
 @import "../node_modules/bootstrap/scss/bootstrap";
+@import "theme-components";
 
 body {
     font-family: "Open Sans", sans-serif;
@@ -20,7 +22,7 @@ body {
 .header__subtitle {
     margin: 0;
     padding: $spacer / 2 0 $spacer;
-    color: $gray-light;
+    color: $gray;
     border-bottom: 1px solid $gray-lighter;
 }
 
@@ -30,8 +32,9 @@ body {
 
 .resources__header {
     font-size: $font-size-sm;
-    color: $gray-light;
+    color: $gray;
     text-transform: uppercase;
+    margin: 0 0 $spacer;
 }
 
 .resources__list {
@@ -39,21 +42,22 @@ body {
     list-style: none;
 
     li {
-        margin-bottom: $spacer-y;
+        margin: $spacer / 2 0 $spacer;
     }
 }
 
 .resources__list__endpoints {
     font-size: $font-size-xs;
     list-style: none;
-    padding-left: $spacer-x;
+    padding: 0;
+    color: $gray;
 
     li {
-        margin-bottom: 0;
+        margin: $spacer / 2 0;
     }
 
     .label {
-        width: 40px;
+        width: 46px;
         text-transform: uppercase;
         margin-right: $spacer-x / 2;
     }
@@ -89,7 +93,7 @@ body {
     }
 
     .label {
-        width: 66px;
+        width: 76px;
         text-transform: uppercase;
         margin: 0 $spacer 0 0;
     }
@@ -97,7 +101,7 @@ body {
 
 .documentation__endpoints__description {
     padding-bottom: $spacer-y;
-    color: $gray-light;
+    color: $gray;
     border-bottom: 1px solid $gray-lighter;
 }
 
@@ -120,6 +124,13 @@ pre, code {
 }
 
 .footer__text {
-    padding: $spacer / 2 0;
+    padding: $spacer 0;
+    margin: 0;
     border-top: 1px solid $gray-lighter;
+    color: $gray-light;
+    text-align: right;
+
+    a {
+        margin: 0 $spacer / 4;
+    }
 }

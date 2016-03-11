@@ -14,7 +14,7 @@ html(lang="en")
             .container
                 h1(class='header__title')= apiTitle
                 p(class='header__subtitle')= apiDescription
-                    span(class='text-primary pull-xs-right')= apiBaseUri
+                    span(class='text-primary #{apiDescription ? "pull-xs-right" : ""}')= apiBaseUri
         main
             .container
                 .row
@@ -34,6 +34,11 @@ html(lang="en")
                                                         when 'delete': span(class='label label-danger')= endpoint.method
                                                     = endpoint.uri
                     .col-md-9
+                        each documentation in apiDocumentations
+                            section(class='documentation')
+                                h1(class='documentation__header')= documentation.title
+                                p(class='documentation__content')= documentation.content
+
                         each resource in apiResources
                             section(class='documentation')
                                 h1(class='documentation__header')= resource.name
@@ -91,4 +96,5 @@ html(lang="en")
                                                         code !{endpoint.example}
         footer(class='footer')
             .container
-                p(class='footer__text') ramlo | &copy; 2016
+                p(class='footer__text') powered by
+                    a(href='https://github.com/PGSSoft/ramlo') ramlo
