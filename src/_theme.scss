@@ -5,6 +5,8 @@ $gray-lighter:              #f0f0f0;
 
 $brand-primary:             #ff7726;
 $brand-success:             #00a561;
+$brand-info:                #5cb7f1;
+$brand-warning:             #ffb61a;
 $brand-danger:              #ff0000;
 
 $link-color:                 $brand-primary;
@@ -12,10 +14,11 @@ $link-decoration:            underline;
 $link-hover-color:           #d9621b;
 $link-hover-decoration:      underline;
 
-$label-default-bg:            $gray-light;
+$label-default-bg:            $gray;
 $label-primary-bg:            $brand-primary;
 $label-success-bg:            $brand-success;
-$label-warning-bg:            $gray;
-$label-danger-bg:             $brand-danger;
+$label-info-bg:               $brand-info;
+$label-warning-bg:            $brand-info;
+$label-danger-bg:             $gray;
 
 $enable-rounded:             false;

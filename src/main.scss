@@ -112,6 +112,7 @@ pre, code {
 
 .documentation__subheader {
     font-size: $font-size-base;
+    font-weight: 700;
     margin-top: $spacer * 2;
 }
 
@@ -133,4 +134,20 @@ pre, code {
     a {
         margin: 0 $spacer / 4;
     }
+}
+
+pre {
+    color: $gray;
+}
+
+.hljs-number {
+    color: $brand-success;
+}
+
+.hljs-string {
+    color: $brand-primary;
+}
+
+.hljs-literal {
+    color: $brand-info;
 }

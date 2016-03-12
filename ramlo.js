@@ -6,6 +6,8 @@ var program = require('commander');
 var raml = require('raml-1-parser');
 var sass = require('node-sass');
 var jade = require('jade');
+var hljs = require('highlight.js');
+
 var pkg = require(path.join(__dirname, 'package.json'));
 
 program
@@ -45,6 +47,7 @@ if (program.file) {
             method.responses().forEach(function(response) {
                 response.body().forEach(function(body) {
                     example = body.toJSON().example;
+                    example = example && hljs.highlight('json', example).value;
                 });
             });
 
@@ -84,7 +87,9 @@ if (program.file) {
                 method.responses().forEach(function(response) {
                     response.body().forEach(function(body) {
                         schema = body.schemaContent();
+
                         example = body.toJSON().example;
+                        example = example && hljs.highlight('json', example).value;
                     });
                 });
 
