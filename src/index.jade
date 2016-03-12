@@ -85,9 +85,25 @@ html(lang="en")
                                                                     td= parameter.description
 
                                                 if endpoint.schema
-                                                    h2(class='documentation__subheader') Schema
-                                                    pre
-                                                        code !{endpoint.schema}
+                                                    h2(class='documentation__subheader') Response
+                                                    if endpoint.schemaProperties
+                                                        table(class='documentation__parameters table table-bordered table-striped')
+                                                            thead
+                                                                tr
+                                                                    th name
+                                                                    th type
+                                                                    th description
+                                                            tbody
+                                                                each property in endpoint.schemaProperties
+                                                                    tr
+                                                                        td= property.name
+                                                                            if property.isRequired
+                                                                                span(class='text-primary') *
+                                                                        td= property.type
+                                                                        td= property.description
+
+                                                    //pre
+                                                    //    code !{endpoint.schema}
 
                                             .col-md-4
                                                 if endpoint.example

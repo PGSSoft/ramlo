@@ -7,6 +7,7 @@ var raml = require('raml-1-parser');
 var sass = require('node-sass');
 var jade = require('jade');
 var hljs = require('highlight.js');
+var _ = require('lodash');
 
 var pkg = require(path.join(__dirname, 'package.json'));
 
@@ -75,6 +76,8 @@ if (program.file) {
             resource.methods().forEach(function(method) {
                 var example = '';
                 var schema = '';
+                var schemaObject;
+                var schemaProperties = [];
 
                 method.queryParameters().forEach(function(parameter) {
                     queryParameters.push({
@@ -90,6 +93,19 @@ if (program.file) {
 
                         example = body.toJSON().example;
                         example = example && hljs.highlight('json', example).value;
+
+                        schemaObject = JSON.parse(schema);
+
+                        if (schemaObject && schemaObject.properties) {
+                            _.forOwn(schemaObject.properties, function(value, key) {
+                                schemaProperties.push({
+                                    name: key,
+                                    type: value.type,
+                                    description: value.description,
+                                    isRequired: value.required
+                                });
+                            });
+                        }
                     });
                 });
 
@@ -100,6 +116,7 @@ if (program.file) {
                     uriParameters: uriParameters,
                     queryParameters: queryParameters,
                     schema: schema,
+                    schemaProperties: schemaProperties,
                     example: example
                 });
             });
