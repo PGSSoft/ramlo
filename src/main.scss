@@ -110,16 +110,32 @@ pre, code {
     width: 100%;
     word-break: break-all;
     color: $gray;
-    font-size: $font-size-sm;
+    font-size: $font-size-xs;
 }
 
 .documentation__subheader {
     font-size: $font-size-base;
     font-weight: 400;
+    margin: $spacer 0;
 }
 
 .documentation__parameters {
     margin-bottom: $spacer * 2;
+
+    thead {
+        th {
+            color: $brand-primary;
+            font-weight: 400;
+            text-transform: uppercase;
+            border-bottom-width: 1px;
+        }
+    }
+
+    th, td {
+        padding: $spacer / 2;
+        border-top: 0;
+        border-bottom: 1px solid $gray-lighter;
+    }
 }
 
 .footer {

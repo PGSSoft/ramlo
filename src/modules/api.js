@@ -112,7 +112,7 @@ function produceRequestBody(method) {
     var ramlBody = method.body();
 
     _.forEach(ramlBody, function(body) {
-        apiBodySchema = produceSchemaParameters(body.schemaContent());
+        //apiBodySchema = produceSchemaParameters(body.schemaContent());
     });
 
     return apiBodySchema;

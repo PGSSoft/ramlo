@@ -58,7 +58,7 @@ html(lang="en")
                                         .row
                                             .col-md-8
                                                 if endpoint.uriParameters && endpoint.uriParameters.length
-                                                    table(class='documentation__parameters table table-bordered table-striped')
+                                                    table(class='documentation__parameters table')
                                                         thead
                                                             tr
                                                                 th name
@@ -73,7 +73,7 @@ html(lang="en")
 
                                                 if endpoint.queryParameters && endpoint.queryParameters.length
                                                     h2(class='documentation__subheader') Query Parameters
-                                                    table(class='documentation__parameters table table-bordered table-striped')
+                                                    table(class='documentation__parameters table')
                                                         thead
                                                             tr
                                                                 th name
@@ -86,9 +86,9 @@ html(lang="en")
                                                                     td= parameter.type
                                                                     td= parameter.description
 
-                                                if endpoint.requestBody
+                                                if endpoint.requestBody && endpoint.requestBody.length
                                                     h2(class='documentation__subheader') Request
-                                                    table(class='documentation__parameters table table-bordered table-striped')
+                                                    table(class='documentation__parameters table')
                                                         thead
                                                             tr
                                                                 th name
@@ -103,10 +103,10 @@ html(lang="en")
                                                                     td= property.type
                                                                     td= property.description
 
-                                                if endpoint.responseBody
+                                                if endpoint.responseBody && endpoint.responseBody.length
                                                     h2(class='documentation__subheader')= 'Response '
                                                         span(class='text-success') (200)
-                                                    table(class='documentation__parameters table table-bordered table-striped')
+                                                    table(class='documentation__parameters table')
                                                         thead
                                                             tr
                                                                 th name
