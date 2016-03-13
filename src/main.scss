@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
-@import "theme";
-@import "../node_modules/bootstrap/scss/bootstrap";
-@import "theme-components";
+@import "styles/theme";
+@import "styles/bootstrap";
+@import "styles/theme-components";
 
 body {
     font-family: "Open Sans", sans-serif;
@@ -82,6 +82,7 @@ body {
 
 .documentation__endpoints {
     padding: 0;
+    margin-bottom: $spacer * 2;
 }
 
 .documentation__endpoints__name {
@@ -108,20 +109,21 @@ body {
 pre, code {
     width: 100%;
     word-break: break-all;
+    color: $gray;
+    font-size: $font-size-sm;
 }
 
 .documentation__subheader {
     font-size: $font-size-base;
-    font-weight: 700;
-    margin-top: $spacer * 2;
+    font-weight: 400;
 }
 
 .documentation__parameters {
-
+    margin-bottom: $spacer * 2;
 }
 
 .footer {
-    margin: $spacer * 6 0 0;
+
 }
 
 .footer__text {
@@ -134,10 +136,6 @@ pre, code {
     a {
         margin: 0 $spacer / 4;
     }
-}
-
-pre {
-    color: $gray;
 }
 
 .hljs-number {

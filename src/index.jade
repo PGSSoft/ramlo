@@ -43,8 +43,8 @@ html(lang="en")
                             section(class='documentation')
                                 h1(class='documentation__header')= resource.name
 
-                                div(class='documentation__endpoints')
-                                    each endpoint in resource.endpoints
+                                each endpoint in resource.endpoints
+                                    div(class='documentation__endpoints')
                                         p(class='documentation__endpoints__name')
                                             case endpoint.method
                                                 when 'get': span(class='label label-primary')= endpoint.method
@@ -62,11 +62,13 @@ html(lang="en")
                                                         thead
                                                             tr
                                                                 th name
+                                                                th type
                                                                 th description
                                                         tbody
                                                             each parameter in endpoint.uriParameters
                                                                 tr
                                                                     td= parameter.name
+                                                                    td= parameter.type
                                                                     td= parameter.description
 
                                                 if endpoint.queryParameters && endpoint.queryParameters.length
@@ -84,32 +86,47 @@ html(lang="en")
                                                                     td= parameter.type
                                                                     td= parameter.description
 
-                                                if endpoint.schema
-                                                    h2(class='documentation__subheader') Response
-                                                    if endpoint.schemaProperties
-                                                        table(class='documentation__parameters table table-bordered table-striped')
-                                                            thead
+                                                if endpoint.requestBody
+                                                    h2(class='documentation__subheader') Request
+                                                    table(class='documentation__parameters table table-bordered table-striped')
+                                                        thead
+                                                            tr
+                                                                th name
+                                                                th type
+                                                                th description
+                                                        tbody
+                                                            each property in endpoint.requestBody
                                                                 tr
-                                                                    th name
-                                                                    th type
-                                                                    th description
-                                                            tbody
-                                                                each property in endpoint.schemaProperties
-                                                                    tr
-                                                                        td= property.name
-                                                                            if property.isRequired
-                                                                                span(class='text-primary') *
-                                                                        td= property.type
-                                                                        td= property.description
+                                                                    td= property.name
+                                                                    if property.isRequired
+                                                                        span(class='text-primary') *
+                                                                    td= property.type
+                                                                    td= property.description
 
-                                                    //pre
-                                                    //    code !{endpoint.schema}
+                                                if endpoint.responseBody
+                                                    h2(class='documentation__subheader')= 'Response '
+                                                        span(class='text-success') (200)
+                                                    table(class='documentation__parameters table table-bordered table-striped')
+                                                        thead
+                                                            tr
+                                                                th name
+                                                                th type
+                                                                th description
+                                                        tbody
+                                                            each property in endpoint.responseBody
+                                                                tr
+                                                                    td= property.name
+                                                                        if property.isRequired
+                                                                            span(class='text-primary') *
+                                                                    td= property.type
+                                                                    td= property.description
 
                                             .col-md-4
-                                                if endpoint.example
-                                                    h2(class='documentation__subheader') Example
+                                                if endpoint.responseExample
+                                                    h2(class='documentation__subheader')= 'Example '
+                                                        span(class='text-success') (200)
                                                     pre
-                                                        code !{endpoint.example}
+                                                        code !{endpoint.responseExample}
         footer(class='footer')
             .container
                 p(class='footer__text') powered by
