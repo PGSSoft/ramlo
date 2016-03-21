@@ -11,12 +11,12 @@ html(lang="en")
             include main.css
     body
         header(class='header')
-            .container
+            .container-fluid
                 h1(class='header__title')= apiTitle
                 p(class='header__subtitle')= apiDescription
                     span(class='text-primary #{apiDescription ? "pull-xs-right" : ""}')= apiBaseUri
         main
-            .container
+            .container-fluid
                 .row
                     .col-md-3
                         section(class='resources')
@@ -55,8 +55,8 @@ html(lang="en")
 
                                         p(class='documentation__endpoints__description')= endpoint.description
 
-                                        .row
-                                            .col-md-8
+                                        .row.documentation__endpoints__container
+                                            .col-md-8.documentation__endpoints__left
                                                 if endpoint.uriParameters && endpoint.uriParameters.length
                                                     table(class='documentation__parameters table')
                                                         thead
@@ -121,13 +121,13 @@ html(lang="en")
                                                                     td= property.type
                                                                     td= property.description
 
-                                            .col-md-4
+                                            .col-md-4.documentation__endpoints__right
                                                 if endpoint.responseExample
                                                     h2(class='documentation__subheader')= 'Example '
                                                         span(class='text-success') (200)
                                                     pre
                                                         code !{endpoint.responseExample}
         footer(class='footer')
-            .container
+            .container-fluid
                 p(class='footer__text') powered by
                     a(href='https://github.com/PGSSoft/ramlo') ramlo

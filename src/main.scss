@@ -9,6 +9,28 @@ body {
     font-size: $font-size-sm;
 }
 
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: $gray-lighter;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $gray-light;
+    border-radius: 8px;
+}
+
+pre, code {
+    width: 100%;
+    word-break: break-all;
+    color: $gray;
+    font-size: $font-size-xs;
+    overflow: hidden;
+}
+
 .header {
     padding: $spacer * 2 0;
 }
@@ -85,6 +107,24 @@ body {
     margin-bottom: $spacer * 2;
 }
 
+
+.documentation__endpoints__container {
+    position: relative;
+}
+
+.documentation__endpoints__left {
+
+}
+
+.documentation__endpoints__right {
+    position: absolute;
+    top: 0;
+    right: $spacer;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 .documentation__endpoints__name {
     font-size: $font-size-lg;
     margin-top: 3rem;
@@ -106,16 +146,9 @@ body {
     border-bottom: 1px solid $gray-lighter;
 }
 
-pre, code {
-    width: 100%;
-    word-break: break-all;
-    color: $gray;
-    font-size: $font-size-xs;
-}
-
 .documentation__subheader {
     font-size: $font-size-base;
-    font-weight: 400;
+    font-weight: 700;
     margin: $spacer 0;
 }
 

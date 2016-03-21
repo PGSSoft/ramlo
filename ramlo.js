@@ -22,8 +22,18 @@ if (program.file) {
     console.log(chalk.blue('starting ramlo...'));
     console.time('time');
 
-    // convert RAML to API object
+    // check if RAML file exists
     var ramlFile = path.resolve(process.cwd(), program.file);
+
+    try {
+        fs.statSync(ramlFile);
+    }
+    catch(e) {
+        console.log(chalk.red('provided file does not exist!'));
+        process.exit(1);
+    }
+
+    // convert RAML to API objectcls
     var ramlApi = api(ramlFile);
 
     // compile sass styles

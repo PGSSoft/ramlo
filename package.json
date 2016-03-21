@@ -24,7 +24,7 @@
     "jade": "^1.11.0",
     "lodash": "^4.6.1",
     "node-sass": "^3.4.2",
-    "raml-1-parser": "0.1.0-beta.6"
+    "raml-1-parser": "0.1.0-beta.10"
   },
   "preferGlobal": true,
   "bin": {

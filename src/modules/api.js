@@ -1,6 +1,7 @@
 var raml = require('raml-1-parser');
 var _ = require('lodash');
 var hljs = require('highlight.js');
+var chalk = require('chalk');
 
 var ramlo = {};
 
@@ -178,7 +179,15 @@ function capitalizeFirstLetter(string) {
 }
 
 module.exports = function(ramlFile) {
-    var api = raml.loadApiSync(ramlFile);
+    var api;
+
+    try {
+        api = raml.loadApiSync(ramlFile);
+    }
+    catch(e) {
+        console.log(chalk.red('provided file is not a correct RAML file!'));
+        process.exit(1);
+    }
 
     ramlo.ramlVersion = api.RAMLVersion();
     ramlo.apiTitle = api.title();
