@@ -83,7 +83,10 @@ html(lang="en")
                                                             each parameter in endpoint.queryParameters
                                                                 tr
                                                                     td= parameter.name
-                                                                    td= parameter.type
+                                                                    if parameter.repeat
+                                                                        td [ #{parameter.type} ]
+                                                                    else
+                                                                        td #{parameter.type}
                                                                     td= parameter.description
 
                                                 if endpoint.requestBody && endpoint.requestBody.length

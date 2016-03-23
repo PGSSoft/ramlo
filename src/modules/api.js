@@ -101,7 +101,8 @@ function produceQueryParameters(method) {
         apiQueryParameters.push({
             name: parameter.name(),
             type: parameter.type(),
-            description: description && description.value()
+            description: description && description.value(),
+            repeat: parameter.repeat()
         });
     });
 
