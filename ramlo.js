@@ -10,6 +10,7 @@ var jade = require('jade');
 
 var pkg = require(path.join(__dirname, 'package.json'));
 var api = require('./src/modules/api');
+var helpers = require('./src/modules/helpers');
 
 program
     .version(pkg.version)
@@ -33,7 +34,7 @@ if (program.file) {
         process.exit(1);
     }
 
-    // convert RAML to API objectcls
+    // convert RAML to API object
     var ramlApi = api(ramlFile);
 
     // compile sass styles
@@ -48,7 +49,7 @@ if (program.file) {
     fs.writeFileSync(path.join(__dirname, 'src/main.css'), scss.css);
 
     // render html from jade template
-    var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), ramlApi);
+    var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), { api: ramlApi, helpers: helpers });
 
     // save html file with documentation
     fs.writeFileSync(path.resolve(process.cwd(), docFile), html);

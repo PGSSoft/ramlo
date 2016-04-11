@@ -9,20 +9,6 @@ body {
     font-size: $font-size-sm;
 }
 
-::-webkit-scrollbar {
-    width: 4px;
-}
-
-::-webkit-scrollbar-track {
-    background: $gray-lighter;
-    border-radius: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: $gray-light;
-    border-radius: 8px;
-}
-
 pre, code {
     width: 100%;
     word-break: break-all;
@@ -83,6 +69,15 @@ pre, code {
         text-transform: uppercase;
         margin-right: $spacer-x / 2;
     }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover, &:focus {
+            text-decoration: underline;
+        }
+    }
 }
 
 .documentation {
@@ -123,6 +118,20 @@ pre, code {
     bottom: 0;
     overflow-x: hidden;
     overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $gray-lighter;
+        border-radius: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $gray-light;
+        border-radius: 8px;
+    }
 }
 
 .documentation__endpoints__name {
@@ -165,9 +174,19 @@ pre, code {
     }
 
     th, td {
-        padding: $spacer / 2;
+        padding: $spacer / 2 $spacer;
         border-top: 0;
         border-bottom: 1px solid $gray-lighter;
+    }
+}
+
+.documentation__parameters__nested {
+
+    td {
+
+        &:first-child {
+            padding-left: $spacer * 2;
+        }
     }
 }
 

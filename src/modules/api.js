@@ -158,16 +158,32 @@ function produceResponseExample(method) {
 }
 
 function produceSchemaParameters(schemaContent) {
-    var schemaObject = JSON.parse(schemaContent);
+    var schemaObject = _.isObject(schemaContent) ? schemaContent : JSON.parse(schemaContent);
     var schemaProperties = [];
+    var nestedProperties;
+
+    if (_.has(schemaObject, 'items')) {
+        schemaObject = schemaObject.items;
+    }
 
     if (_.has(schemaObject, 'properties')) {
         _.forOwn(schemaObject.properties, function(value, key) {
+            nestedProperties = [];
+
+            if (_.has(value, 'items')) {
+                value = value.items;
+            }
+
+            if (_.has(value, 'properties')) {
+                nestedProperties = produceSchemaParameters(value);
+            }
+
             schemaProperties.push({
                 name: key,
                 type: value.type,
                 description: value.description,
-                isRequired: value.required
+                isRequired: value.required,
+                nestedProperties: nestedProperties
             });
         });
     }
