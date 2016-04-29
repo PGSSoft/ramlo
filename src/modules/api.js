@@ -15,7 +15,7 @@ function produceDocumentations(api) {
     var apiDocumentations = [];
     var ramlDocumentations = api.documentation();
 
-    _.forEach(ramlDocumentations, function(documentation) {
+    _.forEach(ramlDocumentations, function (documentation) {
         var content = documentation.content();
 
         apiDocumentations.push({
@@ -31,7 +31,7 @@ function produceResources(api) {
     var apiResources = [];
     var ramlResources = api.resources();
 
-    _.forEach(ramlResources, function(resource) {
+    _.forEach(ramlResources, function (resource) {
         var uri = resource.completeRelativeUri();
         var name = resource.displayName() || capitalizeFirstLetter(uri.replace('/', ''));
 
@@ -50,7 +50,7 @@ function produceEndpoints(resource) {
     var ramlNestedResources = resource.resources();
     var ramlMethods = resource.methods();
 
-    _.forEach(ramlMethods, function(method) {
+    _.forEach(ramlMethods, function (method) {
         var description = method.description();
 
         endpoints.push({
@@ -66,7 +66,7 @@ function produceEndpoints(resource) {
     });
 
     if (ramlNestedResources.length) {
-        _.forEach(ramlNestedResources, function(resource) {
+        _.forEach(ramlNestedResources, function (resource) {
             endpoints.push(produceEndpoints(resource));
         })
     }
@@ -78,7 +78,7 @@ function produceUriParameters(resource) {
     var apiUriParameters = [];
     var ramlUriParameters = resource.uriParameters();
 
-    _.forEach(ramlUriParameters, function(parameter) {
+    _.forEach(ramlUriParameters, function (parameter) {
         var description = parameter.description();
 
         apiUriParameters.push({
@@ -95,7 +95,7 @@ function produceQueryParameters(method) {
     var apiQueryParameters = [];
     var ramlQueryParameters = method.queryParameters();
 
-    _.forEach(ramlQueryParameters, function(parameter) {
+    _.forEach(ramlQueryParameters, function (parameter) {
         var description = parameter.description();
 
         apiQueryParameters.push({
@@ -113,7 +113,7 @@ function produceRequestBody(method) {
     var apiBodySchema = [];
     var ramlBody = method.body();
 
-    _.forEach(ramlBody, function(body) {
+    _.forEach(ramlBody, function (body) {
         //apiBodySchema = produceSchemaParameters(body.schemaContent());
     });
 
@@ -125,11 +125,11 @@ function produceResponseBody(method) {
     var ramlBodies;
     var schemaProperties = [];
 
-    _.forEach(ramlResponses, function(response) {
+    _.forEach(ramlResponses, function (response) {
         if (response.code().value() === '200') {
             ramlBodies = response.body();
 
-            _.forEach(ramlBodies, function(body) {
+            _.forEach(ramlBodies, function (body) {
                 schemaProperties = produceSchemaParameters(body.schemaContent());
             });
         }
@@ -139,22 +139,34 @@ function produceResponseBody(method) {
 }
 
 function produceResponseExample(method) {
-    var apiExample = '';
+    var apiExample = {};
+    var apiExamples = [];
     var ramlResponses = method.responses();
     var ramlBodies;
 
-    _.forEach(ramlResponses, function(response) {
-        if (response.code().value() === '200') {
+    _.forEach(ramlResponses, function (response) {
+        if (response.code().value() !== undefined) {
             ramlBodies = response.body();
 
-            _.forEach(ramlBodies, function(body) {
-                apiExample = body.toJSON().example;
-                apiExample = apiExample && hljs.highlight('json', apiExample).value;
+            _.forEach(ramlBodies, function (body) {
+                apiExample = {
+                    response: body.toJSON().example,
+                    code: response.code().value()
+                };
+                if (apiExample.response !== undefined) {
+                    apiExample.response = apiExample.response && hljs.highlight('json', apiExample.response).value;
+                    apiExamples = apiExamples.concat(apiExample);
+                }
             });
         }
     });
 
-    return apiExample;
+    if (apiExamples.length === 0) {
+        return undefined;
+    }
+    else {
+        return apiExamples;
+    }
 }
 
 function produceSchemaParameters(schemaContent) {
@@ -167,7 +179,7 @@ function produceSchemaParameters(schemaContent) {
     }
 
     if (_.has(schemaObject, 'properties')) {
-        _.forOwn(schemaObject.properties, function(value, key) {
+        _.forOwn(schemaObject.properties, function (value, key) {
             nestedProperties = [];
 
             if (_.has(value, 'items')) {
@@ -195,13 +207,13 @@ function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
 
-module.exports = function(ramlFile) {
+module.exports = function (ramlFile) {
     var api;
 
     try {
         api = raml.loadApiSync(ramlFile);
     }
-    catch(e) {
+    catch (e) {
         console.log(chalk.red('provided file is not a correct RAML file!'));
         process.exit(1);
     }
