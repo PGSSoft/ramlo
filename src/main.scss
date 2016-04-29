@@ -2,6 +2,7 @@
 @import "styles/theme";
 @import "styles/bootstrap";
 @import "styles/theme-components";
+@import "styles/examples";
 
 body {
     font-family: "Open Sans", sans-serif;
@@ -28,10 +29,40 @@ pre, code {
 }
 
 .header__subtitle {
-    margin: 0;
+    margin: 0 0 $spacer;
     padding: $spacer / 2 0 $spacer;
     color: $gray;
     border-bottom: 1px solid $gray-lighter;
+}
+
+.header__uri {
+    padding: 0 10px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 2;
+    background-color: $gray-lighter;
+}
+
+.sidebar {
+    position: relative;
+    border-right: 1px solid #ccc;
+    transition: all 0.3s linear;
+    $root: &;
+    &-content {
+        position: absolute;
+        top: 0;
+        padding-top: 20px;
+    }
+    &.is-abs {
+        position: absolute;
+    }
+    &.is-fixed {
+        #{$root}-content {
+            position: fixed;
+
+            top: 0;
+        }
+    }
 }
 
 .resources {
@@ -81,30 +112,76 @@ pre, code {
 }
 
 .documentation {
-    margin: 0 0 $spacer * 4;
+    border-left: 1px solid $gray-light;
+
+    //border-top: 1px solid $gray-light;
+    &:first-of-type {
+        border-top: 1px solid $gray-light;
+
+    }
 }
 
 .documentation__header {
-    margin: 0 0 $spacer;
-    padding: 0 0 $spacer;
-    font-size: $font-size-h4;
+    position: relative;
+    margin: 0 0;
+    padding: 2*$spacer 10px 2*$spacer;
+    font-size: $font-size-h2;
     font-weight: 700;
-    border-bottom: 1px solid $gray-lighter;
+    width: 60%;
 
     .text-muted {
         float: right;
         font-size: $font-size-sm;
     }
+
+    &:after {
+        content: '';
+        position: absolute;
+        left: 100%;
+        width: 66.67%;
+        top: 0;
+        bottom: 0;
+        background-color: #333;
+    }
 }
 
 .documentation__endpoints {
     padding: 0;
-    margin-bottom: $spacer * 2;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    $rootElem: &;
+    &:first-of-type {
+        #{$rootElem}__params {
+            border-top: 1px solid $gray-light;
+        }
+        #{$rootElem}__examples {
+            border-top: 1px solid $gray-middlescale;
+        }
+    }
 }
-
 
 .documentation__endpoints__container {
     position: relative;
+}
+
+.documentation__endpoints__params {
+    min-height: 100px;
+    width: 60%;
+    position: relative;
+    padding: $spacer * 2 10px $spacer * 2;
+    border-bottom: 1px solid $gray-light;
+}
+
+.documentation__endpoints__examples {
+    min-height: 100px;
+    width: 40%;
+    padding: 0px 10px;
+    padding-top: $spacer * 2;
+    position: relative;
+    background-color: #333;
+    color: #fcfcfc;
+    border-bottom: 1px solid $gray-middlescale;
 }
 
 .documentation__endpoints__left {
@@ -136,7 +213,7 @@ pre, code {
 
 .documentation__endpoints__name {
     font-size: $font-size-lg;
-    margin-top: 3rem;
+    margin-top: 1rem;
 
     &:first-child {
         margin-top: 0;
@@ -150,9 +227,7 @@ pre, code {
 }
 
 .documentation__endpoints__description {
-    padding-bottom: $spacer-y;
     color: $gray;
-    border-bottom: 1px solid $gray-lighter;
 }
 
 .documentation__subheader {
