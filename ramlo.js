@@ -18,7 +18,7 @@ program
     .parse(process.argv);
 
 if (program.file) {
-    var docFile = 'api.html';
+    var docFile = path.resolve(process.cwd(), path.dirname(program.file), 'index.html');
 
     console.log(chalk.blue('starting ramlo...'));
     console.time('time');
@@ -52,7 +52,7 @@ if (program.file) {
     var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), { api: ramlApi, helpers: helpers });
 
     // save html file with documentation
-    fs.writeFileSync(path.resolve(process.cwd(), docFile), html);
+    fs.writeFileSync(docFile, html);
 
     console.timeEnd('time');
     console.log(chalk.green('finished'));
