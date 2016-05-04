@@ -15,10 +15,11 @@ var helpers = require('./src/modules/helpers');
 program
     .version(pkg.version)
     .option('-f, --file <path>', 'RAML input file')
+    .option('-o, --output <path>', 'HTML output file')
     .parse(process.argv);
 
 if (program.file) {
-    var docFile = path.resolve(process.cwd(), path.dirname(program.file), 'index.html');
+    var docFile = path.resolve(process.cwd(), path.dirname(program.file), program.output || 'index.html');
 
     console.log(chalk.blue('starting ramlo...'));
     console.time('time');
