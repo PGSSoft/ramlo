@@ -49,7 +49,7 @@ function produceEndpoints(resource) {
     var endpoints = [];
     var ramlNestedResources = resource.resources();
     var ramlMethods = resource.methods();
-
+    
     _.forEach(ramlMethods, function(method) {
         var description = method.description();
 
@@ -114,7 +114,7 @@ function produceRequestBody(method) {
     var ramlBody = method.body();
 
     _.forEach(ramlBody, function(body) {
-        //apiBodySchema = produceSchemaParameters(body.schemaContent());
+        apiBodySchema = produceSchemaParameters(body.schemaContent());
     });
 
     return apiBodySchema;
@@ -130,7 +130,15 @@ function produceResponseBody(method) {
             ramlBodies = response.body();
 
             _.forEach(ramlBodies, function(body) {
-                schemaProperties = produceSchemaParameters(body.schemaContent());
+
+                //check if NULL before calling produceSchemaParameters()
+
+                var sch = body.schemaContent();
+
+                if(sch != null && typeof sch != "undefined"){
+                    schemaProperties = produceSchemaParameters( sch );
+                }
+
             });
         }
     });
@@ -158,34 +166,45 @@ function produceResponseExample(method) {
 }
 
 function produceSchemaParameters(schemaContent) {
-    var schemaObject = _.isObject(schemaContent) ? schemaContent : JSON.parse(schemaContent);
+
     var schemaProperties = [];
-    var nestedProperties;
 
-    if (_.has(schemaObject, 'items')) {
-        schemaObject = schemaObject.items;
-    }
 
-    if (_.has(schemaObject, 'properties')) {
-        _.forOwn(schemaObject.properties, function(value, key) {
-            nestedProperties = [];
+    //before calling JSON.parse, make sure the string is valid json
+    //using try/catch solved errors, ex. https://github.com/raml-apis/Instagram
+    try{
+        var schemaObject = _.isObject(schemaContent) ? schemaContent : JSON.parse(schemaContent);
+        var nestedProperties;
 
-            if (_.has(value, 'items')) {
-                value = value.items;
-            }
+        if (_.has(schemaObject, 'items')) {
+            schemaObject = schemaObject.items;
+        }
 
-            if (_.has(value, 'properties')) {
-                nestedProperties = produceSchemaParameters(value);
-            }
+        if (_.has(schemaObject, 'properties')) {
+            _.forOwn(schemaObject.properties, function(value, key) {
+                nestedProperties = [];
 
-            schemaProperties.push({
-                name: key,
-                type: value.type,
-                description: value.description,
-                isRequired: value.required,
-                nestedProperties: nestedProperties
+                if (_.has(value, 'items')) {
+                    value = value.items;
+                }
+
+                if (_.has(value, 'properties')) {
+                    nestedProperties = produceSchemaParameters(value);
+                }
+
+                schemaProperties.push({
+                    name: key,
+                    type: value.type,
+                    description: value.description,
+                    isRequired: value.required,
+                    nestedProperties: nestedProperties
+                });
             });
-        });
+        }
+    }
+    catch(err){
+        console.log( err ,  schemaContent);
+        console.log( "////////////////////////////////////////////////////" );
     }
 
     return schemaProperties;
