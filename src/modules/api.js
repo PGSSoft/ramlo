@@ -42,6 +42,7 @@ function produceResources(api) {
         });
     });
 
+
     return apiResources;
 }
 
@@ -92,16 +93,50 @@ function produceUriParameters(resource) {
 }
 
 function produceQueryParameters(method) {
-    var apiQueryParameters = [];
+    var apiQueryParameters = {
+        /* default values */
+        thead: {
+            name: true,
+            type: false,
+            description: false,
+            example: false,
+            default: false,
+        },
+        tbody:[]
+    };
     var ramlQueryParameters = method.queryParameters();
 
     _.forEach(ramlQueryParameters, function(parameter) {
+
         var description = parameter.description();
 
-        apiQueryParameters.push({
+        //check if type exists
+        if(apiQueryParameters.thead.type == false && description != null){
+            apiQueryParameters.thead.type = true;
+        }
+
+        //check if description exists
+        if(apiQueryParameters.thead.description == false && description != null){
+            apiQueryParameters.thead.description = true;
+        }
+
+        //check if example exists
+        if(apiQueryParameters.thead.example == false && parameter.example() != null){
+            apiQueryParameters.thead.example = true;
+        }
+
+        //check if default exists
+        if(apiQueryParameters.thead.default == false && parameter.default() != null){
+            apiQueryParameters.thead.default = true;
+        }
+
+        apiQueryParameters["tbody"].push({
             name: parameter.name(),
             type: parameter.type(),
+            isRequired: parameter.required(),
             description: description && description.value(),
+            example: parameter.example(),
+            default: parameter.default(),
             repeat: parameter.repeat()
         });
     });
@@ -167,7 +202,16 @@ function produceResponseExample(method) {
 
 function produceSchemaParameters(schemaContent) {
 
-    var schemaProperties = [];
+    var schemaProperties = {
+        thead: {
+            name: true,
+            type: false,
+            description: false,
+            example: false,
+            default: false
+        },
+        tbody:[]
+    };
 
 
     //before calling JSON.parse, make sure the string is valid json
@@ -192,10 +236,19 @@ function produceSchemaParameters(schemaContent) {
                     nestedProperties = produceSchemaParameters(value);
                 }
 
-                schemaProperties.push({
+                //check if description exists
+                if(schemaProperties.thead.description == false && value.description != null){
+                    schemaProperties.thead.description = true;
+                }
+
+                if(schemaProperties.thead.type == false && value.type != null){
+                    schemaProperties.thead.type = true;
+                }
+
+                schemaProperties["tbody"].push({
                     name: key,
                     type: value.type,
-                    description: value.description,
+                    description:  value.description,
                     isRequired: value.required,
                     nestedProperties: nestedProperties
                 });
@@ -231,6 +284,7 @@ module.exports = function(ramlFile) {
     ramlo.apiBaseUri = api.baseUri().value().replace('{version}', api.version());
     ramlo.apiDocumentations = produceDocumentations(api);
     ramlo.apiResources = produceResources(api);
+
 
     return ramlo;
 };
