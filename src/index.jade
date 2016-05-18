@@ -60,6 +60,7 @@ html(lang="en")
                                             .col-md-8.documentation__endpoints__left
                                                 if endpoint.uriParameters && endpoint.uriParameters["tbody"]
                                                     if endpoint.uriParameters["tbody"].length
+
                                                         table(class='documentation__parameters table')
                                                             thead
                                                                 tr
@@ -72,7 +73,7 @@ html(lang="en")
                                                                     if endpoint.uriParameters.thead.description
                                                                         th description
                                                             tbody
-                                                                each parameter in endpoint.uriParameters
+                                                                each parameter in endpoint.uriParameters["tbody"]
                                                                     tr
                                                                         if endpoint.uriParameters.thead.name
                                                                             td= parameter.name

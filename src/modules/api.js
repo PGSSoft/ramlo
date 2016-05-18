@@ -89,6 +89,8 @@ function produceUriParameters(resource) {
 
     _.forEach(ramlUriParameters, function(parameter) {
 
+        console.log("*", Object.keys( parameter ).length );
+
         var description = parameter.description();
 
         //check if type exists
@@ -105,7 +107,7 @@ function produceUriParameters(resource) {
         if(apiUriParameters.thead.name == false && parameter.name() != null){
             apiUriParameters.thead.name = true;
         }
-
+        
         apiUriParameters["tbody"].push({
             name: parameter.name(),
             type: parameter.type(),
@@ -227,8 +229,6 @@ function produceRequestBody(method) {
         });
     }
 
-    console.log("*", apiBodySchema);
-
     return apiBodySchema;
 }
 
@@ -239,19 +239,22 @@ function produceResponseBody(method) {
     var schemaProperties = [];
 
     _.forEach(ramlResponses, function(response) {
-        if (response.code().value() === '200') {
+        if (response.code().value() === '200' ) {
             ramlBodies = response.body();
 
             _.forEach(ramlBodies, function(body) {
 
                 //check if NULL before calling produceSchemaParameters()
-
                 var sch = body.schemaContent();
 
                 if(sch != null && typeof sch != "undefined"){
-                    schemaProperties = produceSchemaParameters( sch );
-                }
 
+                    var sp = produceSchemaParameters( sch );
+                    console.log(  sp);
+                    if(sp["tbody"].length > 0){
+                        schemaProperties.push(sp);
+                    }
+                }
             });
         }
     });
