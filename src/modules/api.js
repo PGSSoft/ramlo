@@ -76,13 +76,37 @@ function produceEndpoints(resource) {
 }
 
 function produceUriParameters(resource) {
-    var apiUriParameters = [];
+    var apiUriParameters = {
+        /* default values */
+        thead: {
+            name: false,
+            type: false,
+            description: false,
+        },
+        tbody:[]
+    };;
     var ramlUriParameters = resource.uriParameters();
 
     _.forEach(ramlUriParameters, function(parameter) {
+
         var description = parameter.description();
 
-        apiUriParameters.push({
+        //check if type exists
+        if(apiUriParameters.thead.type == false && parameter.type() != null){
+            apiUriParameters.thead.type = true;
+        }
+
+        //check if description exists
+        if(apiUriParameters.thead.description == false && description != null){
+            apiUriParameters.thead.description = true;
+        }
+
+        //check if example exists
+        if(apiUriParameters.thead.name == false && parameter.name() != null){
+            apiUriParameters.thead.name = true;
+        }
+
+        apiUriParameters["tbody"].push({
             name: parameter.name(),
             type: parameter.type(),
             description: description && description.value()
@@ -101,6 +125,8 @@ function produceQueryParameters(method) {
             description: false,
             example: false,
             default: false,
+            minLength: false,
+            maxLength: false
         },
         tbody:[]
     };
@@ -109,9 +135,11 @@ function produceQueryParameters(method) {
     _.forEach(ramlQueryParameters, function(parameter) {
 
         var description = parameter.description();
+        var minLength  = "";
+        var maxLength  = "";
 
         //check if type exists
-        if(apiQueryParameters.thead.type == false && description != null){
+        if(apiQueryParameters.thead.type == false && parameter.type() != null){
             apiQueryParameters.thead.type = true;
         }
 
@@ -130,6 +158,23 @@ function produceQueryParameters(method) {
             apiQueryParameters.thead.default = true;
         }
 
+        try{
+            if(apiQueryParameters.thead.minLength == false && parameter.minLength() != null){
+                apiQueryParameters.thead.minLength = true;
+                minLength = parameter.minLength();
+            }
+        }
+        catch(err){}
+
+        try{
+            if(apiQueryParameters.thead.maxLength == false && parameter.maxLength() != null){
+                apiQueryParameters.thead.maxLength = true;
+                maxLength = parameter.maxLength();
+            }
+        }
+        catch(err){}
+
+
         apiQueryParameters["tbody"].push({
             name: parameter.name(),
             type: parameter.type(),
@@ -137,6 +182,8 @@ function produceQueryParameters(method) {
             description: description && description.value(),
             example: parameter.example(),
             default: parameter.default(),
+            minLength: minLength,
+            maxLength: maxLength,
             repeat: parameter.repeat()
         });
     });
