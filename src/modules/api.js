@@ -84,7 +84,7 @@ function produceUriParameters(resource) {
             description: false,
         },
         tbody:[]
-    };;
+    };
     var ramlUriParameters = resource.uriParameters();
 
     _.forEach(ramlUriParameters, function(parameter) {
@@ -120,7 +120,7 @@ function produceQueryParameters(method) {
     var apiQueryParameters = {
         /* default values */
         thead: {
-            name: true,
+            name: false,
             type: false,
             description: false,
             example: false,
@@ -137,6 +137,11 @@ function produceQueryParameters(method) {
         var description = parameter.description();
         var minLength  = "";
         var maxLength  = "";
+
+        //check if name exists
+        if(apiQueryParameters.thead.name == false && parameter.name() != null){
+            apiQueryParameters.thead.name = true;
+        }
 
         //check if type exists
         if(apiQueryParameters.thead.type == false && parameter.type() != null){
@@ -159,6 +164,9 @@ function produceQueryParameters(method) {
         }
 
         try{
+            /* note: parameter.minLength() & parameter.maxLength() throws an error if no minLength | maxLength exists
+                    it is an error from the parser, try...catch solves the problem
+             */
             if(apiQueryParameters.thead.minLength == false && parameter.minLength() != null){
                 apiQueryParameters.thead.minLength = true;
                 minLength = parameter.minLength();
@@ -192,15 +200,38 @@ function produceQueryParameters(method) {
 }
 
 function produceRequestBody(method) {
-    var apiBodySchema = [];
+    var apiBodySchema = {
+        thead: {
+        },
+        tbody: []
+    };
+
     var ramlBody = method.body();
 
-    _.forEach(ramlBody, function(body) {
-        apiBodySchema = produceSchemaParameters(body.schemaContent());
-    });
+    if(Object.keys(ramlBody).length > 0){
+
+        //expecting only 1 value to be valid
+        //there should NOT be 2 or more "body" declarations
+
+        _.forEach(ramlBody, function (body) {
+
+            if(body.schemaContent() != null ){
+                var sp = produceSchemaParameters(body.schemaContent());
+
+                //make sure that "body" key was valid
+                if(sp["tbody"].length > 0 ){
+                    apiBodySchema = sp;
+                }
+
+            }
+        });
+    }
+
+    console.log("*", apiBodySchema);
 
     return apiBodySchema;
 }
+
 
 function produceResponseBody(method) {
     var ramlResponses = method.responses();
