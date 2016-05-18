@@ -107,7 +107,7 @@ function produceUriParameters(resource) {
         if(apiUriParameters.thead.name == false && parameter.name() != null){
             apiUriParameters.thead.name = true;
         }
-        
+
         apiUriParameters["tbody"].push({
             name: parameter.name(),
             type: parameter.type(),
@@ -250,7 +250,7 @@ function produceResponseBody(method) {
                 if(sch != null && typeof sch != "undefined"){
 
                     var sp = produceSchemaParameters( sch );
-                    console.log(  sp);
+
                     if(sp["tbody"].length > 0){
                         schemaProperties.push(sp);
                     }
