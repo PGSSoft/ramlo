@@ -19,6 +19,7 @@ html(lang="en")
                 p(class='header__subtitle')= api.apiDescription
                 span(class='header__uri text-primary #{api.apiDescription ? "pull-xs-right" : ""}')= api.apiBaseUri
         main
+            - var globId = 0;
             .container-fluid
                 .row
                     .col-md-3.sidebar
@@ -136,14 +137,19 @@ html(lang="en")
                                                                         td= nested.description
                                         .documentation__endpoints__examples
                                             if endpoint.responseExample
-                                                h2(class='documentation__subheader')= 'Examples '
-                                                ul.examples__list
+                                                h2(class='documentation__subheader')= ' Response examples '
+                                                ul.examples__tabs
                                                     each example, index in endpoint.responseExample
-                                                        li.examples__example.example__tab
-                                                            input(class='text-success' type='radio' id='example-tab-#{index}')
-                                                            label(for='example-tab-#{index}') (#{example.code})
-                                                            pre
-                                                                code !{example.response}
+                                                        li.example__tab
+                                                            - var check = index === 0;
+                                                            input(class='text-success' type='radio' name='example-tabs#{globId}' id='example-tab#{globId + index}' checked=check)
+                                                            label(for='example-tab#{globId + index}') (#{example.code})
+                                                ul.examples__contents
+                                                    each example, index in endpoint.responseExample
+                                                        - var check = index === 0;
+                                                        pre.example__content(class=check ? "is-active" : "" id='example-content#{globId + index}' data-tab='example-tab#{globId + index}')
+                                                            code !{example.response}
+                                                - globId += endpoint.responseExample.length;
         footer(class='footer')
             .container-fluid
                 p(class='footer__text') powered by

@@ -4,6 +4,7 @@
     var stickyClass = 'is-fixed';
     var isSticky = false;
 
+    //handle the sticky sidebar
     function stickySidebar() {
         stickOffset = $(sidebarSelector).offset().top;
 
@@ -26,8 +27,13 @@
         });
     }
 
+    //handle menu & scrolling effects - scroll animations, menu highlighting
     function animateScroll() {
         var $sidebarLinks = $('.resources__list__endpoints li a');
+        var sectionOffsets = [];
+        $sidebarLinks.each(function (el) {
+            sectionOffsets.push($('a[name="' + this.hash.substr(1) + '"]').offset().top);
+        });
         var animLock = false;
         $sidebarLinks.click(function (e, data) {
             e.preventDefault();
@@ -47,11 +53,35 @@
                 animLock = false;
             });
         });
+        $(window).scroll(function () {
+            var offset = $(window).scrollTop();
+
+            var index = sectionOffsets.findIndex(function (elem) {
+                return (offset + 50) < elem; //50px as a buffer
+            });
+            if (index >= 1) {
+                $sidebarLinks.removeClass("is-current").eq(index - 1).addClass("is-current");
+            } else {
+                $sidebarLinks.removeClass("is-current");
+            }
+        });
     }
 
+    //handle example tabs - prevent scrolling to hidden inputs, activate related content on click
+    function initTabs() {
+        $('label').click(function (e) {
+            e.preventDefault();
+            var forEl = $(this).attr('for');
+            $('#' + forEl).trigger('click');
+            $('.example__content[data-tab=' + forEl + ']').addClass('is-active').siblings().removeClass('is-active');
+        });
+    }
+
+    //initialize scripts
     $(document).ready(function () {
         stickySidebar();
         animateScroll();
+        initTabs();
     });
 
 })($);
