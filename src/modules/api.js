@@ -89,7 +89,7 @@ function produceUriParameters(resource) {
 
     _.forEach(ramlUriParameters, function(parameter) {
 
-        console.log("*", Object.keys( parameter ).length );
+        //console.log("*", Object.keys( parameter ).length );
 
         var description = parameter.description();
 
@@ -239,6 +239,7 @@ function produceResponseBody(method) {
     var schemaProperties = [];
 
     _.forEach(ramlResponses, function(response) {
+
         if (response.code().value() === '200' ) {
             ramlBodies = response.body();
 
@@ -287,9 +288,7 @@ function produceSchemaParameters(schemaContent) {
         thead: {
             name: true,
             type: false,
-            description: false,
-            example: false,
-            default: false
+            description: false
         },
         tbody:[]
     };
@@ -352,7 +351,7 @@ module.exports = function(ramlFile) {
     var api;
 
     try {
-        api = raml.loadApiSync(ramlFile);
+        api = raml.loadApiSync(ramlFile).expand(); //expand() fixed the problem with traits
     }
     catch(e) {
         console.log(chalk.red('provided file is not a correct RAML file!'));
@@ -365,7 +364,6 @@ module.exports = function(ramlFile) {
     ramlo.apiBaseUri = api.baseUri().value().replace('{version}', api.version());
     ramlo.apiDocumentations = produceDocumentations(api);
     ramlo.apiResources = produceResources(api);
-
 
     return ramlo;
 };
