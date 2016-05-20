@@ -2,6 +2,7 @@ var raml = require('raml-1-parser');
 var _ = require('lodash');
 var hljs = require('highlight.js');
 var chalk = require('chalk');
+var markdown = require('markdown').markdown;
 
 var ramlo = {};
 
@@ -51,12 +52,12 @@ function produceEndpoints(resource) {
     var ramlMethods = resource.methods();
 
     _.forEach(ramlMethods, function (method) {
-        var description = method.description();
+        var description = markdown.toHTML(method.description().value());
 
         endpoints.push({
             uri: resource.completeRelativeUri(),
             method: method.method(),
-            description: description && description.value(),
+            description: description,
             uriParameters: produceUriParameters(resource),
             queryParameters: produceQueryParameters(method),
             requestBody: produceRequestBody(method),

@@ -22,7 +22,7 @@ html(lang="en")
             - var globId = 0;
             .container-fluid
                 .row
-                    .col-md-3.sidebar
+                    .col-md-2.sidebar
                         section(class='resources sidebar-content')
                             h1(class='resources__header') Resources
                             ul(class='resources__list')
@@ -37,7 +37,7 @@ html(lang="en")
                                                     when 'put': span(class='label label-warning')= endpoint.method
                                                     when 'delete': span(class='label label-danger')= endpoint.method
                                                 a(href='#' + '#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')= endpoint.uri
-                    .col-md-9.col-md-offset-3
+                    .col-md-10.col-md-offset-2
                         each documentation in api.apiDocumentations
                             section(class='documentation')
                                 h1(class='documentation__header')= documentation.title
@@ -59,7 +59,7 @@ html(lang="en")
                                                     when 'delete': span(class='label label-danger')= endpoint.method
                                                 = endpoint.uri
 
-                                            p(class='documentation__endpoints__description')= endpoint.description
+                                            div(class='documentation__endpoints__description') !{endpoint.description}
 
                                             if endpoint.uriParameters && endpoint.uriParameters.length
                                                 table(class='documentation__parameters table')
