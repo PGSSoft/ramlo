@@ -349,6 +349,7 @@ function capitalizeFirstLetter(string) {
 
 module.exports = function(ramlFile) {
     var api;
+    var apiBaseUri = "";
 
     try {
         api = raml.loadApiSync(ramlFile).expand(); //expand() fixed the problem with traits
@@ -358,10 +359,17 @@ module.exports = function(ramlFile) {
         process.exit(1);
     }
 
+    try{
+        apiBaseUri = api.baseUri().value().replace('{version}', api.version());
+    }
+    catch(err){
+        console.log("BaseUri" + err);
+    }
+    
     ramlo.ramlVersion = api.RAMLVersion();
     ramlo.apiTitle = api.title();
     ramlo.apiDescription = produceDescription(api);
-    ramlo.apiBaseUri = api.baseUri().value().replace('{version}', api.version());
+    ramlo.apiBaseUri = apiBaseUri;
     ramlo.apiDocumentations = produceDocumentations(api);
     ramlo.apiResources = produceResources(api);
 
