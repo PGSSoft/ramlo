@@ -53,7 +53,7 @@ function produceEndpoints(resource) {
     var ramlMethods = resource.methods();
 
     _.forEach(ramlMethods, function (method) {
-        var description = markdown.toHTML(method.description().value());
+        var description = method.description() && markdown.toHTML(method.description().value());
 
         endpoints.push({
             uri: resource.completeRelativeUri(),
@@ -82,7 +82,7 @@ function produceUriParameters(resource) {
         thead: {
             name: false,
             type: false,
-            description: false,
+            description: false
         },
         tbody: []
     };
