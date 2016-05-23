@@ -39,7 +39,7 @@ html(lang="en")
                                                 a(href='#' + '#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')= endpoint.uri
                     .col-md-10.col-md-offset-2
                         each documentation in api.apiDocumentations
-                            section(class='documentation')
+                            section(class='documentation row')
                                 h1(class='documentation__header')= documentation.title
                                 p(class='documentation__content')= documentation.content
 
