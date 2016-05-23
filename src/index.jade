@@ -61,167 +61,175 @@ html(lang="en")
 
                                             div(class='documentation__endpoints__description') !{endpoint.description}
 
-                                        .row.documentation__endpoints__container
-                                            .col-md-8.documentation__endpoints__left
-                                                if endpoint.uriParameters && endpoint.uriParameters["tbody"]
-                                                    if endpoint.uriParameters["tbody"].length
+                                            if endpoint.uriParameters && endpoint.uriParameters["tbody"]
+                                                if endpoint.uriParameters["tbody"].length
 
-                                                        table(class='documentation__parameters table')
-                                                            thead
+                                                    table(class='documentation__parameters table')
+                                                        thead
+                                                            tr
+                                                                if endpoint.uriParameters.thead.name
+                                                                    th name
+
+                                                                if endpoint.uriParameters.thead.type
+                                                                    th type
+
+                                                                if endpoint.uriParameters.thead.description
+                                                                    th description
+                                                        tbody
+                                                            each parameter in endpoint.uriParameters["tbody"]
                                                                 tr
                                                                     if endpoint.uriParameters.thead.name
-                                                                        th name
+                                                                        td= parameter.name
 
                                                                     if endpoint.uriParameters.thead.type
-                                                                        th type
+                                                                        td= parameter.type
 
                                                                     if endpoint.uriParameters.thead.description
-                                                                        th description
-                                                            tbody
-                                                                each parameter in endpoint.uriParameters["tbody"]
-                                                                    tr
-                                                                        if endpoint.uriParameters.thead.name
-                                                                            td= parameter.name
+                                                                        td= parameter.description
 
-                                                                        if endpoint.uriParameters.thead.type
-                                                                            td= parameter.type
+                                            if endpoint.queryParameters && endpoint.queryParameters["tbody"]
+                                                if endpoint.queryParameters["tbody"].length
+                                                    h2(class='documentation__subheader') Query Parameters
+                                                    table(class='documentation__parameters table')
+                                                        thead
+                                                            tr
+                                                                if endpoint.queryParameters.thead.name
+                                                                    th name
 
-                                                                        if endpoint.uriParameters.thead.description
-                                                                            td= parameter.description
+                                                                if endpoint.queryParameters.thead.type
+                                                                    th type
 
-                                                if endpoint.queryParameters && endpoint.queryParameters["tbody"]
-                                                    if endpoint.queryParameters["tbody"].length
-                                                        h2(class='documentation__subheader') Query Parameters
-                                                        table(class='documentation__parameters table')
-                                                            thead
+                                                                if endpoint.queryParameters.thead.description
+                                                                    th description
+
+                                                                if endpoint.queryParameters.thead.default
+                                                                    th default
+
+                                                                if endpoint.queryParameters.thead.minLength
+                                                                    th min
+
+                                                                if endpoint.queryParameters.thead.maxLength
+                                                                    th max
+
+                                                                if endpoint.queryParameters.thead.example
+                                                                    th example
+                                                        tbody
+                                                            each parameter in endpoint.queryParameters["tbody"]
                                                                 tr
                                                                     if endpoint.queryParameters.thead.name
-                                                                        th name
+                                                                        td= parameter.name
+                                                                        if parameter.isRequired
+                                                                            span(class='text-primary') *
 
                                                                     if endpoint.queryParameters.thead.type
-                                                                        th type
+                                                                        if parameter.repeat
+                                                                            td [ #{parameter.type} ]
+                                                                        else
+                                                                            td #{parameter.type}
 
                                                                     if endpoint.queryParameters.thead.description
-                                                                        th description
+                                                                        td= parameter.description
 
                                                                     if endpoint.queryParameters.thead.default
-                                                                        th default
+                                                                        td= parameter.default
 
                                                                     if endpoint.queryParameters.thead.minLength
-                                                                        th min
+                                                                        td= parameter.minLength
 
                                                                     if endpoint.queryParameters.thead.maxLength
-                                                                        th max
+                                                                        td= parameter.maxLength
 
                                                                     if endpoint.queryParameters.thead.example
-                                                                        th example
-                                                            tbody
-                                                                each parameter in endpoint.queryParameters["tbody"]
-                                                                    tr
-                                                                        if endpoint.queryParameters.thead.name
-                                                                            td= parameter.name
-                                                                                if parameter.isRequired
-                                                                                    span(class='text-primary') *
+                                                                        td= parameter.example
 
-                                                                        if endpoint.queryParameters.thead.type
-                                                                            if parameter.repeat
-                                                                                td [ #{parameter.type} ]
-                                                                            else
-                                                                                td #{parameter.type}
+                                            if endpoint.requestBody && endpoint.requestBody["tbody"]
+                                                if endpoint.requestBody["tbody"].length
+                                                    h2(class='documentation__subheader') Request
+                                                    table(class='documentation__parameters table')
+                                                        thead
+                                                            tr
+                                                                if endpoint.requestBody.thead.name
+                                                                    th name
 
-                                                                        if endpoint.queryParameters.thead.description
-                                                                            td= parameter.description
+                                                                if endpoint.requestBody.thead.type
+                                                                    th type
 
-                                                                        if endpoint.queryParameters.thead.default
-                                                                            td= parameter.default
-
-                                                                        if endpoint.queryParameters.thead.minLength
-                                                                            td= parameter.minLength
-
-                                                                        if endpoint.queryParameters.thead.maxLength
-                                                                            td= parameter.maxLength
-
-                                                                        if endpoint.queryParameters.thead.example
-                                                                            td= parameter.example
-
-                                                if endpoint.requestBody && endpoint.requestBody["tbody"]
-                                                    if endpoint.requestBody["tbody"].length
-                                                        h2(class='documentation__subheader') Request
-                                                        table(class='documentation__parameters table')
-                                                            thead
+                                                                if endpoint.requestBody.thead.description
+                                                                    th description
+                                                        tbody
+                                                            each property in endpoint.requestBody.tbody
                                                                 tr
                                                                     if endpoint.requestBody.thead.name
-                                                                        th name
+                                                                        td= property.name
+                                                                        if property.isRequired
+                                                                            span(class='text-primary') *
 
                                                                     if endpoint.requestBody.thead.type
-                                                                        th type
+                                                                        td= property.type
 
                                                                     if endpoint.requestBody.thead.description
-                                                                        th description
-                                                            tbody
-                                                                each property in endpoint.requestBody.tbody
-                                                                    tr
-                                                                        if endpoint.requestBody.thead.name
-                                                                            td= property.name
-                                                                                if property.isRequired
-                                                                                    span(class='text-primary') *
+                                                                        td= property.description
 
-                                                                        if endpoint.requestBody.thead.type
-                                                                            td= property.type
+                                            if endpoint.responseBody && endpoint.responseBody["tbody"]
+                                                if endpoint.responseBody["tbody"].length
+                                                    h2(class='documentation__subheader')= 'Response '
+                                                    span(class='text-success') (200)
+                                                    table(class='documentation__parameters table')
+                                                        thead
+                                                            tr
+                                                                if endpoint.responseBody.thead.name
+                                                                    th name
 
-                                                                        if endpoint.requestBody.thead.description
-                                                                            td= property.description
+                                                                if endpoint.responseBody.thead.type
+                                                                    th type
 
-                                                if endpoint.responseBody && endpoint.responseBody["tbody"]
-                                                    if endpoint.responseBody["tbody"].length
-                                                        h2(class='documentation__subheader')= 'Response '
-                                                            span(class='text-success') (200)
-                                                        table(class='documentation__parameters table')
-                                                            thead
+                                                                if endpoint.responseBody.thead.description
+                                                                    th description
+                                                        tbody
+                                                            each property in endpoint.responseBody.tbody
                                                                 tr
                                                                     if endpoint.responseBody.thead.name
-                                                                        th name
+                                                                        td= property.name
+                                                                        if property.isRequired
+                                                                            span(class='text-primary') *
 
                                                                     if endpoint.responseBody.thead.type
-                                                                        th type
+                                                                        td= property.type
 
                                                                     if endpoint.responseBody.thead.description
-                                                                        th description
-                                                            tbody
-                                                                each property in endpoint.responseBody.tbody
-                                                                    tr
-                                                                        if endpoint.responseBody.thead.name
-                                                                            td= property.name
-                                                                                if property.isRequired
-                                                                                    span(class='text-primary') *
+                                                                        td= property.description
 
-                                                                        if endpoint.responseBody.thead.type
-                                                                            td= property.type
+                                                                if property.nestedProperties.tbody
+                                                                    if property.nestedProperties.tbody.length
+                                                                        each nested in property.nestedProperties.tbody
+                                                                            tr(class='documentation__parameters__nested')
+                                                                                if endpoint.responseBody.thead.name
+                                                                                    td= nested.name
+                                                                                    if nested.isRequired
+                                                                                        span(class='text-primary') *
 
-                                                                        if endpoint.responseBody.thead.description
-                                                                            td= property.description
+                                                                                if property.nestedProperties.thead.type
+                                                                                    td= nested.type
 
-                                                                    if property.nestedProperties.tbody
-                                                                        if property.nestedProperties.tbody.length
-                                                                            each nested in property.nestedProperties.tbody
-                                                                                tr(class='documentation__parameters__nested')
-                                                                                    if endpoint.responseBody.thead.name
-                                                                                        td= nested.name
-                                                                                            if nested.isRequired
-                                                                                                span(class='text-primary') *
+                                                                                if property.nestedProperties.thead.description
+                                                                                    td= nested.description
 
-                                                                                    if property.nestedProperties.thead.type
-                                                                                        td= nested.type
+                                        .documentation__endpoints__examples
+                                            if endpoint.responseExample
+                                                h2(class='documentation__subheader')= ' Response examples '
+                                                ul.examples__tabs
+                                                    each example, index in endpoint.responseExample
+                                                        li.example__tab
+                                                            - var check = index === 0;
+                                                            input(class='text-success' type='radio' name='example-tabs#{globId}' id='example-tab#{globId + index}' checked=check)
+                                                            label(for='example-tab#{globId + index}') (#{example.code})
+                                                ul.examples__contents
+                                                    each example, index in endpoint.responseExample
+                                                        - var check = index === 0;
+                                                        pre.example__content(class=check ? "is-active" : "" id='example-content#{globId + index}' data-tab='example-tab#{globId + index}')
+                                                            code !{example.response}
+                                                - globId += endpoint.responseExample.length;
 
-                                                                                    if property.nestedProperties.thead.description
-                                                                                        td= nested.description
-
-                                            .col-md-4.documentation__endpoints__right
-                                                if endpoint.responseExample
-                                                    h2(class='documentation__subheader')= 'Example '
-                                                        span(class='text-success') (200)
-                                                    pre
-                                                        code !{endpoint.responseExample}
         footer(class='footer')
             .container-fluid
                 p(class='footer__text') powered by
