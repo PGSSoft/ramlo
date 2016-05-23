@@ -1,0 +1,99 @@
+.example__tab {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+$background: #9b59b6;
+$tabs-base-color: #555;
+.examples__tabs {
+    float: none;
+    list-style: none;
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    margin: 20px 0 0 10px;
+    text-align: left;
+    transition: all 0.5s;
+    * {
+        box-sizing: border-box;
+    }
+    li {
+        float: left;
+        display: block;
+        transition: all 0.5s;
+    }
+    input[type="radio"] {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    label {
+        display: block;
+        width: 90px;
+        padding: 12px 16px;
+        border-radius: 2px 2px 0 0;
+        margin-bottom: 0;
+        font-size: 1em;
+        font-weight: normal;
+        text-transform: uppercase;
+        text-align: center;
+        background: $tabs-base-color;
+        cursor: pointer;
+        position: relative;
+        @include transition(all 0.2s ease-in-out);
+        &:hover {
+            background: darken($tabs-base-color, 10);
+        }
+    }
+
+    //The Magic
+    input[id^="example-tab"]:checked + label {
+        background: darken($tabs-base-color, 15);
+        padding: 10px 16px;
+        border: 2px solid $brand-primary;
+    }
+
+}
+
+.examples__contents {
+    list-style: none;
+    margin: 0 0 0 10px;
+    padding: 0;
+}
+
+.example__content {
+    box-sizing: border-box;
+    z-index: 2;
+    display: inline-block;
+    opacity: 0;
+    overflow: visible;
+    width: 0;
+    padding: 10px 0;
+    position: relative;
+    left: 0;
+    vertical-align: top;
+    //background: darken($tabs-base-color, 15);
+    transition: all 0.5s;
+    &.is-active {
+        opacity: 1;
+    }
+}
+
+p.link {
+    clear: both;
+    margin: 380px 0 0 15px;
+    a {
+        text-transform: uppercase;
+        text-decoration: none;
+        display: inline-block;
+        color: #fff;
+        padding: 5px 10px;
+        margin: 0 5px;
+        background-color: darken($tabs-base-color, 15);
+        @include transition(all 0.2s ease-in);
+        &:hover {
+            background-color: darken($tabs-base-color, 20);
+        }
+    }
+}

@@ -36,7 +36,7 @@ if (program.file) {
 
     // convert RAML to API object
     var ramlApi = api(ramlFile);
-    
+
     // compile sass styles
     var scss = sass.renderSync({
         file: path.join(__dirname, 'src/main.scss'),

@@ -264,22 +264,34 @@ function produceResponseBody(method) {
 }
 
 function produceResponseExample(method) {
-    var apiExample = '';
+    var apiExample = {};
+    var apiExamples = [];
     var ramlResponses = method.responses();
     var ramlBodies;
 
-    _.forEach(ramlResponses, function(response) {
-        if (response.code().value() === '200') {
+    _.forEach(ramlResponses, function (response) {
+        if (response.code().value() !== undefined) {
             ramlBodies = response.body();
 
-            _.forEach(ramlBodies, function(body) {
-                apiExample = body.toJSON().example;
-                apiExample = apiExample && hljs.highlight('json', apiExample).value;
+            _.forEach(ramlBodies, function (body) {
+                apiExample = {
+                    response: body.toJSON().example,
+                    code: response.code().value()
+                };
+                if (apiExample.response !== undefined) {
+                    apiExample.response = apiExample.response && hljs.highlight('json', apiExample.response).value;
+                    apiExamples = apiExamples.concat(apiExample);
+                }
             });
         }
     });
 
-    return apiExample;
+    if (apiExamples.length === 0) {
+        return undefined;
+    }
+    else {
+        return apiExamples;
+    }
 }
 
 function produceSchemaParameters(schemaContent) {
