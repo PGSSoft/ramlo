@@ -17,6 +17,11 @@ pre, code {
     color: $gray;
     font-size: $font-size-xs;
     overflow: hidden;
+    //white-space: pre-wrap; /* css-3 */
+    //white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    ////white-space: -pre-wrap;      /* Opera 4-6 */
+    //white-space: -o-pre-wrap; /* Opera 7 */
+    //word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
 .header {
@@ -113,6 +118,13 @@ pre, code {
 
     li {
         margin: $spacer / 2 0 $spacer;
+    }
+}
+
+.resources__resource {
+    cursor: pointer;
+    &:active, &:focus {
+        outline: none;
     }
 }
 

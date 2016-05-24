@@ -58,8 +58,10 @@ $tabs-base-color: #555;
 
 .examples__contents {
     list-style: none;
-    margin: 0 0 0 10px;
-    padding: 0;
+    margin: 0;
+    padding: 0 0 0 10px;
+    width: 100%;
+    overflow: hidden;
 }
 
 .example__content {
@@ -74,9 +76,44 @@ $tabs-base-color: #555;
     left: 0;
     vertical-align: top;
     //background: darken($tabs-base-color, 15);
-    transition: all 0.5s;
+    transition: opacity 0.5s;
     &.is-active {
         opacity: 1;
+        width: 100%;
+    }
+
+    .example__response {
+        max-height: 400px;
+        //overflow: hidden;
+        padding-bottom: 30px;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 1px 0 3px $gray-light;
+            background: $scrollbar-custom-track;
+            border-radius: 0;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            width: 6px;
+            position: relative;
+            left: 1px;
+            border-radius: 1px;
+            -webkit-box-shadow: none;
+            background: $scrollbar-custom-thumb;
+        }
+        &:hover {
+            //cursor: pointer;
+        }
+
+        span {
+            //word-break: break-all;
+        }
     }
 }
 

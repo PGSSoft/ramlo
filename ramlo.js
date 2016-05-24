@@ -7,6 +7,7 @@ var program = require('commander');
 var chalk = require('chalk');
 var sass = require('node-sass');
 var jade = require('jade');
+var uglify = require('uglify-js');
 
 var pkg = require(path.join(__dirname, 'package.json'));
 var api = require('./src/modules/api');
@@ -29,14 +30,14 @@ if (program.file) {
     try {
         fs.statSync(ramlFile);
     }
-    catch(e) {
+    catch (e) {
         console.log(chalk.red('provided file does not exist!'));
         process.exit(1);
     }
 
     // convert RAML to API object
     var ramlApi = api(ramlFile);
-    
+
     // compile sass styles
     var scss = sass.renderSync({
         file: path.join(__dirname, 'src/main.scss'),
@@ -45,11 +46,15 @@ if (program.file) {
         sourceMap: false
     });
 
+    var minjs = uglify.minify(path.join(__dirname, 'src/index.js'));
+
     // save css file which will be included in html file
     fs.writeFileSync(path.join(__dirname, 'src/main.css'), scss.css);
 
+    fs.writeFileSync(path.join(__dirname, 'src/index.min.js'), minjs.code);
+
     // render html from jade template
-    var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), { api: ramlApi, helpers: helpers });
+    var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), {api: ramlApi, helpers: helpers});
 
     // save html file with documentation
     fs.writeFileSync(path.resolve(process.cwd(), docFile), html);

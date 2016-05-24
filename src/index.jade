@@ -11,7 +11,7 @@ html(lang="en")
             include main.css
         script(src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous")
         script(type="text/javascript")
-            include index.js
+            include index.min.js
     body
         header(class='header')
             .container-fluid
@@ -27,17 +27,18 @@ html(lang="en")
                             h1(class='resources__header') Resources
                             ul(class='resources__list')
                                 each resource in api.apiResources
-                                    li= resource.name
-                                    ul(class='resources__list__endpoints')
-                                        each endpoint in resource.endpoints
-                                            li
-                                                case endpoint.method
-                                                    when 'get': span(class='label label-primary')= endpoint.method
-                                                    when 'post': span(class='label label-success')= endpoint.method
-                                                    when 'put': span(class='label label-warning')= endpoint.method
-                                                    when 'delete': span(class='label label-danger')= endpoint.method
-                                                    when 'patch': span(class='label label-warning')= endpoint.method
-                                                a(href='#' + '#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')= endpoint.uri
+                                    details
+                                        summary.resources__resource= resource.name
+                                        ul(class='resources__list__endpoints')
+                                            each endpoint in resource.endpoints
+                                                li
+                                                    case endpoint.method
+                                                        when 'get': span(class='label label-primary')= endpoint.method
+                                                        when 'post': span(class='label label-success')= endpoint.method
+                                                        when 'put': span(class='label label-warning')= endpoint.method
+                                                        when 'delete': span(class='label label-danger')= endpoint.method
+                                                        when 'patch': span(class='label label-warning')= endpoint.method
+                                                    a(href='#' + '#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')= endpoint.uri
                     .col-md-10.col-md-offset-2
                         each documentation in api.apiDocumentations
                             section(class='documentation row')
@@ -229,7 +230,7 @@ html(lang="en")
                                                     each example, index in endpoint.responseExample
                                                         - var check = index === 0;
                                                         pre.example__content(class=check ? "is-active" : "" id='example-content#{globId + index}' data-tab='example-tab#{globId + index}')
-                                                            code !{example.response}
+                                                            div.example__response !{example.response}
                                                 - globId += endpoint.responseExample.length;
 
         footer(class='footer')
