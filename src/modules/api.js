@@ -21,7 +21,7 @@ function produceDocumentations(api) {
 
         apiDocumentations.push({
             title: documentation.title(),
-            content: content && content.value()
+            content: content && markdown.toHTML(content.value())
         });
     });
 
@@ -109,7 +109,7 @@ function produceUriParameters(resource) {
         apiUriParameters["tbody"].push({
             name: parameter.name(),
             type: parameter.type(),
-            description: description && description.value()
+            description: description && markdown.toHTML(description.value())
         });
     });
 
@@ -188,7 +188,7 @@ function produceQueryParameters(method) {
             name: parameter.name(),
             type: parameter.type(),
             isRequired: parameter.required(),
-            description: description && description.value(),
+            description: description && markdown.toHTML(description.value()),
             example: parameter.example(),
             default: parameter.default(),
             minLength: minLength,

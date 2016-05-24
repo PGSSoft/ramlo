@@ -36,12 +36,13 @@ html(lang="en")
                                                     when 'post': span(class='label label-success')= endpoint.method
                                                     when 'put': span(class='label label-warning')= endpoint.method
                                                     when 'delete': span(class='label label-danger')= endpoint.method
+                                                    when 'patch': span(class='label label-warning')= endpoint.method
                                                 a(href='#' + '#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')= endpoint.uri
                     .col-md-10.col-md-offset-2
                         each documentation in api.apiDocumentations
                             section(class='documentation row')
                                 h1(class='documentation__header')= documentation.title
-                                p(class='documentation__content')= documentation.content
+                                div(class='documentation__content') !{documentation.content}
 
                         each resource in api.apiResources
                             section(class='documentation row')
@@ -57,6 +58,7 @@ html(lang="en")
                                                     when 'post': span(class='label label-success')= endpoint.method
                                                     when 'put': span(class='label label-warning')= endpoint.method
                                                     when 'delete': span(class='label label-danger')= endpoint.method
+                                                    when 'patch': span(class='label label-warning')= endpoint.method
                                                 = endpoint.uri
 
                                             div(class='documentation__endpoints__description') !{endpoint.description}
@@ -85,7 +87,7 @@ html(lang="en")
                                                                         td= parameter.type
 
                                                                     if endpoint.uriParameters.thead.description
-                                                                        td= parameter.description
+                                                                        td !{parameter.description}
 
                                             if endpoint.queryParameters && endpoint.queryParameters["tbody"]
                                                 if endpoint.queryParameters["tbody"].length
@@ -128,7 +130,7 @@ html(lang="en")
                                                                             td #{parameter.type}
 
                                                                     if endpoint.queryParameters.thead.description
-                                                                        td= parameter.description
+                                                                        td !{parameter.description}
 
                                                                     if endpoint.queryParameters.thead.default
                                                                         td= parameter.default
