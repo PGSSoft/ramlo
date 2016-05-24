@@ -46,7 +46,7 @@ html(lang="en")
                         each resource in api.apiResources
                             section(class='documentation row')
                                 h1(class='documentation__header')= resource.name
-
+                                div(class='documentation__description')= resource.description
                                 each endpoint in resource.endpoints
                                     div(class='documentation__endpoints')
                                         a(name='#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')
