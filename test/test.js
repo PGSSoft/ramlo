@@ -4,26 +4,35 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var fs     = require('fs');
 
-var test1 = "test/_test1.raml";
+var test1 = "test/test1/api.raml";
 
 //make sure the path of the file is correct before running the test
 
 if (fs.existsSync( test1 )) {
 
-    describe('Array', function() {
-        describe('#indexOf()', function () {
-            it('should return -1 when the value is not present', function () {
-                assert.equal(-1, [1,2,3].indexOf(5));
-                assert.equal(-1, [1,2,3].indexOf(0));
-            });
-        });
+    describe('Ramlo', function() {
 
         describe('load raml', function () {
 
             var rm = ramlo( test1 );
 
-            it("should pass", function(){
-                expect(rm).to.not.equal(null);
+            console.log(rm );
+
+            it("should return an object", function(){
+                expect(typeof rm).to.equal('object');
+            });
+
+            it("title should be PetShop", function(){
+                expect(rm.apiTitle).to.equal("PetShop");
+            });
+
+
+            it("apiDescription", function(){
+                expect(rm.apiDescription).to.equal(null);
+            });
+
+            it("apiDocumentations should be array", function(){
+                expect( Object.prototype.toString.call( rm.apiDocumentations ) ).to.equal("[object Array]");
             });
 
         });
