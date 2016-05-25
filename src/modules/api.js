@@ -49,7 +49,6 @@ function produceResources(api) {
         });
     });
 
-
     return apiResources;
 }
 
@@ -351,7 +350,7 @@ function produceSchemaParameters(schemaContent) {
         }
     }
     catch (err) {
-        console.log(err, schemaContent);
+        //console.log(err, schemaContent);
         console.log("////////////////////////////////////////////////////");
     }
 
@@ -371,6 +370,7 @@ module.exports = function (ramlFile) {
     }
     catch (e) {
         console.log(chalk.red('provided file is not a correct RAML file!'));
+        
         process.exit(1);
     }
 
@@ -381,12 +381,12 @@ module.exports = function (ramlFile) {
         console.log("BaseUri" + err);
     }
 
-    ramlo.ramlVersion = api.RAMLVersion();
-    ramlo.apiTitle = api.title();
-    ramlo.apiDescription = produceDescription(api);
-    ramlo.apiBaseUri = apiBaseUri;
+    ramlo.ramlVersion       = api.RAMLVersion();
+    ramlo.apiTitle          = api.title();
+    ramlo.apiDescription    = produceDescription(api);
+    ramlo.apiBaseUri        = apiBaseUri;
     ramlo.apiDocumentations = produceDocumentations(api);
-    ramlo.apiResources = produceResources(api);
+    ramlo.apiResources      = produceResources(api);
 
     return ramlo;
 };
