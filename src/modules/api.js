@@ -30,7 +30,7 @@ function produceDocumentations(api) {
 
 function produceResources(api) {
     var apiResources = [];
-    var ramlResources = api.resources();
+    var ramlResources = api.allResources();
 
     _.forEach(ramlResources, function (resource) {
         var uri = resource.completeRelativeUri();
@@ -49,8 +49,9 @@ function produceResources(api) {
         });
     });
 
-    return apiResources;
+    return  apiResources;
 }
+
 
 function produceEndpoints(resource) {
     var endpoints = [];
@@ -60,9 +61,12 @@ function produceEndpoints(resource) {
     _.forEach(ramlMethods, function (method) {
         var description = method.description() && markdown.toHTML(method.description().value());
 
+        var securedBy =  method.securedBy() || "";
+
         endpoints.push({
             uri: resource.completeRelativeUri(),
             method: method.method(),
+            securedBy : securedBy,
             description: description,
             uriParameters: produceUriParameters(resource),
             queryParameters: produceQueryParameters(method),
@@ -70,6 +74,7 @@ function produceEndpoints(resource) {
             responseBody: produceResponseBody(method),
             responseExample: produceResponseExample(method)
         });
+
     });
 
     if (ramlNestedResources.length) {
@@ -361,6 +366,33 @@ function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
 
+function produceSecuredBy(api) {
+    var securedBy = api.securedBy() || "";
+    //console.log(typeof securedBy);
+    //console.log( securedBy);
+    return securedBy;
+}
+
+function produceProtocols(api) {
+
+    var protocols   = " ";
+    var protArr     = [];
+    try {
+        protocols = api.protocols();
+
+        _.forEach(protocols, function (p) {
+            protArr.push( p );
+        });
+
+        protocols = "Protocols: " + protArr.join(", ");
+
+    }
+    catch (err) {
+        console.log( err );
+    }
+    return protocols;
+}
+
 module.exports = function (ramlFile) {
     var api;
     var apiBaseUri = "";
@@ -370,7 +402,7 @@ module.exports = function (ramlFile) {
     }
     catch (e) {
         console.log(chalk.red('provided file is not a correct RAML file!'));
-        
+
         process.exit(1);
     }
 
@@ -381,9 +413,22 @@ module.exports = function (ramlFile) {
         console.log("BaseUri" + err);
     }
 
+    /*
+    testing annotations from example of parser but not working
+
+    api.annotationTypes().forEach(function(aType){
+        //see "Supertypes and Subtypes" section of the "Types" chapter
+        //for "printHierarchyAndProperties" definition
+        printHierarchyAndProperties(aType.runtimeDefinition());
+        console.log();
+    });
+    */
+
     ramlo.ramlVersion       = api.RAMLVersion();
     ramlo.apiTitle          = api.title();
+    ramlo.apiProtocol       = produceProtocols(api);
     ramlo.apiDescription    = produceDescription(api);
+    ramlo.apiSecuredBy      = produceSecuredBy(api);
     ramlo.apiBaseUri        = apiBaseUri;
     ramlo.apiDocumentations = produceDocumentations(api);
     ramlo.apiResources      = produceResources(api);
