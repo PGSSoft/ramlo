@@ -35,14 +35,19 @@ function produceResources(api) {
     _.forEach(ramlResources, function (resource) {
         var uri = resource.completeRelativeUri();
         var name = resource.displayName() || capitalizeFirstLetter(uri.replace('/', ''));
+        var description = "";
+
+        if(resource.description()){
+            description = resource.description().value();
+        }
 
         apiResources.push({
             uri: uri,
             name: name,
+            description: description,
             endpoints: _.flattenDeep(produceEndpoints(resource))
         });
     });
-
 
     return apiResources;
 }
@@ -345,8 +350,8 @@ function produceSchemaParameters(schemaContent) {
         }
     }
     catch (err) {
-        console.log(err, schemaContent);
-        console.log("////////////////////////////////////////////////////");
+        //console.log(err, schemaContent);
+        //console.log("////////////////////////////////////////////////////");
     }
 
     return schemaProperties;

@@ -149,12 +149,12 @@ pre, code {
         text-decoration: none;
         font-size: 0.875rem;
         transition: all 0.2s linear;
-
         word-break: break-all;
 
         &:hover, &:focus {
             text-decoration: underline;
         }
+
         //&:active {
         //    text-decoration: none;
         //}
