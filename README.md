@@ -11,7 +11,7 @@ Command line tool based on Node.js for generating RESTful API documentations wri
 
 It supports both RAML [0.8](http://raml.org/raml-08-spec) and [1.0](http://raml.org/raml-10-spec).
 
-First tests performed on Node.js 5.8.0 and RAML 0.8 (see [Example](#example) section).
+First tests performed on Node.js 4.4.5 LTS & 5.8.0 and RAML 0.8 (see [Example](#example) section).
 
 ## Instalation
 ```
@@ -44,4 +44,24 @@ osprey-mock-service -f api.raml -p 8000
 :boom: Unfortunately Osprey Mock Service does not support RAML 1.0, only RAML 0.8.
 
 ## License
-MIT
+The MIT License (MIT)
+
+Copyright (c) 2015 PGS Software
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
