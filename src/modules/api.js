@@ -76,10 +76,10 @@ function produceEndpoints(resource) {
             });
         }
         catch(err){
-            console.log("ERROR ANNOTATIONS: " + err);
+            //console.log("ERROR ANNOTATIONS: " + err);
         }
 
-        console.log( "securedBy " + securedBy );
+        //console.log( "securedBy " + securedBy );
 
         endpoints.push({
             uri: resource.completeRelativeUri(),
@@ -279,7 +279,7 @@ function produceResponseBody(method) {
                     var sp = produceSchemaParameters(sch);
 
                     if (sp["tbody"].length > 0) {
-                        schemaProperties.push(sp);
+                        schemaProperties = sp;
                     }
                 }
             });
@@ -305,8 +305,13 @@ function produceResponseExample(method) {
                     code: response.code().value()
                 };
                 if (apiExample.response !== undefined) {
-                    apiExample.response = apiExample.response && hljs.highlight('json', apiExample.response).value;
-                    apiExamples = apiExamples.concat(apiExample);
+                    try{
+                        apiExample.response = apiExample.response && hljs.highlight('json', apiExample.response).value;
+                        apiExamples = apiExamples.concat(apiExample);
+                    }
+                    catch(err){
+
+                    }
                 }
             });
         }
@@ -444,7 +449,7 @@ function produceSecuredBy(api) {
         });
     }
     catch (err){
-        console.log(err);
+        //console.log(err);
     }
     return securedBy;
 }
@@ -464,7 +469,7 @@ function produceProtocols(api) {
 
     }
     catch (err) {
-        console.log( err );
+        //console.log( err );
     }
     return protocols;
 }
