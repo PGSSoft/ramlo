@@ -5,11 +5,12 @@ var expect = require('chai').expect;
 var fs     = require('fs');
 
 var test1 = "test/test1/api.raml";
-var annotations = "test/annotations/api.raml"; // ? ERROR: the api goes in infinite loop
+var annotations = "test/annotations/api.raml"; // ? ERROR: strange infinite loop on test, but no crash on api
 var libraries = "test/libraries/api.raml"; //
 var overlays = "test/overlays/api.raml"; //working correctly
+var extended = "test/extended/api.raml"; // ? missing protocols, mediaType, securedBy
 
-var test = test1;
+var test = annotations;
 
 //make sure the path of the file is correct before running the test
 
@@ -84,7 +85,7 @@ console.log(rm);
                 });
 
                 for(var i in o.endpoints){
-                    console.log(o.endpoints[i]);
+                    //console.log(o.endpoints[i]);
                 }
             }
 

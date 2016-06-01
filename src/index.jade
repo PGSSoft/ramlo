@@ -15,7 +15,7 @@ html(lang="en")
     body
         header(class='header')
             .container-fluid
-                h1(class='header__title')= api.apiTitle
+                h1(class='header__title', title=api.apiProtocol )= api.apiTitle
                 p(class='header__subtitle')= api.apiDescription
                 span(class='header__uri text-primary #{api.apiDescription ? "pull-xs-right" : ""}')= api.apiBaseUri
         main
@@ -26,6 +26,8 @@ html(lang="en")
                         section(class='resources sidebar-content')
                             h1(class='resources__header') Resources
                             ul(class='resources__list')
+                                if Object.keys(api.apiSecuredBy).length > 0
+                                    li= "Authentication"
                                 each resource in api.apiResources
                                     details
                                         summary.resources__resource= resource.name
@@ -44,6 +46,11 @@ html(lang="en")
                             section(class='documentation row')
                                 h1(class='documentation__header')= documentation.title
                                 div(class='documentation__content') !{documentation.content}
+
+                        if Object.keys(api.apiSecuredBy).length > 0
+                            section(class='documentation row authentication')
+                                h1(class='documentation__header')= "Authentication - " + api.apiSecuredBy.type
+                                p(class='documentation__content')= api.apiSecuredBy.descripton
 
                         each resource in api.apiResources
                             section(class='documentation row')
