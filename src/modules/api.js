@@ -58,10 +58,28 @@ function produceEndpoints(resource) {
     var ramlNestedResources = resource.resources();
     var ramlMethods = resource.methods();
 
+
     _.forEach(ramlMethods, function (method) {
         var description = method.description() && markdown.toHTML(method.description().value());
 
         var securedBy =  method.securedBy() || "";
+
+        try{
+            method.annotations().forEach(function(aRef){
+
+                console.log("referenced annotation:");
+                //see "Supertypes and Subtypes" section of the "Types" chapter
+                //for "printHierarchyAndProperties" definition
+                //printHierarchyAndProperties(aRef.annotation().runtimeDefinition());
+                console.log("value:", JSON.stringify(aRef.structuredValue().toJSON(),null,2));
+                console.log();
+            });
+        }
+        catch(err){
+            console.log("ERROR ANNOTATIONS: " + err);
+        }
+
+        console.log( "securedBy " + securedBy );
 
         endpoints.push({
             uri: resource.completeRelativeUri(),
@@ -366,10 +384,68 @@ function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
 
+function produceAOTH2(val) {
+//work in progress
+    var db = val.describedBy();
+
+    var ramlResponses = db.responses();
+    var ramlBodies;
+    var schemaProperties = [];
+
+    _.forEach(ramlResponses, function (response) {
+
+        ramlBodies = response.body();
+        console.log( produceSchemaParameters(ramlBodies) );
+        _.forEach(ramlBodies, function (body) {
+
+            //check if NULL before calling produceSchemaParameters()
+            var sch = body.schemaContent();
+
+            if (sch != null && typeof sch != "undefined") {
+
+                var sp = produceSchemaParameters(sch);
+
+                if (sp["tbody"].length > 0) {
+                    schemaProperties.push(sp);
+                }
+            }
+        });
+
+    });
+    console.log(schemaProperties);
+}
+
 function produceSecuredBy(api) {
-    var securedBy = api.securedBy() || "";
-    //console.log(typeof securedBy);
-    //console.log( securedBy);
+
+    var securedBy =  {};
+
+    try{
+        securedBy = api.securedBy();
+
+        securedBy.name = securedBy[0].securitySchemeName();
+
+        var scsh = api.securitySchemes();
+
+        _.forOwn( scsh, function(val, key){
+
+            if(val.name() == securedBy.name){
+
+                securedBy.descripton = val.description().value();
+                securedBy.type       = val.type();
+
+                //console.log( securedBy.descripton );
+
+                if(securedBy.type == "OAuth 2.0"){
+                    //work in progress
+                    var auth2 = produceAOTH2(val);
+                }
+            }
+
+        });
+    }
+    catch (err){
+        console.log(err);
+    }
     return securedBy;
 }
 
@@ -413,22 +489,12 @@ module.exports = function (ramlFile) {
         console.log("BaseUri" + err);
     }
 
-    /*
-    testing annotations from example of parser but not working
-
-    api.annotationTypes().forEach(function(aType){
-        //see "Supertypes and Subtypes" section of the "Types" chapter
-        //for "printHierarchyAndProperties" definition
-        printHierarchyAndProperties(aType.runtimeDefinition());
-        console.log();
-    });
-    */
 
     ramlo.ramlVersion       = api.RAMLVersion();
     ramlo.apiTitle          = api.title();
     ramlo.apiProtocol       = produceProtocols(api);
     ramlo.apiDescription    = produceDescription(api);
-    ramlo.apiSecuredBy      = produceSecuredBy(api);
+    ramlo.apiSecuredBy      = produceSecuredBy(api); //work in progress
     ramlo.apiBaseUri        = apiBaseUri;
     ramlo.apiDocumentations = produceDocumentations(api);
     ramlo.apiResources      = produceResources(api);

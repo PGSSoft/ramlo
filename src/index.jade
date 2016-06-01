@@ -19,6 +19,7 @@ html(lang="en")
                 p(class='header__subtitle')= api.apiDescription
                 span(class='header__uri text-primary #{api.apiDescription ? "pull-xs-right" : ""}')= api.apiBaseUri
         main
+            p= JSON.stringify({ foo: "sample", bar: "sample" }, null, 4)
             - var globId = 0;
             .container-fluid
                 .row
@@ -26,6 +27,8 @@ html(lang="en")
                         section(class='resources sidebar-content')
                             h1(class='resources__header') Resources
                             ul(class='resources__list')
+                                if Object.keys(api.apiSecuredBy).length > 0
+                                    li= "Authentication"
                                 each resource in api.apiResources
                                     li= resource.name
                                     ul(class='resources__list__endpoints')
@@ -42,6 +45,11 @@ html(lang="en")
                             section(class='documentation')
                                 h1(class='documentation__header')= documentation.title
                                 p(class='documentation__content')= documentation.content
+
+                        if Object.keys(api.apiSecuredBy).length > 0
+                            section(class='documentation row authentication')
+                                h1(class='documentation__header')= "Authentication - " + api.apiSecuredBy.type
+                                p(class='documentation__content')= api.apiSecuredBy.descripton
 
                         each resource in api.apiResources
                             section(class='documentation row')
