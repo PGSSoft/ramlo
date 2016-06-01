@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import "styles/theme";
+@import "styles/mixins";
 @import "styles/bootstrap";
 @import "styles/theme-components";
+@import "styles/examples";
 
 body {
     font-family: "Open Sans", sans-serif;
@@ -15,6 +17,11 @@ pre, code {
     color: $gray;
     font-size: $font-size-xs;
     overflow: hidden;
+    //white-space: pre-wrap; /* css-3 */
+    //white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    ////white-space: -pre-wrap;      /* Opera 4-6 */
+    //white-space: -o-pre-wrap; /* Opera 7 */
+    //word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
 .header {
@@ -28,10 +35,69 @@ pre, code {
 }
 
 .header__subtitle {
-    margin: 0;
+    margin: 0 0 $spacer;
     padding: $spacer / 2 0 $spacer;
     color: $gray;
     border-bottom: 1px solid $gray-lighter;
+}
+
+.header__uri {
+    padding: 0 10px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 2;
+    background-color: $gray-lighter;
+}
+
+.sidebar {
+    position: relative;
+    transition: all 0.3s linear;
+    $root: &;
+    &-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 20px 15px 0;
+
+        //customizing the sidebar scrollbar
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 1px 0 3px $gray-light;
+            background: $scrollbar-custom-track;
+            border-radius: 0;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            width: 6px;
+            position: relative;
+            left: 1px;
+            border-radius: 1px;
+            -webkit-box-shadow: none;
+            background: $scrollbar-custom-thumb;
+        }
+
+    }
+    &.is-abs {
+        position: absolute;
+    }
+    &.is-fixed {
+        #{$root}-content {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            padding-right: 15px;
+            overflow-y: scroll;
+            width: 16.66667%;
+            min-width: 200px;
+
+            /*below mixin is an optional effect added to sidebar*/
+            //@include shrouded-element-fixed(16.66667%);
+
+        }
+    }
 }
 
 .resources {
@@ -48,9 +114,17 @@ pre, code {
 .resources__list {
     padding: 0;
     list-style: none;
+    margin-bottom: 2 * $spacer;
 
     li {
         margin: $spacer / 2 0 $spacer;
+    }
+}
+
+.resources__resource {
+    cursor: pointer;
+    &:active, &:focus {
+        outline: none;
     }
 }
 
@@ -73,38 +147,103 @@ pre, code {
     a {
         color: inherit;
         text-decoration: none;
+        font-size: 0.875rem;
+        transition: all 0.2s linear;
+
+        word-break: break-all;
 
         &:hover, &:focus {
             text-decoration: underline;
+        }
+        //&:active {
+        //    text-decoration: none;
+        //}
+
+        &.is-current {
+            font-weight: 700;
+            color: $pitch-black;
+            text-decoration: none;
         }
     }
 }
 
 .documentation {
-    margin: 0 0 $spacer * 4;
+    border-left: 1px solid $gray-light;
+
+    //border-top: 1px solid $gray-light;
+    &:first-of-type {
+        border-top: 1px solid $gray-light;
+
+    }
 }
 
 .documentation__header {
-    margin: 0 0 $spacer;
-    padding: 0 0 $spacer;
-    font-size: $font-size-h4;
+    position: relative;
+    margin: 0 0;
+    padding: 2*$spacer 10px 2*$spacer 20px;
+    font-size: $font-size-h2;
     font-weight: 700;
-    border-bottom: 1px solid $gray-lighter;
+    width: 60%;
 
     .text-muted {
         float: right;
         font-size: $font-size-sm;
     }
+
+    &:after {
+        @include empty-sidebar-right;
+    }
+}
+
+.documentation__content {
+    position: relative;
+    margin: 0 0;
+    padding: 2*$spacer 10px 2*$spacer 20px;
+    width: 60%;
+    display: inline-block;
+
+    &:after {
+        @include empty-sidebar-right;
+    }
 }
 
 .documentation__endpoints {
     padding: 0;
-    margin-bottom: $spacer * 2;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    $rootElem: &;
+    &:first-of-type {
+        #{$rootElem}__params {
+            border-top: 1px solid $gray-light;
+        }
+        #{$rootElem}__examples {
+            border-top: 1px solid $gray-middlescale;
+        }
+    }
 }
-
 
 .documentation__endpoints__container {
     position: relative;
+}
+
+.documentation__endpoints__params {
+    min-height: 100px;
+    width: 60%;
+    position: relative;
+    padding: $spacer * 2 10px $spacer * 2 20px;
+    border-bottom: 1px solid $gray-light;
+}
+
+.documentation__endpoints__examples {
+    min-height: 100px;
+    width: 40%;
+    padding: 0px 10px;
+    padding-top: $spacer * 2;
+    position: relative;
+    background-color: $gray-dark;
+    color: #fcfcfc;
+    border-bottom: 1px solid $gray-middlescale;
 }
 
 .documentation__endpoints__left {
@@ -136,7 +275,7 @@ pre, code {
 
 .documentation__endpoints__name {
     font-size: $font-size-lg;
-    margin-top: 3rem;
+    margin-top: 1rem;
 
     &:first-child {
         margin-top: 0;
@@ -150,9 +289,7 @@ pre, code {
 }
 
 .documentation__endpoints__description {
-    padding-bottom: $spacer-y;
-    color: $gray;
-    border-bottom: 1px solid $gray-lighter;
+    color: $gray-middlescale;
 }
 
 .documentation__subheader {

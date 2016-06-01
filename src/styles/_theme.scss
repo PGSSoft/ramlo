@@ -1,24 +1,29 @@
-$gray-dark:                 #000;
-$gray:                      #a8a8a8;
-$gray-light:                #d9d9d9;
-$gray-lighter:              #f0f0f0;
+$pitch-black: #000;
+$gray-dark: #333;
+$gray-middlescale: #777;
+$gray: #a8a8a8;
+$gray-light: #d9d9d9;
+$gray-lighter: #f0f0f0;
 
-$brand-primary:             #ff7726;
-$brand-success:             #00a561;
-$brand-info:                #5cb7f1;
-$brand-warning:             #ffb61a;
-$brand-danger:              #ff0000;
+$brand-primary: #ff7726;
+$brand-success: #00a561;
+$brand-info: #5cb7f1;
+$brand-warning: #ffb61a;
+$brand-danger: #ff0000;
 
-$link-color:                 $brand-primary;
-$link-decoration:            underline;
-$link-hover-color:           #d9621b;
-$link-hover-decoration:      underline;
+$link-color: $brand-primary;
+$link-decoration: underline;
+$link-hover-color: #d9621b;
+$link-hover-decoration: underline;
 
-$label-default-bg:            $gray;
-$label-primary-bg:            $brand-primary;
-$label-success-bg:            $brand-success;
-$label-info-bg:               $brand-info;
-$label-warning-bg:            $brand-info;
-$label-danger-bg:             $gray;
+$label-default-bg: $gray;
+$label-primary-bg: $brand-primary;
+$label-success-bg: $brand-success;
+$label-info-bg: $brand-info;
+$label-warning-bg: $brand-info;
+$label-danger-bg: $gray;
 
-$enable-rounded:             false;
+$scrollbar-custom-track: #f1f1f1;
+$scrollbar-custom-thumb: #c1c1c1;
+
+$enable-rounded: false;

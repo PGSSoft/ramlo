@@ -23,8 +23,10 @@
     "highlight.js": "^9.4.0",
     "jade": "^1.11.0",
     "lodash": "^4.13.1",
+    "markdown": "^0.5.0",
     "node-sass": "^3.7.0",
-    "raml-1-parser": "^0.2.21"
+    "raml-1-parser": "^0.2.21",
+    "uglify-js": "^2.6.2"
   },
   "preferGlobal": true,
   "bin": {
