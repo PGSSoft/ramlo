@@ -19,7 +19,6 @@ html(lang="en")
                 p(class='header__subtitle')= api.apiDescription
                 span(class='header__uri text-primary #{api.apiDescription ? "pull-xs-right" : ""}')= api.apiBaseUri
         main
-            p= JSON.stringify({ foo: "sample", bar: "sample" }, null, 4)
             - var globId = 0;
             .container-fluid
                 .row
