@@ -67,12 +67,12 @@ function produceEndpoints(resource) {
         try{
             method.annotations().forEach(function(aRef){
 
-                console.log("referenced annotation:");
+                //console.log("referenced annotation:");
                 //see "Supertypes and Subtypes" section of the "Types" chapter
                 //for "printHierarchyAndProperties" definition
                 //printHierarchyAndProperties(aRef.annotation().runtimeDefinition());
-                console.log("value:", JSON.stringify(aRef.structuredValue().toJSON(),null,2));
-                console.log();
+                //console.log("value:", JSON.stringify(aRef.structuredValue().toJSON(),null,2));
+                //console.log();
             });
         }
         catch(err){
@@ -330,6 +330,7 @@ function produceSchemaParameters(schemaContent) {
     var schemaProperties = {
         thead: {
             name: true,
+            required : false,
             type: false,
             description: false
         },
@@ -358,6 +359,13 @@ function produceSchemaParameters(schemaContent) {
                     nestedProperties = produceSchemaParameters(value);
                 }
 
+                if (_.has(value, 'required')) {
+                    //check if description exists
+                    if (schemaProperties.thead.description == false && value.description != null) {
+                        schemaProperties.thead.required = true;
+                    }
+                }
+
                 //check if description exists
                 if (schemaProperties.thead.description == false && value.description != null) {
                     schemaProperties.thead.description = true;
@@ -379,7 +387,7 @@ function produceSchemaParameters(schemaContent) {
     }
     catch (err) {
         //console.log(err, schemaContent);
-        console.log("////////////////////////////////////////////////////");
+        //console.log("////////////////////////////////////////////////////");
     }
 
     return schemaProperties;
@@ -400,7 +408,7 @@ function produceAOTH2(val) {
     _.forEach(ramlResponses, function (response) {
 
         ramlBodies = response.body();
-        console.log( produceSchemaParameters(ramlBodies) );
+        //console.log( produceSchemaParameters(ramlBodies) );
         _.forEach(ramlBodies, function (body) {
 
             //check if NULL before calling produceSchemaParameters()
@@ -411,13 +419,13 @@ function produceAOTH2(val) {
                 var sp = produceSchemaParameters(sch);
 
                 if (sp["tbody"].length > 0) {
-                    schemaProperties.push(sp);
+                    schemaProperties = sp;
                 }
             }
         });
 
     });
-    console.log(schemaProperties);
+    //console.log(schemaProperties);
 }
 
 function produceSecuredBy(api) {
