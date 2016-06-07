@@ -86,7 +86,7 @@ function produceAnnotations(method) {
         });
     }
     catch(err){
-        console.log("ERROR ANNOTATIONS: " + err);
+        //console.log("ERROR ANNOTATIONS: " + err);
     }
 
     return annotations;
@@ -444,13 +444,13 @@ function produceSecuredBy(api) {
 
                 secured = val.toJSON();
 
-                console.log(secured.describedBy.queryParameters.access_token);
+                //console.log(secured.describedBy.queryParameters.access_token);
             }
 
         });
     }
     catch (err){
-        console.log(err);
+        //console.log(err);
     }
     return secured;
 }
@@ -467,7 +467,6 @@ function produceProtocols(api) {
         });
 
         protocols = "Protocols: " + protArr.join(", ");
-
     }
     catch (err) {
         //console.log( err );
@@ -495,7 +494,7 @@ function produceBaseUriParameters(api) {
         });
     }
     catch (err){
-        console.log(err);
+        //console.log(err);
     }
     return baseUriParameters;
 }
@@ -566,9 +565,7 @@ module.exports = function (ramlFile) {
             console.log("  type:",aType.type());
         });
     }
-    catch(err){
-        
-    }
+    catch(err){}
     */
 
     ramlo.ramlVersion        = api.RAMLVersion();
