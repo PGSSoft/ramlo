@@ -18,6 +18,27 @@ html(lang="en")
                 h1(class='header__title', title=api.apiProtocol )= api.apiTitle
                 p(class='header__subtitle')= api.apiDescription
                 span(class='header__uri text-primary #{api.apiDescription ? "pull-xs-right" : ""}')= api.apiBaseUri
+                if api.baseUriParameters.length > 0
+                    div
+                        H4 Base Uri Parameters
+
+                        table(class='documentation__parameters table')
+                            thead
+                                tr
+                                    th name
+                                    th type
+                                    th repeat
+                                    th description
+                            tbody
+                                each parameter in api.baseUriParameters
+                                    tr
+                                        td= parameter.name
+                                            if parameter.required
+                                                span(class='text-primary') *
+                                        td= parameter.type
+                                        td= parameter.repeat
+                                        td= parameter.description
+
         main
             - var globId = 0;
             .container-fluid
@@ -49,6 +70,8 @@ html(lang="en")
                             section(class='documentation row authentication')
                                 h1(class='documentation__header')= "Authentication - " + api.apiSecuredBy.type
                                 p(class='documentation__content')= api.apiSecuredBy.descripton
+
+
 
                         each resource in api.apiResources
                             section(class='documentation row')
@@ -237,7 +260,134 @@ html(lang="en")
                                                             code !{example.response}
                                                 - globId += endpoint.responseExample.length;
 
-        footer(class='footer')
+                        if api.apiSecuritySchemes.length > 0
+                            div(class='securityScheme')
+                            each securityScheme in api.apiSecuritySchemes
+                                if securityScheme.type
+                                    h2(id=securityScheme.type)= securityScheme.type
+                                if securityScheme.description
+                                    p(class='description')= securityScheme.description
+
+                                if securityScheme.settings
+                                    h4 Settings
+                                    ul
+                                        if securityScheme.settings.requestTokenUri
+                                            li
+                                                span(class='setTitle')='requestTokenUri:'
+                                                span(class='setDesc')= securityScheme.settings.requestTokenUri
+
+                                        if securityScheme.settings.authorizationUri
+                                            li
+                                                span(class='setTitle')='authorizationUri:'
+                                                span(class='setDesc')= securityScheme.settings.authorizationUri
+
+                                        if securityScheme.settings.tokenCredentialsUri
+                                            li
+                                                span(class='setTitle')='tokenCredentialsUri:'
+                                                span(class='setDesc')= securityScheme.settings.tokenCredentialsUri
+
+                                        if securityScheme.settings.signatures
+                                            li
+                                                span(class='setTitle')='signatures:'
+                                                span(class='setDesc')= securityScheme.settings.signatures
+
+
+                                        if securityScheme.settings.accessTokenUri
+                                            li
+                                                span(class='setTitle')='accessTokenUri:'
+                                                span(class='setDesc')= securityScheme.settings.accessTokenUri
+
+                                        if securityScheme.settings.authorizationGrants
+                                            li
+                                                span(class='setTitle')='authorizationGrants:'
+                                                span(class='setDesc')= securityScheme.settings.authorizationGrants
+
+                                        if securityScheme.settings.scopes
+                                            li
+                                                span(class='setTitle')='scopes:'
+                                                span(class='setDesc')= securityScheme.settings.scopes
+
+
+                                if securityScheme.describedBy
+                                    div(class='documentation__endpoints__description')
+                                        h4 Described By
+
+                                            if securityScheme.describedBy.headers
+                                                h2(class='documentation__subheader') Headers
+                                                each auth,index in securityScheme.describedBy.headers
+
+                                                    table(class='documentation__parameters table')
+                                                        thead
+                                                            tr
+                                                                th name
+                                                                if auth.type
+                                                                    th type
+                                                                if auth.description
+                                                                    th description
+                                                        tbody
+                                                            tr
+                                                                th= index
+                                                                if auth.type
+                                                                    td= auth.type
+
+                                                                if auth.description
+                                                                    td= auth.description
+
+                                            if securityScheme.describedBy.queryParameters
+                                                h2(class='documentation__subheader') Query Parameters
+
+                                                each auth,index in securityScheme.describedBy.queryParameters
+
+                                                    table(class='documentation__parameters table')
+                                                        thead
+                                                            tr
+                                                                th name
+                                                                if auth.type
+                                                                    th type
+                                                                if auth.description
+                                                                    th description
+                                                        tbody
+                                                            tr
+                                                                th= index
+                                                                if auth.type
+                                                                    td= auth.type
+
+                                                                if auth.description
+                                                                    td= auth.description
+
+                                            if securityScheme.describedBy.responses
+                                                h2(class='documentation__subheader') Responses
+
+                                                each auth,index in securityScheme.describedBy.responses
+
+                                                    table(class='documentation__parameters table')
+                                                        thead
+                                                            tr
+                                                                th name
+                                                                if auth.type
+                                                                    th type
+                                                                if auth.description
+                                                                    th description
+                                                        tbody
+                                                            tr
+                                                                th= index
+                                                                if auth.type
+                                                                    td= auth.type
+
+                                                                if auth.description
+                                                                    td= auth.description
+
+
+
+
+
+
+
+
+
+
+
+footer(class='footer')
             .container-fluid
                 p(class='footer__text') powered by
                     a(href='https://github.com/PGSSoft/ramlo') ramlo
