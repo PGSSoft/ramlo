@@ -278,8 +278,9 @@ function produceRequestBody(method) {
                 if (sp["tbody"].length > 0) {
                     apiBodySchema = sp;
                 }
-
             }
+
+
         });
     }
 
@@ -309,6 +310,16 @@ function produceResponseBody(method) {
                     if (sp["tbody"].length > 0) {
                         schemaProperties = sp;
                     }
+                }
+
+                //get
+                try{
+                    console.log(  body.type() );
+                    var h = getType( body );
+                    console.log(  h);
+                }
+                catch (err){
+                    console.log(err);
                 }
             });
         }
@@ -527,20 +538,134 @@ function produceAllSecuritySchemes(api){
 
 }
 
-module.exports = function (ramlFile) {
-    var api;
-    var apiBaseUri = "";
-    var baseUriParameters = [];
-
-    /*
+function getAllResourceTypes(api){
     try {
-        api = raml.loadApiSync(ramlFile).expand(); //expand() fixed the problem with traits
-        console.log(api.toJSON() );
+        api.resourceTypes().forEach(function (resourceType) {
+            console.log(resourceType.name())
+
+            resourceType.methods().forEach(function(method){
+                console.log("\t"+method.method())
+
+                method.responses().forEach(function (response) {
+                    console.log("\t\t" + response.code().value())
+                })
+            })
+        })
     }
     catch (e) {
         console.log( e );
     }
+}
+
+
+function printHierarchy(runtimeType,indent){
+    indent = indent || "";
+    var typeName = runtimeType.nameId();
+    console.log(indent + typeName);
+    runtimeType.superTypes().forEach(function(st){
+        printHierarchy(st, indent + "  ");
+    });
+}
+
+
+/////// ----- TYPES -------------------/////////////
+
+//RAML: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#raml-data-types
+//parser: https://github.com/raml-org/raml-js-parser-2/blob/master/documentation/GettingStarted.md#types
+
+function getAllTypes(api) {
+
+    var allTypes = [];
+    api.types().forEach(function (type) {
+        allTypes.push( getType(type) );
+    });
+
+    return allTypes;
+}
+
+function getType(type) {
+
+    var thisType = {};
+
+    var kind = type.kind();
+
+    var name = type.name() ;
+
+    thisType.name = name;
+    thisType.type = type.type();
+
+        if(kind == "ObjectTypeDeclaration"){
+            var props = getHierarchyAndProperties(type);
+
+            thisType.properties = props;
+        }
+        else if(kind == "ArrayTypeDeclaration"){
+
+            //RAML: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#array-types
+
+            var runtimeDefinition = type.items().runtimeDefinition();
+
+            var props = getHierarchyAndProperties(runtimeDefinition);
+
+            thisType.properties  = props;
+        }
+        else if ( kind == "StringTypeDeclaration"  ) {
+
+            //RAML:  https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#string
+            //expected facets: pattern?, minLength?, maxLength?
+
+            var a = type.toJSON();
+
+            thisType.properties = a;
+        }
+        else if (kind == "UnionTypeDeclaration"  ) {
+            //RAML: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#union-types
+        }
+
+    //printHierarchy(type.runtimeDefinition());
+    return thisType;
+}
+
+
+function getHierarchyAndProperties(type) {
+
+    //reference: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#object-types
+
+    var props = [];
+
+    if(type.properties().length > 0 ) {
+        type.properties().forEach(function (prop) {
+
+            //console.log("-- " + prop.name() + " : " + prop.kind() );
+
+            props.push(prop.toJSON());
+
+            if (prop.kind() == "StringTypeDeclaration" && prop.enum()) {
+                prop.enum().forEach(function (enumValue) {
+                    console.log("\t\t--", enumValue);
+                })
+            }
+        });
+    }
+    /*
+    if(type.superTypes().length>0) {
+        console.log(  "  supertypes:");
+        type.superTypes().forEach(function (st) {
+            //printHierarchyAndProperties(st, indent + "    ");
+        });
+    }
     */
+
+    return props;
+}
+
+
+///////////
+
+module.exports = function (ramlFile) {
+    var api;
+    var apiBaseUri = "";
+    var baseUriParameters = [];
 
     try {
         api = raml.loadApiSync(ramlFile).expand(); //expand() fixed the problem with traits
@@ -555,7 +680,7 @@ module.exports = function (ramlFile) {
         apiBaseUri = api.baseUri().value().replace('{version}', api.version());
     }
     catch (err) {
-        console.log("BaseUri" + err);
+        //console.log("BaseUri" + err);
     }
 
     /*
@@ -578,6 +703,7 @@ module.exports = function (ramlFile) {
     ramlo.baseUriParameters  = produceBaseUriParameters(api);
     ramlo.apiDocumentations  = produceDocumentations(api);
     ramlo.apiResources       = produceResources(api);
+    ramlo.apiAllTypes        = getAllTypes(api);
 
     //console.log(ramlo.apiSecuritySchemes);
 

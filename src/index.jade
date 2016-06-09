@@ -260,6 +260,27 @@ html(lang="en")
                                                             code !{example.response}
                                                 - globId += endpoint.responseExample.length;
 
+                        if api.apiAllTypes.length > 0
+                            div(class='allTypes')
+                                h2 All Types
+                                each type in api.apiAllTypes
+                                    div= type.name
+                                    table(class='documentation__parameters table')
+                                        thead
+                                            tr
+                                                if type.type
+                                                    th type
+                                                if type.properties
+                                                    th properties
+                                        thead
+                                            tr
+                                                if type.type
+                                                    td= type.type
+                                                if type.properties
+                                                    td= JSON.stringify( type.properties )
+
+
+
                         if api.apiSecuritySchemes.length > 0
                             div(class='securityScheme')
                             each securityScheme in api.apiSecuritySchemes
