@@ -1,3 +1,19 @@
+Pet:
+    properties:
+      name: string
+      kind: string
+      price: number
+      metrics?: Metrics
+      color:
+        enum:
+          - Black
+          - White
+          - Colored
+    example:
+      name: "Snoopy"
+      kind: "Mammal"
+      price: 100
+      color: Black
 Org:
     type: object
     properties:

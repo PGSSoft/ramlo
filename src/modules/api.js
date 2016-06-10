@@ -1,3 +1,11 @@
+//  QUICK REFERENCES
+/*
+ TYPES
+    RAML: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#raml-data-types
+    parser: https://github.com/raml-org/raml-js-parser-2/blob/master/documentation/GettingStarted.md#types
+
+ */
+
 var raml = require('raml-1-parser');
 var _ = require('lodash');
 var hljs = require('highlight.js');
@@ -56,41 +64,6 @@ function produceResources(api) {
     return  apiResources;
 }
 
-function produceAnnotations(method) {
-
-    var annotations = [];
-
-    try{
-        method.annotations().forEach(function(aRef){
-
-            var a = {};
-
-            var name = aRef.name();
-
-            var structure = aRef.structuredValue().toJSON();
-
-            //forEach
-
-            a[name] = {
-                "value" : structure
-            };
-
-            try{
-                a[name].type = aRef.type();
-            }
-            catch (err){  }
-
-            //console.log( "R: " ,a[name].value );
-
-            annotations.push( a  );
-        });
-    }
-    catch(err){
-        //console.log("ERROR ANNOTATIONS: " + err);
-    }
-
-    return annotations;
-}
 
 function produceEndpoints(resource) {
     var endpoints = [];
@@ -272,15 +245,13 @@ function produceRequestBody(method) {
         _.forEach(ramlBody, function (body) {
 
             if (body.schemaContent() != null) {
-                var sp = produceSchemaParameters(body.schemaContent());
+                var sp = produceSchemaParameters( body.schemaContent() );
 
                 //make sure that "body" key was valid
                 if (sp["tbody"].length > 0) {
                     apiBodySchema = sp;
                 }
             }
-
-
         });
     }
 
@@ -314,12 +285,17 @@ function produceResponseBody(method) {
 
                 //get
                 try{
-                    console.log(  body.type() );
-                    var h = getType( body );
-                    console.log(  h);
+                    var type = body.toJSON();
+
+                    //this key is inserted by json parser, we don't need it
+                    if(type["__METADATA__"] != null){
+                        delete type["__METADATA__"];
+                    }
+
+                    schemaProperties["type"] = type;
                 }
                 catch (err){
-                    console.log(err);
+                    //console.log(err);
                 }
             });
         }
@@ -568,97 +544,36 @@ function printHierarchy(runtimeType,indent){
 }
 
 
-/////// ----- TYPES -------------------/////////////
 
-//RAML: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#raml-data-types
-//parser: https://github.com/raml-org/raml-js-parser-2/blob/master/documentation/GettingStarted.md#types
+function produceAnnotations(method) {
 
-function getAllTypes(api) {
+    var annotations = [];
 
-    var allTypes = [];
-    api.types().forEach(function (type) {
-        allTypes.push( getType(type) );
-    });
+    try{
+        method.annotations().forEach(function(aRef){
 
-    return allTypes;
-}
+            var a = {};
 
-function getType(type) {
+            var name = aRef.name();
+            var structure = aRef.structuredValue().toJSON();
 
-    var thisType = {};
+            //forEach
+            a[name] = {
+                "value" : structure
+            };
 
-    var kind = type.kind();
-
-    var name = type.name() ;
-
-    thisType.name = name;
-    thisType.type = type.type();
-
-        if(kind == "ObjectTypeDeclaration"){
-            var props = getHierarchyAndProperties(type);
-
-            thisType.properties = props;
-        }
-        else if(kind == "ArrayTypeDeclaration"){
-
-            //RAML: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#array-types
-
-            var runtimeDefinition = type.items().runtimeDefinition();
-
-            var props = getHierarchyAndProperties(runtimeDefinition);
-
-            thisType.properties  = props;
-        }
-        else if ( kind == "StringTypeDeclaration"  ) {
-
-            //RAML:  https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#string
-            //expected facets: pattern?, minLength?, maxLength?
-
-            var a = type.toJSON();
-
-            thisType.properties = a;
-        }
-        else if (kind == "UnionTypeDeclaration"  ) {
-            //RAML: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#union-types
-        }
-
-    //printHierarchy(type.runtimeDefinition());
-    return thisType;
-}
-
-
-function getHierarchyAndProperties(type) {
-
-    //reference: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#object-types
-
-    var props = [];
-
-    if(type.properties().length > 0 ) {
-        type.properties().forEach(function (prop) {
-
-            //console.log("-- " + prop.name() + " : " + prop.kind() );
-
-            props.push(prop.toJSON());
-
-            if (prop.kind() == "StringTypeDeclaration" && prop.enum()) {
-                prop.enum().forEach(function (enumValue) {
-                    console.log("\t\t--", enumValue);
-                })
+            try{
+                a[name].type = aRef.type();
             }
-        });
-    }
-    /*
-    if(type.superTypes().length>0) {
-        console.log(  "  supertypes:");
-        type.superTypes().forEach(function (st) {
-            //printHierarchyAndProperties(st, indent + "    ");
-        });
-    }
-    */
+            catch (err){  }
 
-    return props;
+            annotations.push( a  );
+        });
+    }
+    catch(err){ }
+
+    return annotations;
 }
-
 
 ///////////
 
@@ -666,9 +581,13 @@ module.exports = function (ramlFile) {
     var api;
     var apiBaseUri = "";
     var baseUriParameters = [];
+    var types = [];
+    var json  = {};
 
     try {
         api = raml.loadApiSync(ramlFile).expand(); //expand() fixed the problem with traits
+
+        json = api.toJSON();
     }
     catch (e) {
         console.log(chalk.red('provided file is not a correct RAML file!'));
@@ -683,6 +602,9 @@ module.exports = function (ramlFile) {
         //console.log("BaseUri" + err);
     }
 
+    if(json.types != null && typeof json.types != "undefined"){ //faster than try...catch
+        types = json.types;
+    }
     /*
     try{
         api.annotationTypes().forEach(function(aType){
@@ -703,7 +625,7 @@ module.exports = function (ramlFile) {
     ramlo.baseUriParameters  = produceBaseUriParameters(api);
     ramlo.apiDocumentations  = produceDocumentations(api);
     ramlo.apiResources       = produceResources(api);
-    ramlo.apiAllTypes        = getAllTypes(api);
+    ramlo.apiAllTypes        = types;
 
     //console.log(ramlo.apiSecuritySchemes);
 

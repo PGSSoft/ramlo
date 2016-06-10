@@ -1,3 +1,84 @@
+//JADE supports includes, so the file will be splitted in different files
+
+// JADE Functions used for TYPES -----------
+
+mixin produceTypeNode(t)
+    - var firstChar = t.charAt(0)
+
+    //if firstChar is uppercase, it is defined in Types otherwise is default raml type
+    if firstChar == firstChar.toUpperCase()
+        a(href="#" + t)= t
+
+    else
+        span= t
+
+mixin getTypesType(type)
+
+    //...[type][type] is array
+    each t in type
+        if t.indexOf("|") < -1
+            +produceTypeNode(t)
+
+        else
+            - var types = t.split("|")
+            each _t,index in types
+                +produceTypeNode(_t)
+                if index < (types.length-1)
+                    span |
+
+mixin typePropsTable( properties)
+
+    table(class='documentation__parameters table')
+        thead
+            tr
+                th name
+                th type
+        tbody
+            each prop in  properties
+                tr( id=prop.name  )
+                    if prop.displayName
+                        td
+                            span= prop.displayName
+                            if prop.required
+                                span(class='text-primary') *
+                    else
+                        td -
+
+                    if prop.type
+                        td= prop.type
+                    else
+                        td -
+
+mixin typeTable(typeObj)
+
+    each type in typeObj
+
+        h2(id=type.name  class='documentation__subheader' )= type.displayName
+        table(class='documentation__parameters table')
+
+            thead
+                    tr
+                        th required
+                        th type
+                        th properties
+            tbody
+
+                    tr
+                        if type.required
+                            td= type.required
+                        else
+                            td -
+
+                        if type.type
+                            td
+                                +getTypesType( type.type )
+                        else
+                            td -
+
+                        if type.properties
+                            td
+                                +typePropsTable(type.properties)
+
 doctype html
 html(lang="en")
     head
@@ -200,49 +281,69 @@ html(lang="en")
                                                                     if endpoint.requestBody.thead.description
                                                                         td= property.description
 
-                                            if endpoint.responseBody && endpoint.responseBody["tbody"]
-                                                if endpoint.responseBody["tbody"].length
-                                                    h2(class='documentation__subheader')= 'Response '
-                                                    span(class='text-success') (200)
-                                                    table(class='documentation__parameters table')
-                                                        thead
-                                                            tr
-                                                                if endpoint.responseBody.thead.name
-                                                                    th name
+                                            if endpoint.responseBody
 
-                                                                if endpoint.responseBody.thead.type
-                                                                    th type
+                                                h2(class='documentation__subheader')= 'Response '
+                                                span(class='text-success') (200)
 
-                                                                if endpoint.responseBody.thead.description
-                                                                    th description
-                                                        tbody
-                                                            each property in endpoint.responseBody.tbody
+                                                if endpoint.responseBody["type"]
+                                                    h4 Type
+                                                    if endpoint.responseBody["type"].name
+                                                        span(class="typeName")= endpoint.responseBody["type"].name
+                                                    if endpoint.responseBody["type"].type
+                                                        span(class="typeType")= " | type: "
+                                                        +getTypesType(endpoint.responseBody["type"].type)
+
+
+                                                    //dumping data for the moment, need to add properties
+                                                    div
+                                                        if endpoint.responseBody["type"].properties
+                                                            h6 Properties
+                                                            +typePropsTable( endpoint.responseBody["type"].properties )
+
+
+                                                if endpoint.responseBody["tbody"]
+
+                                                    if endpoint.responseBody["tbody"].length
+                                                        table(class='documentation__parameters table')
+                                                            thead
                                                                 tr
                                                                     if endpoint.responseBody.thead.name
-                                                                        td= property.name
-                                                                        if property.isRequired
-                                                                            span(class='text-primary') *
+                                                                        th name
 
                                                                     if endpoint.responseBody.thead.type
-                                                                        td= property.type
+                                                                        th type
 
                                                                     if endpoint.responseBody.thead.description
-                                                                        td= property.description
+                                                                        th description
+                                                            tbody
+                                                                each property in endpoint.responseBody.tbody
+                                                                    tr
+                                                                        if endpoint.responseBody.thead.name
+                                                                            td= property.name
+                                                                            if property.isRequired
+                                                                                span(class='text-primary') *
 
-                                                                if property.nestedProperties.tbody
-                                                                    if property.nestedProperties.tbody.length
-                                                                        each nested in property.nestedProperties.tbody
-                                                                            tr(class='documentation__parameters__nested')
-                                                                                if endpoint.responseBody.thead.name
-                                                                                    td= nested.name
-                                                                                    if nested.isRequired
-                                                                                        span(class='text-primary') *
+                                                                        if endpoint.responseBody.thead.type
+                                                                            td= property.type
 
-                                                                                if property.nestedProperties.thead.type
-                                                                                    td= nested.type
+                                                                        if endpoint.responseBody.thead.description
+                                                                            td= property.description
 
-                                                                                if property.nestedProperties.thead.description
-                                                                                    td= nested.description
+                                                                    if property.nestedProperties.tbody
+                                                                        if property.nestedProperties.tbody.length
+                                                                            each nested in property.nestedProperties.tbody
+                                                                                tr(class='documentation__parameters__nested')
+                                                                                    if endpoint.responseBody.thead.name
+                                                                                        td= nested.name
+                                                                                        if nested.isRequired
+                                                                                            span(class='text-primary') *
+
+                                                                                    if property.nestedProperties.thead.type
+                                                                                        td= nested.type
+
+                                                                                    if property.nestedProperties.thead.description
+                                                                                        td= nested.description
 
                                         .documentation__endpoints__examples
                                             if endpoint.responseExample
@@ -260,27 +361,17 @@ html(lang="en")
                                                             code !{example.response}
                                                 - globId += endpoint.responseExample.length;
 
+
+                        //-- TYPES
                         if api.apiAllTypes.length > 0
                             div(class='allTypes')
                                 h2 All Types
-                                each type in api.apiAllTypes
-                                    div= type.name
-                                    table(class='documentation__parameters table')
-                                        thead
-                                            tr
-                                                if type.type
-                                                    th type
-                                                if type.properties
-                                                    th properties
-                                        thead
-                                            tr
-                                                if type.type
-                                                    td= type.type
-                                                if type.properties
-                                                    td= JSON.stringify( type.properties )
+                                each typeObj in api.apiAllTypes
+                                    //generate types table
+                                    +typeTable(typeObj)
 
 
-
+                        //-- SECURITY SCHEMAS
                         if api.apiSecuritySchemes.length > 0
                             div(class='securityScheme')
                             each securityScheme in api.apiSecuritySchemes
@@ -372,7 +463,6 @@ html(lang="en")
                                                                 th= index
                                                                 if auth.type
                                                                     td= auth.type
-
                                                                 if auth.description
                                                                     td= auth.description
 

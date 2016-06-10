@@ -3,9 +3,34 @@ title: My API with Types
 mediaType: application/json
 types: !include types.raml
 /orgs/{orgId}:
+  type:
+    collection:
+      exampleCollection: |
+        [
+          {
+            "songId": "550e8400-e29b-41d4-a716-446655440000",
+            "songTitle": "Get Lucky"
+          },
+          {
+            "songId": "550e8400-e29b-41d4-a716-446655440111",
+            "songTitle": "Loose yourself to dance"
+          },
+          {
+            "songId": "550e8400-e29b-41d4-a716-446655440222",
+            "songTitle": "Gio sorgio by Morodera"
+          }
+        ]
+      exampleItem: |
+        {
+          "songId": "550e8400-e29b-41d4-a716-446655440000",
+          "songTitle": "Get Lucky",
+          "albumId": "183100e3-0e2b-4404-a716-66104d440550"
+        }
   get:
     responses:
       200:
         body:
           application/json:
             type: Org
+            properties:
+                tailLength: number
