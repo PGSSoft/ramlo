@@ -21,6 +21,7 @@ Org:
       Head: Manager
 Person:
     type: object
+    discriminator: kind
     properties:
       firstname: string
       lastname:  string
@@ -28,6 +29,8 @@ Person:
 Phone:
     type: string
     pattern: "[0-9|-]+"
+    minLength: 5
+    maxLength: 16
 Manager:
     type: Person
     properties:
@@ -43,3 +46,16 @@ AlertableAdmin:
     properties:
       phone: Phone
 Alertable: Manager | AlertableAdmin
+userPicture:
+    type: file
+    fileTypes: ['image/jpeg', 'image/png']
+    maxLength: 307200
+customFile:
+    type: file
+    fileTypes: ['*/*'] # any file type allowed
+    maxLength: 1048576
+Emails:
+    type: array
+    items: Email
+    minItems: 1
+    uniqueItems: true

@@ -45,6 +45,7 @@ function produceResources(api) {
         var name = resource.displayName() || capitalizeFirstLetter(uri.replace('/', ''));
         var description = "";
         var annotations =  produceAnnotations(resource);
+        var type = "";
 
         if(resource.description()){
             description = resource.description().value();
@@ -56,6 +57,7 @@ function produceResources(api) {
             uri: uri,
             name: name,
             description: description,
+            type : type,
             endpoints: _.flattenDeep(produceEndpoints(resource)),
             annotations: annotations
         });
@@ -77,6 +79,8 @@ function produceEndpoints(resource) {
         var securedBy =  method.securedBy() || "";
 
         var annotations = produceAnnotations(method);
+
+
 
         //console.log( annotations );
         //console.log( "securedBy " + securedBy );
@@ -582,6 +586,7 @@ module.exports = function (ramlFile) {
     var apiBaseUri = "";
     var baseUriParameters = [];
     var types = [];
+    var resourceTypes = "";
     var json  = {};
 
     try {
@@ -602,9 +607,16 @@ module.exports = function (ramlFile) {
         //console.log("BaseUri" + err);
     }
 
+    // https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#overview
     if(json.types != null && typeof json.types != "undefined"){ //faster than try...catch
         types = json.types;
     }
+
+
+    if(json.resourceTypes != null && typeof json.resourceTypes != "undefined"){ //faster than try...catch
+        resourceTypes = json.resourceTypes;
+    }
+
     /*
     try{
         api.annotationTypes().forEach(function(aType){
