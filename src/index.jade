@@ -55,62 +55,56 @@ mixin typePropsTable( properties)
                     else
                         td -
 
-mixin getNodeName(nodeString)
-    //ex. minLength > Min Length
-    - var upCharPos = []
-
-    //for(var i=0; i < nodeString.length; i++){
-        if(nodeString[i].match(/[A-Z]/) != null){
-            upCharPos.push(i)
-        }
-
 
 mixin typeTable(typeObj)
 
-    - var excludedArr = ["__METADATA__", "name", "displayName", "example", "repeat" ]
+    - var excludedArr = ["__METADATA__", "name", "displayName", "example", "repeat", "required", "structuredExample" ]
 
     each type in typeObj
 
         section(class="documentation row")
             .documentation__endpoints
                 .documentation__endpoints__params
-                    h2(id=type.name  class='documentation__subheader' )= type.displayName
+                    h2(id=type.name  class='documentation__subheader' )
+                        span= type.displayName
+                        if type.required
+                            span(class='text-primary') *
                     table(class='documentation__parameters table')
-
-                        //this table will be simplified
 
                         thead
                                 tr
                                     each tp,index in type
                                         if excludedArr.indexOf(index) < 0
-                                            if tp == "required"
-                                                th(width="105px")= index
-                                            else
-                                                th= index
+                                            th= index
                         tbody
                                 tr
                                     each tp,index in type
                                         if excludedArr.indexOf(index) < 0
-                                            if index == "required"
-                                                td(width="105px")= tp
-                                            else if index == "type"
+                                            if index == "type"
                                                 td
                                                     +getTypesType( tp )
                                             else if index == "properties"
                                                 td
                                                     +typePropsTable(tp)
-                                            else if index == "structuredExample"
+                                            else if index == "items"
                                                 td
-                                                    ul
-                                                        each val,k in tp
-                                                            li= k + " : " + val
+                                                    each item in tp.type
+                                                        span= item
                                             else
                                                 td= tp
 
                 .documentation__endpoints__examples
-                    if type.example
+                    if type.structuredExample
                         div
-                            span= JSON.stringify( type.example )
+                            span {
+                            ul
+                                each val,k in type.structuredExample
+                                    li= k + " : " + val
+                            span }
+                    else
+                        if type.example
+                            div
+                                span= JSON.stringify( type.example )
 
 doctype html
 html(lang="en")
