@@ -67,39 +67,50 @@ mixin getNodeName(nodeString)
 
 mixin typeTable(typeObj)
 
+    - var excludedArr = ["__METADATA__", "name", "displayName", "example", "repeat" ]
+
     each type in typeObj
 
-        h2(id=type.name  class='documentation__subheader' )= type.displayName
-        table(class='documentation__parameters table')
+        section(class="documentation row")
+            .documentation__endpoints
+                .documentation__endpoints__params
+                    h2(id=type.name  class='documentation__subheader' )= type.displayName
+                    table(class='documentation__parameters table')
 
-            //this table will be simplified
-            //it can be made dynamic
-            thead
-                    tr
-                        each tp,index in type
-                            if index != "__METADATA__" && index != "name" && index != "displayName"
-                                if tp == "required"
-                                    th(width="105px")= index
-                                else
-                                    th= index
+                        //this table will be simplified
 
-            tbody
+                        thead
+                                tr
+                                    each tp,index in type
+                                        if excludedArr.indexOf(index) < 0
+                                            if tp == "required"
+                                                th(width="105px")= index
+                                            else
+                                                th= index
+                        tbody
+                                tr
+                                    each tp,index in type
+                                        if excludedArr.indexOf(index) < 0
+                                            if index == "required"
+                                                td(width="105px")= tp
+                                            else if index == "type"
+                                                td
+                                                    +getTypesType( tp )
+                                            else if index == "properties"
+                                                td
+                                                    +typePropsTable(tp)
+                                            else if index == "structuredExample"
+                                                td
+                                                    ul
+                                                        each val,k in tp
+                                                            li= k + " : " + val
+                                            else
+                                                td= tp
 
-                    tr
-                        each tp,index in type
-                            if index != "__METADATA__" && index != "name" && index != "displayName"
-                                if index == "required"
-                                    td(width="105px")= tp
-                                else if index == "type"
-                                    td
-                                        +getTypesType( tp )
-                                else if index == "properties"
-                                    td
-                                        +typePropsTable(tp)
-                                else
-                                    td= tp
-
-
+                .documentation__endpoints__examples
+                    if type.example
+                        div
+                            span= JSON.stringify( type.example )
 
 doctype html
 html(lang="en")
@@ -386,11 +397,15 @@ html(lang="en")
 
                         //-- TYPES
                         if api.apiAllTypes.length > 0
-                            div(class='allTypes')
-                                h2 All Types
-                                each typeObj in api.apiAllTypes
-                                    //generate types table
-                                    +typeTable(typeObj)
+                            section(id='allTypes')
+                                h1 All Types
+                                div(class="documentation__description")
+                                    span All defined data types listed below
+                                #typesContainer
+                                    each typeObj in api.apiAllTypes
+                                        //generate types table
+                                        +typeTable(typeObj)
+
 
 
                         //-- SECURITY SCHEMAS
