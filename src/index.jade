@@ -55,6 +55,16 @@ mixin typePropsTable( properties)
                     else
                         td -
 
+mixin getNodeName(nodeString)
+    //ex. minLength > Min Length
+    - var upCharPos = []
+
+    //for(var i=0; i < nodeString.length; i++){
+        if(nodeString[i].match(/[A-Z]/) != null){
+            upCharPos.push(i)
+        }
+
+
 mixin typeTable(typeObj)
 
     each type in typeObj
@@ -66,81 +76,31 @@ mixin typeTable(typeObj)
             //it can be made dynamic
             thead
                     tr
-                        if type.required
-                            th(width="105px") required
-                        if type.type
-                            th type
+                        each tp,index in type
+                            if index != "__METADATA__" && index != "name" && index != "displayName"
+                                if tp == "required"
+                                    th(width="105px")= index
+                                else
+                                    th= index
 
-                        //object type facets
-                        if type.properties
-                            th properties
-                        if type.minProperties
-                            th min prop.
-                        if type.maxProperties
-                            th max prop.
-                        if type.additionalProperties
-                            th additional prop.
-                        // discriminator to be tested
-                            if type.discriminator
-                                th properties
-
-                        //array type facets
-                        if type.uniqueItems
-                            th Unique Items
-                        if type.items
-                            th Items
-                        if type.minItems
-                            th Min Items
-                        if type.maxItems
-                            th Max Items
-
-                        //string type facets
-                        if type.pattern
-                            th Pattern
-                        if type.minlength
-                            th Min Length
-                        if type.maxLength
-                            th Max Length
             tbody
 
                     tr
-                        if type.required
-                            td(width="105px")= type.required
-                        if type.type
-                            td
-                                +getTypesType( type.type )
+                        each tp,index in type
+                            if index != "__METADATA__" && index != "name" && index != "displayName"
+                                if index == "required"
+                                    td(width="105px")= tp
+                                else if index == "type"
+                                    td
+                                        +getTypesType( tp )
+                                else if index == "properties"
+                                    td
+                                        +typePropsTable(tp)
+                                else
+                                    td= tp
 
-                        //object type facets
-                        if type.properties
-                            td
-                                +typePropsTable(type.properties)
-                        if type.minProperties
-                            td= type.minProperties
-                        if type.maxProperties
-                            td= type.maxProperties
-                        if type.additionalProperties
-                            td= type.additionalProperties
-                        // discriminator to be tested
-                            if type.discriminator
-                                td= type.discriminator
 
-                        //array type facets
-                        if type.uniqueItems
-                            td= type.uniqueItems
-                        if type.items
-                            td= type.items.type
-                        if type.minItems
-                            td= type.minItems
-                        if type.maxItems
-                            td= type.maxItems
 
-                        //string type facets
-                        if type.pattern
-                            td= type.pattern
-                        if type.minlength
-                            td= type.minLength
-                        if type.maxLength
-                            td= type.maxLength
 doctype html
 html(lang="en")
     head
