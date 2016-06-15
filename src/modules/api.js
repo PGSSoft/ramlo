@@ -51,7 +51,7 @@ function produceResources(api) {
             description = resource.description().value();
         }
 
-        //console.log( annotations )
+        //console.log( resource )
 
         apiResources.push({
             uri: uri,
@@ -81,8 +81,6 @@ function produceEndpoints(resource) {
         var annotations = produceAnnotations(method);
 
 
-
-        //console.log( annotations );
         //console.log( "securedBy " + securedBy );
 
         endpoints.push({
@@ -297,6 +295,7 @@ function produceResponseBody(method) {
                     }
 
                     schemaProperties["type"] = type;
+
                 }
                 catch (err){
                     //console.log(err);
@@ -579,6 +578,27 @@ function produceAnnotations(method) {
     return annotations;
 }
 
+
+function prepareSchemas(_schemas) {
+
+    var schemas = [];
+
+    _.forOwn(_schemas , function (value, key) {
+        _.forOwn(value , function (schema, k) {
+
+            var ob = {};
+
+            var sch = JSON.parse(schema);
+
+            ob[k] = sch;
+
+            schemas.push( ob );
+        });
+    });
+
+    return schemas;
+}
+
 ///////////
 
 module.exports = function (ramlFile) {
@@ -588,6 +608,7 @@ module.exports = function (ramlFile) {
     var types = [];
     var resourceTypes = "";
     var json  = {};
+    var schemas = [];
 
     try {
         api = raml.loadApiSync(ramlFile).expand(); //expand() fixed the problem with traits
@@ -612,10 +633,16 @@ module.exports = function (ramlFile) {
         types = json.types;
     }
 
+    if(json.schemas != null && typeof json.schemas != "undefined"){ //faster than try...catch
+        schemas = json.schemas;
+
+        schemas = prepareSchemas(schemas);
+    }
 
     if(json.resourceTypes != null && typeof json.resourceTypes != "undefined"){ //faster than try...catch
         resourceTypes = json.resourceTypes;
     }
+
 
     /*
     try{
@@ -638,6 +665,7 @@ module.exports = function (ramlFile) {
     ramlo.apiDocumentations  = produceDocumentations(api);
     ramlo.apiResources       = produceResources(api);
     ramlo.apiAllTypes        = types;
+    ramlo.apiAllSchemas      = schemas;
 
     //console.log(ramlo.apiSecuritySchemes);
 

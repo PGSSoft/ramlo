@@ -320,6 +320,9 @@ html(lang="en")
                                                     if endpoint.responseBody["type"].type
                                                         span(class="typeType")= " | type: "
                                                         +getTypesType(endpoint.responseBody["type"].type)
+                                                    if endpoint.responseBody["type"].schema
+                                                        div(class="typeType") Schema
+                                                        div= endpoint.responseBody["type"].schema
 
 
                                                     //dumping data for the moment, need to add properties
@@ -400,6 +403,21 @@ html(lang="en")
                                         //generate types table
                                         +typeTable(typeObj)
 
+                        //-- schemas
+                        if api.apiAllSchemas.length > 0
+                            section(id='allTypes')
+                                h1 All Schemas
+                                div(class="documentation__description")
+                                    span All defined schemas listed below
+                                #typesContainer
+                                    each typeObj in api.apiAllSchemas
+                                        //generate types table
+
+                                        each ob, index in typeObj
+                                            div
+                                                h4= index
+                                                div= JSON.stringify(ob)
+                                                    //+typeTable( )
 
 
                         //-- SECURITY SCHEMAS
