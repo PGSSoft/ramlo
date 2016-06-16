@@ -3,10 +3,9 @@
 // JADE Functions used for TYPES -----------
 
 mixin produceTypeNode(t)
-    - var firstChar = t.charAt(0)
 
     //if firstChar is uppercase, it is defined in Types otherwise is default raml type
-    if firstChar == firstChar.toUpperCase()
+    if api.typeNamesArray.indexOf(t) > -1
         a(href="#" + t)= t
 
     else
@@ -25,6 +24,40 @@ mixin getTypesType(type)
                 +produceTypeNode(_t)
                 if index < (types.length-1)
                     span |
+
+mixin schemasPropsTable(properties)
+
+    div
+        each propObj,index in  properties
+            h5= index
+            table(class='documentation__parameters table')
+                thead
+                    tr
+                        each prop,key in  propObj
+                            th= key
+
+                tbody
+                    tr
+                        each prop,key in  propObj
+                            td
+                                if Object.prototype.toString.call( prop ) === '[object Object]'
+                                    +schemasPropsTable(prop)
+
+                                else if Object.prototype.toString.call( prop ) === '[object Array]'
+                                    each obj in prop
+                                        ul
+                                            li
+                                            each ob,objKey in obj
+                                                if objKey === 'properties'
+                                                    div
+                                                        +schemasPropsTable(ob)
+                                                else
+                                                    div
+                                                        span= objKey
+                                                        span= " : " + ob
+
+                                else
+                                    span=  prop
 
 mixin typePropsTable( properties)
 
@@ -321,8 +354,10 @@ html(lang="en")
                                                         span(class="typeType")= " | type: "
                                                         +getTypesType(endpoint.responseBody["type"].type)
                                                     if endpoint.responseBody["type"].schema
-                                                        div(class="typeType") Schema
-                                                        div= endpoint.responseBody["type"].schema
+                                                        div(class="typeType")
+                                                            - var schemalink = '#' + endpoint.responseBody["type"].schema
+                                                            span Schema:
+                                                            a(href=schemalink)= endpoint.responseBody["type"].schema
 
 
                                                     //dumping data for the moment, need to add properties
@@ -410,14 +445,30 @@ html(lang="en")
                                 div(class="documentation__description")
                                     span All defined schemas listed below
                                 #typesContainer
+                                    - var excluded = ["required", "$schema"]
+
                                     each typeObj in api.apiAllSchemas
                                         //generate types table
 
                                         each ob, index in typeObj
                                             div
-                                                h4= index
-                                                div= JSON.stringify(ob)
-                                                    //+typeTable( )
+                                                h4(id=index)= index
+                                                table
+                                                    thead
+                                                        tr
+                                                        each o,key in ob
+                                                            if excluded.indexOf(key) < 0
+                                                                th= key
+                                                    tbody
+                                                        tr
+                                                        each val,key in ob
+                                                            if excluded.indexOf(key) < 0
+                                                                if key != "properties"
+                                                                    td= val
+                                                                else
+                                                                    +schemasPropsTable(val)
+
+
 
 
                         //-- SECURITY SCHEMAS

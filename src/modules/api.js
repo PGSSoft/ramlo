@@ -40,6 +40,8 @@ function produceResources(api) {
     var apiResources = [];
     var ramlResources = api.allResources();
 
+    var namesArr = [];
+
     _.forEach(ramlResources, function (resource) {
         var uri = resource.completeRelativeUri();
         var name = resource.displayName() || capitalizeFirstLetter(uri.replace('/', ''));
@@ -51,16 +53,20 @@ function produceResources(api) {
             description = resource.description().value();
         }
 
-        //console.log( resource )
+        //make sure there are no duplicates
+        if(namesArr.indexOf(name) < 0 ) {
+            
+            namesArr.push(name);
 
-        apiResources.push({
-            uri: uri,
-            name: name,
-            description: description,
-            type : type,
-            endpoints: _.flattenDeep(produceEndpoints(resource)),
-            annotations: annotations
-        });
+            apiResources.push({
+                uri: uri,
+                name: name,
+                description: description,
+                type: type,
+                endpoints: _.flattenDeep(produceEndpoints(resource)),
+                annotations: annotations
+            });
+        }
     });
 
     return  apiResources;
@@ -599,6 +605,19 @@ function prepareSchemas(_schemas) {
     return schemas;
 }
 
+function produceArrayOfCustomTypes(types) {
+
+    var arr = [];
+
+    _.forEach( types, function (obj) {
+        _.forOwn(obj, function (val, key) {
+             arr.push(key);
+        });
+    });
+
+    return arr;
+}
+
 ///////////
 
 module.exports = function (ramlFile) {
@@ -609,6 +628,7 @@ module.exports = function (ramlFile) {
     var resourceTypes = "";
     var json  = {};
     var schemas = [];
+    var typeNamesArray = [];
 
     try {
         api = raml.loadApiSync(ramlFile).expand(); //expand() fixed the problem with traits
@@ -631,6 +651,7 @@ module.exports = function (ramlFile) {
     // https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#overview
     if(json.types != null && typeof json.types != "undefined"){ //faster than try...catch
         types = json.types;
+        typeNamesArray = produceArrayOfCustomTypes(types);
     }
 
     if(json.schemas != null && typeof json.schemas != "undefined"){ //faster than try...catch
@@ -665,6 +686,7 @@ module.exports = function (ramlFile) {
     ramlo.apiDocumentations  = produceDocumentations(api);
     ramlo.apiResources       = produceResources(api);
     ramlo.apiAllTypes        = types;
+    ramlo.typeNamesArray     = typeNamesArray;
     ramlo.apiAllSchemas      = schemas;
 
     //console.log(ramlo.apiSecuritySchemes);

@@ -43,14 +43,109 @@ securitySchemes:
         requestTokenUri: https://api.dropbox.com/1/oauth/request_token
         authorizationUri: https://www.dropbox.com/1/oauth/authorize
         tokenCredentialsUri: https://api.dropbox.com/1/oauth/access_token
-#types:
-#  Gist:  !include types/gist.raml
-#  Gists: !include types/gists.raml
-#resourceTypes:
-#  collection: !include types/collection.raml
-#traits:
+
+types: !include dataTypes/types.raml
+
+
+resourceTypes:
+    - setPurposeType: !include resourceTypes/setPurposeType.raml
+    - historyType: !include resourceTypes/historyType.raml
+    - markType: !include resourceTypes/markType.raml
+    - collection:
+          get:
+          post:
+      - collection-item:
+          get:
+      - searchableCollection:
+           get:
+              queryParameters:
+                <<queryParamName>>:
+                  description: Return <<resourcePathName>> that have their <<queryParamName>> matching the given value
+                <<fallbackParamName>>:
+                  description: If no values match the value given for <<queryParamName>>, use <<fallbackParamName>> instead
+
+# NOTE for future from RAML:
+# We recommended using the "type" facet instead of "schema"
+# because the schema alias is deprecated and might be removed in a future RAML version
+### ---- ex below taken from SLACK --
+schemas:
+  - channelsHistory: !include schemas/channelsHistory-schema.json
+  - channalsInfo: !include schemas/channalsInfo-schema.json
+  - channelsInvite: !include schemas/channelsInvite-schema.json
+  - ok: !include schemas/ok-schema.json
+  - channels: !include schemas/channels-schema.json
+  - purpose: !include schemas/purpose-schema.json
+  - topic: !include schemas/topic-schema.json
+  - chatOk: !include schemas/chatOk-schema.json
+  - chatUpdate: !include schemas/chatUpdate-schema.json
+  - emojiList: !include schemas/emojiList-schema.json
+  - groups: !include schemas/groups-schema.json
+  - ims: !include schemas/ims-schema.json
+  - searchAll: !include schemas/searchAll-schema.json
+  - searchFiles: !include schemas/searchFiles-schema.json
+  - searchMessages: !include schemas/searchMessages-schema.json
+  - starList: !include schemas/starList-schema.json
+  - usersList: !include schemas/usersList-schema.json
+  - fileObj: !include schemas/fileObj-schema.json
+  - files: !include schemas/files-schema.json
+###------
+
 securedBy: [ oauth_2_0 ]
-/search:
-  /code:
-    type: collection
-    get:
+
+#SCHEMAS TEST
+/channels.history:
+  type: { historyType: { resourceName: Channel }}
+  get:
+    description: Fetches history of messages and events from a channel.
+    responses:
+    200:
+      body:
+        application/json:
+          schema: channelsHistory
+/channels.info:
+  get:
+    description: Gets information about a channel.
+    queryParameters:
+      channel:
+        description: Channel to fetch history for.
+        required: true
+        example: C1234567890
+    responses:
+      200:
+        body:
+          application/json:
+            schema: channalsInfo
+            example: !include examples/channalsInfo-example.json
+
+# DATA TYPES TEST
+/orgs/{orgId}:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: Org
+            properties:
+                tailLength: number
+
+#Inline Type Declarations
+/users/{id}:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+            properties:
+              firstname:
+                type: string
+              lastname:
+                type: string
+              age:
+                type: number
+
+#testing RESOURCE TYPES
+/books:
+  type: { searchableCollection: { queryParamName: title, fallbackParamName: digest_all_fields } }
+
+
