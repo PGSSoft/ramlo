@@ -55,7 +55,7 @@ if (program.file) {
     fs.writeFileSync(path.join(__dirname, 'src/index.min.js'), minjs.code);
 
     // render html from jade template
-    var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), {api: ramlApi, helpers: helpers});
+    var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), { api: ramlApi, helpers: helpers });
 
     // save html file with documentation
     fs.writeFileSync(docFile, html);

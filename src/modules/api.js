@@ -1,3 +1,11 @@
+//  QUICK REFERENCES
+/*
+ TYPES
+    RAML: https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#raml-data-types
+    parser: https://github.com/raml-org/raml-js-parser-2/blob/master/documentation/GettingStarted.md#types
+
+ */
+
 var raml = require('raml-1-parser');
 var _ = require('lodash');
 var hljs = require('highlight.js');
@@ -32,21 +40,33 @@ function produceResources(api) {
     var apiResources = [];
     var ramlResources = api.allResources();
 
+    var namesArr = [];
+
     _.forEach(ramlResources, function (resource) {
         var uri = resource.completeRelativeUri();
         var name = resource.displayName() || capitalizeFirstLetter(uri.replace('/', ''));
         var description = "";
+        var annotations =  produceAnnotations(resource);
+        var type = "";
 
         if(resource.description()){
             description = resource.description().value();
         }
 
-        apiResources.push({
-            uri: uri,
-            name: name,
-            description: description,
-            endpoints: _.flattenDeep(produceEndpoints(resource))
-        });
+        //make sure there are no duplicates
+        if(namesArr.indexOf(name) < 0 ) {
+            
+            namesArr.push(name);
+
+            apiResources.push({
+                uri: uri,
+                name: name,
+                description: description,
+                type: type,
+                endpoints: _.flattenDeep(produceEndpoints(resource)),
+                annotations: annotations
+            });
+        }
     });
 
     return apiResources;
@@ -62,22 +82,10 @@ function produceEndpoints(resource) {
 
         var securedBy =  method.securedBy() || "";
 
-        try{
-            method.annotations().forEach(function(aRef){
+        var annotations = produceAnnotations(method);
 
-                console.log("referenced annotation:");
-                //see "Supertypes and Subtypes" section of the "Types" chapter
-                //for "printHierarchyAndProperties" definition
-                //printHierarchyAndProperties(aRef.annotation().runtimeDefinition());
-                console.log("value:", JSON.stringify(aRef.structuredValue().toJSON(),null,2));
-                console.log();
-            });
-        }
-        catch(err){
-            console.log("ERROR ANNOTATIONS: " + err);
-        }
 
-        console.log( "securedBy " + securedBy );
+        //console.log( "securedBy " + securedBy );
 
         endpoints.push({
             uri: resource.completeRelativeUri(),
@@ -88,7 +96,8 @@ function produceEndpoints(resource) {
             queryParameters: produceQueryParameters(method),
             requestBody: produceRequestBody(method),
             responseBody: produceResponseBody(method),
-            responseExample: produceResponseExample(method)
+            responseExample: produceResponseExample(method),
+            annotations: annotations
         });
     });
 
@@ -247,7 +256,6 @@ function produceRequestBody(method) {
                 if (sp["tbody"].length > 0) {
                     apiBodySchema = sp;
                 }
-
             }
         });
     }
@@ -276,8 +284,24 @@ function produceResponseBody(method) {
                     var sp = produceSchemaParameters(sch);
 
                     if (sp["tbody"].length > 0) {
-                        schemaProperties.push(sp);
+                        schemaProperties = sp;
                     }
+                }
+
+                //get
+                try{
+                    var type = body.toJSON();
+
+                    //this key is inserted by json parser, we don't need it
+                    if(type["__METADATA__"] != null){
+                        delete type["__METADATA__"];
+                    }
+
+                    schemaProperties["type"] = type;
+
+                }
+                catch (err){
+                    //console.log(err);
                 }
             });
         }
@@ -302,8 +326,13 @@ function produceResponseExample(method) {
                     code: response.code().value()
                 };
                 if (apiExample.response !== undefined) {
-                    apiExample.response = apiExample.response && hljs.highlight('json', apiExample.response).value;
-                    apiExamples = apiExamples.concat(apiExample);
+                    try{
+                        apiExample.response = apiExample.response && hljs.highlight('json', apiExample.response).value;
+                        apiExamples = apiExamples.concat(apiExample);
+                    }
+                    catch(err){
+
+                    }
                 }
             });
         }
@@ -322,6 +351,7 @@ function produceSchemaParameters(schemaContent) {
     var schemaProperties = {
         thead: {
             name: true,
+            required : false,
             type: false,
             description: false
         },
@@ -348,6 +378,13 @@ function produceSchemaParameters(schemaContent) {
 
                 if (_.has(value, 'properties')) {
                     nestedProperties = produceSchemaParameters(value);
+                }
+
+                if (_.has(value, 'required')) {
+                    //check if description exists
+                    if (schemaProperties.thead.description == false && value.description != null) {
+                        schemaProperties.thead.required = true;
+                    }
                 }
 
                 //check if description exists
@@ -381,40 +418,11 @@ function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
 
-function produceAOTH2(val) {
-//work in progress
-    var db = val.describedBy();
-
-    var ramlResponses = db.responses();
-    var ramlBodies;
-    var schemaProperties = [];
-
-    _.forEach(ramlResponses, function (response) {
-
-        ramlBodies = response.body();
-        console.log( produceSchemaParameters(ramlBodies) );
-        _.forEach(ramlBodies, function (body) {
-
-            //check if NULL before calling produceSchemaParameters()
-            var sch = body.schemaContent();
-
-            if (sch != null && typeof sch != "undefined") {
-
-                var sp = produceSchemaParameters(sch);
-
-                if (sp["tbody"].length > 0) {
-                    schemaProperties.push(sp);
-                }
-            }
-        });
-
-    });
-    console.log(schemaProperties);
-}
-
 function produceSecuredBy(api) {
 
     var securedBy =  {};
+
+    var secured = {};
 
     try{
         securedBy = api.securedBy();
@@ -427,23 +435,17 @@ function produceSecuredBy(api) {
 
             if(val.name() == securedBy.name){
 
-                securedBy.descripton = val.description().value();
-                securedBy.type       = val.type();
+                secured = val.toJSON();
 
-                //console.log( securedBy.descripton );
-
-                if(securedBy.type == "OAuth 2.0"){
-                    //work in progress
-                    var auth2 = produceAOTH2(val);
-                }
+                //console.log(secured.describedBy.queryParameters.access_token);
             }
 
         });
     }
     catch (err){
-        console.log(err);
+        //console.log(err);
     }
-    return securedBy;
+    return secured;
 }
 
 function produceProtocols(api) {
@@ -458,20 +460,177 @@ function produceProtocols(api) {
         });
 
         protocols = "Protocols: " + protArr.join(", ");
-
     }
     catch (err) {
-        console.log( err );
+        //console.log( err );
     }
     return protocols;
 }
 
+function produceBaseUriParameters(api) {
+    var baseUriParameters = [];
+    try{
+        var u = api.baseUriParameters();
+
+        // Let's enumerate all URI parameters
+        _.forOwn(u, function (parameter) {
+
+            //api.baseUriParameters() function returns also 'version'
+            // which can be retrieved from api.version()
+            if(parameter.name() != "version") {
+                try {
+                    baseUriParameters.push( parameter.toJSON() );
+                }
+                catch (err) {
+                }
+            }
+        });
+    }
+    catch (err){
+        //console.log(err);
+    }
+    return baseUriParameters;
+}
+
+function produceAllSecuritySchemes(api){
+
+    var securitySchemes = [];
+
+    try{
+
+        var scsh = api.securitySchemes();
+
+        _.forOwn( scsh, function(val, key){
+
+            /*
+            //data in responses could be organized better to be more dynamic
+            //to be checked later on
+            if(val.describedBy != null){
+                if(val.describedBy.responses != null){
+                    console.log( produceSchemaParameters(val.describedBy.responses) )
+                }
+            }*/
+            securitySchemes.push( val.toJSON() );
+        });
+    }
+    catch (err){
+        //console.log(err);
+    }
+    return securitySchemes;
+
+}
+
+function getAllResourceTypes(api){
+    try {
+        api.resourceTypes().forEach(function (resourceType) {
+            console.log(resourceType.name())
+
+            resourceType.methods().forEach(function(method){
+                console.log("\t"+method.method())
+
+                method.responses().forEach(function (response) {
+                    console.log("\t\t" + response.code().value())
+                })
+            })
+        })
+    }
+    catch (e) {
+        console.log( e );
+    }
+}
+
+
+function printHierarchy(runtimeType,indent){
+    indent = indent || "";
+    var typeName = runtimeType.nameId();
+    console.log(indent + typeName);
+    runtimeType.superTypes().forEach(function(st){
+        printHierarchy(st, indent + "  ");
+    });
+}
+
+
+
+function produceAnnotations(method) {
+
+    var annotations = [];
+
+    try{
+        method.annotations().forEach(function(aRef){
+
+            var a = {};
+
+            var name = aRef.name();
+            var structure = aRef.structuredValue().toJSON();
+
+            //forEach
+            a[name] = {
+                "value" : structure
+            };
+
+            try{
+                a[name].type = aRef.type();
+            }
+            catch (err){  }
+
+            annotations.push( a  );
+        });
+    }
+    catch(err){ }
+
+    return annotations;
+}
+
+
+function prepareSchemas(_schemas) {
+
+    var schemas = [];
+
+    _.forOwn(_schemas , function (value, key) {
+        _.forOwn(value , function (schema, k) {
+
+            var ob = {};
+
+            var sch = JSON.parse(schema);
+
+            ob[k] = sch;
+
+            schemas.push( ob );
+        });
+    });
+
+    return schemas;
+}
+
+function produceArrayOfCustomTypes(types) {
+
+    var arr = [];
+
+    _.forEach( types, function (obj) {
+        _.forOwn(obj, function (val, key) {
+             arr.push(key);
+        });
+    });
+
+    return arr;
+}
+
+///////////
+
 module.exports = function (ramlFile) {
     var api;
     var apiBaseUri = "";
+    var baseUriParameters = [];
+    var types = [];
+    var resourceTypes = "";
+    var json  = {};
+    var schemas = [];
+    var typeNamesArray = [];
 
     try {
         api = raml.loadApiSync(ramlFile).expand(); //expand() fixed the problem with traits
+
+        json = api.toJSON();
     }
     catch (e) {
         console.log(chalk.red('provided file is not a correct RAML file!'));
@@ -482,17 +641,51 @@ module.exports = function (ramlFile) {
         apiBaseUri = api.baseUri().value().replace('{version}', api.version());
     }
     catch (err) {
-        console.log("BaseUri" + err);
+        //console.log("BaseUri" + err);
     }
 
-    ramlo.ramlVersion = api.RAMLVersion();
-    ramlo.apiTitle = api.title();
-    ramlo.apiProtocol = produceProtocols(api);
-    ramlo.apiDescription = produceDescription(api);
-    ramlo.apiSecuredBy = produceSecuredBy(api); //work in progress
-    ramlo.apiBaseUri = apiBaseUri;
-    ramlo.apiDocumentations = produceDocumentations(api);
-    ramlo.apiResources = produceResources(api);
+    // https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#overview
+    if(json.types != null && typeof json.types != "undefined"){ //faster than try...catch
+        types = json.types;
+        typeNamesArray = produceArrayOfCustomTypes(types);
+    }
+
+    if(json.schemas != null && typeof json.schemas != "undefined"){ //faster than try...catch
+        schemas = json.schemas;
+
+        schemas = prepareSchemas(schemas);
+    }
+
+    if(json.resourceTypes != null && typeof json.resourceTypes != "undefined"){ //faster than try...catch
+        resourceTypes = json.resourceTypes;
+    }
+
+
+    /*
+    try{
+        api.annotationTypes().forEach(function(aType){
+            console.log("  name:",aType.name());
+            console.log("  type:",aType.type());
+        });
+    }
+    catch(err){}
+    */
+
+    ramlo.ramlVersion        = api.RAMLVersion();
+    ramlo.apiTitle           = api.title();
+    ramlo.apiProtocol        = produceProtocols(api);
+    ramlo.apiDescription     = produceDescription(api);
+    ramlo.apiSecuritySchemes = produceAllSecuritySchemes(api);
+    ramlo.apiSecuredBy       = produceSecuredBy(api); //work in progress
+    ramlo.apiBaseUri         = apiBaseUri;
+    ramlo.baseUriParameters  = produceBaseUriParameters(api);
+    ramlo.apiDocumentations  = produceDocumentations(api);
+    ramlo.apiResources       = produceResources(api);
+    ramlo.apiAllTypes        = types;
+    ramlo.typeNamesArray     = typeNamesArray;
+    ramlo.apiAllSchemas      = schemas;
+
+    //console.log(ramlo.apiSecuritySchemes);
 
     return ramlo;
 };
