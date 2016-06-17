@@ -26,7 +26,7 @@ ramlo -f api.raml
 The output of this command is a HTML file called `api.html` which should have RESTful API documentation generated based on provided RAML file.
 
 ## Example
-If you do not have any API documented in RAML you can look at my other project called [Manageably](https://github.com/zkamil/manageably-doc).
+If you do not have any API documented in RAML you can look at my other project called [Manageably](https://github.com/kamilzasada/manageably-doc).
 
 For testing please use API described in file `manageably-0.8.raml`.
 
