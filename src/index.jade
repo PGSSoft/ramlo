@@ -22,7 +22,7 @@ mixin getTypesType(type)
             - var types = t.split("|")
             each _t,index in types
                 +produceTypeNode(_t)
-                if index < (types.length-1)
+                if index < (types.length - 1)
                     span |
 
 mixin schemasPropsTable(properties)
@@ -40,10 +40,10 @@ mixin schemasPropsTable(properties)
                     tr
                         each prop,key in  propObj
                             td
-                                if Object.prototype.toString.call( prop ) === '[object Object]'
+                                if Object.prototype.toString.call(prop) === '[object Object]'
                                     +schemasPropsTable(prop)
 
-                                else if Object.prototype.toString.call( prop ) === '[object Array]'
+                                else if Object.prototype.toString.call(prop) === '[object Array]'
                                     each obj in prop
                                         ul
                                             li
@@ -105,26 +105,26 @@ mixin typeTable(typeObj)
                     table(class='documentation__parameters table')
 
                         thead
-                                tr
-                                    each tp,index in type
-                                        if excludedArr.indexOf(index) < 0
-                                            th= index
+                            tr
+                                each tp,index in type
+                                    if excludedArr.indexOf(index) < 0
+                                        th= index
                         tbody
-                                tr
-                                    each tp,index in type
-                                        if excludedArr.indexOf(index) < 0
-                                            if index == "type"
-                                                td
-                                                    +getTypesType( tp )
-                                            else if index == "properties"
-                                                td
-                                                    +typePropsTable(tp)
-                                            else if index == "items"
-                                                td
-                                                    each item in tp.type
-                                                        span= item
-                                            else
-                                                td= tp
+                            tr
+                                each tp,index in type
+                                    if excludedArr.indexOf(index) < 0
+                                        if index == "type"
+                                            td
+                                                +getTypesType( tp )
+                                        else if index == "properties"
+                                            td
+                                                +typePropsTable(tp)
+                                        else if index == "items"
+                                            td
+                                                each item in tp.type
+                                                    span= item
+                                        else
+                                            td= tp
 
                 .documentation__endpoints__examples
                     if type.structuredExample
@@ -137,7 +137,7 @@ mixin typeTable(typeObj)
                     else
                         if type.example
                             div
-                                span= JSON.stringify( type.example )
+                                span= JSON.stringify(type.example)
 
 doctype html
 html(lang="en")
@@ -174,8 +174,8 @@ html(lang="en")
                                 each parameter in api.baseUriParameters
                                     tr
                                         td= parameter.name
-                                            if parameter.required
-                                                span(class='text-primary') *
+                                        if parameter.required
+                                            span(class='text-primary') *
                                         td= parameter.type
                                         td= parameter.repeat
                                         td= parameter.description
@@ -212,7 +212,8 @@ html(lang="en")
                         if Object.keys(api.apiSecuredBy).length > 0
                             section(class='documentation row authentication')
                                 h1(class='documentation__header')= "Authentication - " + api.apiSecuredBy.type
-                                p(class='documentation__content')= api.apiSecuredBy.descripton
+                                if api.apiSecuredBy.description
+                                    div(class='documentation__content') !{api.apiSecuredBy.description}
 
 
 
@@ -237,7 +238,7 @@ html(lang="en")
 
                                             if endpoint.uriParameters && endpoint.uriParameters["tbody"]
                                                 if endpoint.uriParameters["tbody"].length
-
+                                                    h2(class='documentation__subheader') URI Parameters
                                                     table(class='documentation__parameters table')
                                                         thead
                                                             tr
@@ -291,9 +292,10 @@ html(lang="en")
                                                             each parameter in endpoint.queryParameters["tbody"]
                                                                 tr
                                                                     if endpoint.queryParameters.thead.name
-                                                                        td= parameter.name
-                                                                        if parameter.isRequired
-                                                                            span(class='text-primary') *
+                                                                        td
+                                                                            span= parameter.name
+                                                                            if(parameter.isRequired)
+                                                                                span(class='text-primary') *
 
                                                                     if endpoint.queryParameters.thead.type
                                                                         if parameter.repeat
@@ -347,10 +349,10 @@ html(lang="en")
                                             if endpoint.responseBody
 
                                                 h2(class='documentation__subheader')= 'Response '
-                                                span(class='text-success') (200)
+                                                p(class='text-success') (200)
 
                                                 if endpoint.responseBody["type"]
-                                                    h4 Type
+                                                    span= "Content-Type: "
                                                     if endpoint.responseBody["type"].name
                                                         span(class="typeName")= endpoint.responseBody["type"].name
                                                     if endpoint.responseBody["type"].type
@@ -358,10 +360,9 @@ html(lang="en")
                                                         +getTypesType(endpoint.responseBody["type"].type)
                                                     if endpoint.responseBody["type"].schema
                                                         div(class="typeType")
-                                                            - var schemalink = '#' + endpoint.responseBody["type"].schema
-                                                            span Schema:
+                                                            - var schemalink = '#schemas-' + endpoint.responseBody["type"].schema
+                                                            span= "Schema: "
                                                             a(href=schemalink)= endpoint.responseBody["type"].schema
-
 
                                                     //dumping data for the moment, need to add properties
                                                     div
@@ -369,49 +370,49 @@ html(lang="en")
                                                             h6 Properties
                                                             +typePropsTable( endpoint.responseBody["type"].properties )
 
-
-                                                if endpoint.responseBody["tbody"]
-
-                                                    if endpoint.responseBody["tbody"].length
-                                                        table(class='documentation__parameters table')
-                                                            thead
-                                                                tr
-                                                                    if endpoint.responseBody.thead.name
-                                                                        th name
-
-                                                                if endpoint.responseBody.thead.type
-                                                                    th type
-
-                                                                    if endpoint.responseBody.thead.description
-                                                                        th description
-                                                            tbody
-                                                                each property in endpoint.responseBody.tbody
-                                                                    tr
-                                                                        if endpoint.responseBody.thead.name
-                                                                            td= property.name
-                                                                            if property.isRequired
-                                                                                span(class='text-primary') *
-
-                                                                    if endpoint.responseBody.thead.type
-                                                                        td= property.type
-
-                                                                    if endpoint.responseBody.thead.description
-                                                                        td= property.description
-
-                                                                    if property.nestedProperties.tbody
-                                                                        if property.nestedProperties.tbody.length
-                                                                            each nested in property.nestedProperties.tbody
-                                                                                tr(class='documentation__parameters__nested')
-                                                                                    if endpoint.responseBody.thead.name
-                                                                                        td= nested.name
-                                                                                        if nested.isRequired
-                                                                                            span(class='text-primary') *
-
-                                                                                if property.nestedProperties.thead.type
-                                                                                    td= nested.type
-
-                                                                                if property.nestedProperties.thead.description
-                                                                                    td= nested.description
+                                                //temporary removal of response body in table
+                                                //if endpoint.responseBody["tbody"]
+                                                //
+                                                //    if endpoint.responseBody["tbody"].length
+                                                //        table(class='documentation__parameters table')
+                                                //            thead
+                                                //                tr
+                                                //                if endpoint.responseBody.thead.name
+                                                //                    th name
+                                                //
+                                                //                if endpoint.responseBody.thead.type
+                                                //                    th type
+                                                //
+                                                //                if endpoint.responseBody.thead.description
+                                                //                    th description
+                                                //            tbody
+                                                //                each property in endpoint.responseBody.tbody
+                                                //                    tr
+                                                //                        if endpoint.responseBody.thead.name
+                                                //                            td= property.name
+                                                //                            if property.isRequired
+                                                //                                span(class='text-primary') *
+                                                //
+                                                //                        if endpoint.responseBody.thead.type
+                                                //                            td= property.type
+                                                //
+                                                //                        if endpoint.responseBody.thead.description
+                                                //                            td= property.description
+                                                //
+                                                //                        if property.nestedProperties.tbody
+                                                //                            if property.nestedProperties.tbody.length
+                                                //                                each nested in property.nestedProperties.tbody
+                                                //                                    tr(class='documentation__parameters__nested')
+                                                //                                        if endpoint.responseBody.thead.name
+                                                //                                            td= nested.name
+                                                //                                            if nested.isRequired
+                                                //                                                span(class='text-primary') *
+                                                //
+                                                //                                        if property.nestedProperties.thead.type
+                                                //                                            td= nested.type
+                                                //
+                                                //                                        if property.nestedProperties.thead.description
+                                                //                                            td= nested.description
 
                                         .documentation__endpoints__examples
                                             if endpoint.responseExample
@@ -454,7 +455,7 @@ html(lang="en")
 
                                         each ob, index in typeObj
                                             div
-                                                h4(id=index)= index
+                                                h4(id='schemas-' + index)= index
                                                 table
                                                     thead
                                                         tr
@@ -601,6 +602,6 @@ html(lang="en")
 
 
 footer(class='footer')
-            .container-fluid
-                p(class='footer__text') powered by
-                    a(href='https://github.com/PGSSoft/ramlo') ramlo
+    .container-fluid
+        p(class='footer__text') powered by
+            a(href='https://github.com/PGSSoft/ramlo') ramlo
