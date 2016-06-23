@@ -1,0 +1,151 @@
+#%RAML 1.0
+title: GitHub API
+version: v3
+baseUri: https://api.github.com
+mediaType:  application/json
+securitySchemes:
+  oauth_2_0:
+      description: |
+        Dropbox supports OAuth 2.0 for authenticating all API requests.
+      type: OAuth 2.0
+      describedBy:
+        headers:
+          Authorization:
+            description: |
+               Used to send a valid OAuth 2 access token. Do not use
+               with the "access_token" query string parameter.
+            type: string
+        queryParameters:
+          access_token:
+            description: |
+               Used to send a valid OAuth 2 access token. Do not use with
+               the "Authorization" header.
+            type: string
+        responses:
+          401:
+            description: |
+                Bad or expired token. This can happen if the user or Dropbox
+                revoked or expired an access token. To fix, re-authenticate
+                the user.
+          403:
+            description: |
+                Bad OAuth request (wrong consumer key, bad nonce, expired
+                timestamp...). Unfortunately, re-authenticating the user won't help here.
+      settings:
+        authorizationUri: https://www.dropbox.com/1/oauth2/authorize
+        accessTokenUri: https://api.dropbox.com/1/oauth2/token
+        authorizationGrants: [ authorization_code, implicit ]
+    oauth_1_0:
+      description: |
+        OAuth 1.0 continues to be supported for all API requests, but OAuth 2.0 is now preferred.
+      type: OAuth 1.0
+      settings:
+        requestTokenUri: https://api.dropbox.com/1/oauth/request_token
+        authorizationUri: https://www.dropbox.com/1/oauth/authorize
+        tokenCredentialsUri: https://api.dropbox.com/1/oauth/access_token
+
+types: !include dataTypes/types.raml
+
+
+resourceTypes:
+    - setPurposeType: !include resourceTypes/setPurposeType.raml
+    - historyType: !include resourceTypes/historyType.raml
+    - markType: !include resourceTypes/markType.raml
+    - collection:
+          get:
+          post:
+      - collection-item:
+          get:
+      - searchableCollection:
+           get:
+              queryParameters:
+                <<queryParamName>>:
+                  description: Return <<resourcePathName>> that have their <<queryParamName>> matching the given value
+                <<fallbackParamName>>:
+                  description: If no values match the value given for <<queryParamName>>, use <<fallbackParamName>> instead
+
+# NOTE for future from RAML:
+# We recommended using the "type" facet instead of "schema"
+# because the schema alias is deprecated and might be removed in a future RAML version
+### ---- ex below taken from SLACK --
+schemas:
+  - channelsHistory: !include schemas/channelsHistory-schema.json
+  - channalsInfo: !include schemas/channalsInfo-schema.json
+  - channelsInvite: !include schemas/channelsInvite-schema.json
+  - ok: !include schemas/ok-schema.json
+  - channels: !include schemas/channels-schema.json
+  - purpose: !include schemas/purpose-schema.json
+  - topic: !include schemas/topic-schema.json
+  - chatOk: !include schemas/chatOk-schema.json
+  - chatUpdate: !include schemas/chatUpdate-schema.json
+  - emojiList: !include schemas/emojiList-schema.json
+  - groups: !include schemas/groups-schema.json
+  - ims: !include schemas/ims-schema.json
+  - searchAll: !include schemas/searchAll-schema.json
+  - searchFiles: !include schemas/searchFiles-schema.json
+  - searchMessages: !include schemas/searchMessages-schema.json
+  - starList: !include schemas/starList-schema.json
+  - usersList: !include schemas/usersList-schema.json
+  - fileObj: !include schemas/fileObj-schema.json
+  - files: !include schemas/files-schema.json
+###------
+
+securedBy: [ oauth_2_0 ]
+
+#SCHEMAS TEST
+/channels.history:
+  type: { historyType: { resourceName: Channel }}
+  get:
+    description: Fetches history of messages and events from a channel.
+    responses:
+    200:
+      body:
+        application/json:
+          schema: channelsHistory
+/channels.info:
+  get:
+    description: Gets information about a channel.
+    queryParameters:
+      channel:
+        description: Channel to fetch history for.
+        required: true
+        example: C1234567890
+    responses:
+      200:
+        body:
+          application/json:
+            schema: channalsInfo
+            example: !include examples/channalsInfo-example.json
+
+# DATA TYPES TEST
+/orgs/{orgId}:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: Org
+            properties:
+                tailLength: number
+
+#Inline Type Declarations
+/users/{id}:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+            properties:
+              firstname:
+                type: string
+              lastname:
+                type: string
+              age:
+                type: number
+
+#testing RESOURCE TYPES
+/books:
+  type: { searchableCollection: { queryParamName: title, fallbackParamName: digest_all_fields } }
+
+

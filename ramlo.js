@@ -13,6 +13,7 @@ var pkg = require(path.join(__dirname, 'package.json'));
 var api = require('./src/modules/api');
 var helpers = require('./src/modules/helpers');
 
+
 program
     .version(pkg.version)
     .option('-f, --file <path>', 'RAML input file')
@@ -37,6 +38,7 @@ if (program.file) {
 
     // convert RAML to API object
     var ramlApi = api(ramlFile);
+
 
     // compile sass styles
     var scss = sass.renderSync({

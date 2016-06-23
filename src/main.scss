@@ -51,6 +51,7 @@ pre, code {
 
 .sidebar {
     position: relative;
+    border-right: 1px solid #ccc;
     transition: all 0.3s linear;
     $root: &;
     &-content {
@@ -78,7 +79,6 @@ pre, code {
             -webkit-box-shadow: none;
             background: $scrollbar-custom-thumb;
         }
-
     }
     &.is-abs {
         position: absolute;
@@ -95,7 +95,6 @@ pre, code {
 
             /*below mixin is an optional effect added to sidebar*/
             //@include shrouded-element-fixed(16.66667%);
-
         }
     }
 }
@@ -192,6 +191,7 @@ pre, code {
 
     &:after {
         @include empty-sidebar-right;
+        background-color: $gray-dark;
     }
 }
 
@@ -204,6 +204,7 @@ pre, code {
 
     &:after {
         @include empty-sidebar-right;
+        background-color: $gray-dark;
     }
 }
 
@@ -242,6 +243,7 @@ pre, code {
     padding-top: $spacer * 2;
     position: relative;
     background-color: $gray-dark;
+    //background-color: #333;
     color: #fcfcfc;
     border-bottom: 1px solid $gray-middlescale;
 }
@@ -325,6 +327,15 @@ pre, code {
             padding-left: $spacer * 2;
         }
     }
+}
+
+.setTitle {
+    font-weight: bold;
+    padding: 0 15px 0 0;
+}
+
+.setDesc {
+    color: #999;
 }
 
 .footer {
