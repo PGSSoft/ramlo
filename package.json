@@ -33,6 +33,7 @@
     "ramlo": "ramlo.js"
   },
   "engines": {
-    "node": ">= 5.8.x"
+    "node": ">= 5.8.x",
+    "npm": ">= 3.8.x"
   }
 }
