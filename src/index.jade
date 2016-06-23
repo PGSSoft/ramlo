@@ -181,7 +181,9 @@ html(lang="en")
                                         td= parameter.description
 
         main
+            //helper variables
             - var globId = 0;
+            - var responseCodeClass = '';
             .container-fluid
                 .row
                     .col-md-2.sidebar
@@ -199,9 +201,9 @@ html(lang="en")
                                                     case endpoint.method
                                                         when 'get': span(class='label label-primary')= endpoint.method
                                                         when 'post': span(class='label label-success')= endpoint.method
-                                                        when 'put': span(class='label label-warning')= endpoint.method
+                                                        when 'put': span(class='label label-info')= endpoint.method
                                                         when 'delete': span(class='label label-danger')= endpoint.method
-                                                        when 'patch': span(class='label label-warning')= endpoint.method
+                                                        when 'patch': span(class='label label-info')= endpoint.method
                                                     a(href='#' + '#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')= endpoint.uri
                     .col-md-10.col-md-offset-2
                         each documentation in api.apiDocumentations
@@ -229,9 +231,9 @@ html(lang="en")
                                                 case endpoint.method
                                                     when 'get': span(class='label label-primary')= endpoint.method
                                                     when 'post': span(class='label label-success')= endpoint.method
-                                                    when 'put': span(class='label label-warning')= endpoint.method
+                                                    when 'put': span(class='label label-info')= endpoint.method
                                                     when 'delete': span(class='label label-danger')= endpoint.method
-                                                    when 'patch': span(class='label label-warning')= endpoint.method
+                                                    when 'patch': span(class='label label-info')= endpoint.method
                                                 = endpoint.uri
 
                                             div(class='documentation__endpoints__description') !{endpoint.description}
@@ -421,8 +423,16 @@ html(lang="en")
                                                     each example, index in endpoint.responseExample
                                                         li.example__tab
                                                             - var check = index === 0;
-                                                            input(class='text-success' type='radio' name='example-tabs#{globId}' id='example-tab#{globId + index}' checked=check)
-                                                            label(for='example-tab#{globId + index}') (#{example.code})
+                                                            input(type='radio' name='example-tabs#{globId}' id='example-tab#{globId + index}' checked=check)
+                                                            if example.code >= 200 && example.code < 300
+                                                                - responseCodeClass = "response-ok";
+                                                            else if example.code >= 300 && example.code < 400
+                                                                - responseCodeClass = "response-info";
+                                                            else if example.code >= 400 && example.code < 500
+                                                                - responseCodeClass = "response-errc";
+                                                            else if example.code >= 500
+                                                                - responseCodeClass = "response-errs";
+                                                            label(class='#{responseCodeClass}' for='example-tab#{globId + index}') (#{example.code})
                                                 ul.examples__contents
                                                     each example, index in endpoint.responseExample
                                                         - var check = index === 0;

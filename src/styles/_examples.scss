@@ -32,7 +32,7 @@ $tabs-base-color: #555;
         display: block;
         width: 90px;
         padding: 12px 16px;
-        border-radius: 2px 2px 0 0;
+        border-radius: 0 0;
         margin-bottom: 0;
         font-size: 1em;
         font-weight: normal;
@@ -51,7 +51,7 @@ $tabs-base-color: #555;
     input[id^="example-tab"]:checked + label {
         background: darken($tabs-base-color, 15);
         padding: 10px 16px;
-        border: 2px solid $brand-primary;
+        border: 2px solid $gray-lighter;
     }
 
 }
