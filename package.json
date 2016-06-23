@@ -25,7 +25,7 @@
     "lodash": "^4.6.1",
     "markdown": "^0.5.0",
     "node-sass": "^3.4.2",
-    "raml-1-parser": "0.1.0-beta.10"
+    "raml-1-parser": "0.2.25"
   },
   "preferGlobal": true,
   "bin": {
