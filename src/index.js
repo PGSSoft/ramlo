@@ -89,7 +89,7 @@
         var isExpanded = example.hasClass('is-expanded');
         if (example) {
             if (isExpanded) {
-                example.addClass('is-collapsing').removeClass('is-expanded'); //.children('.documentation__endpoints__examples')
+                example.addClass('is-collapsing').removeClass('is-expanded');
                 setTimeout(function () {
                     example.parent().height('');
                     example.removeClass('is-collapsing');
@@ -97,7 +97,7 @@
             } else {
                 var endpointHeight = example.outerHeight();
                 example.parent().height(endpointHeight);
-                example.addClass('is-expanded'); //.children('.documentation__endpoints__examples')
+                example.addClass('is-expanded');
             }
         }
     }

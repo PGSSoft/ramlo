@@ -23,64 +23,8 @@
     min-height: 100px;
     width: 60%;
     position: relative;
-    padding: $spacer * 2 10px $spacer * 2 20px;
+    padding: $padding-center-sections;
     border-bottom: 1px solid $gray-light;
-}
-
-.documentation__endpoints__examples {
-    min-height: 100px;
-    width: 40%;
-    padding: 0px 10px;
-    padding-top: $spacer * 2;
-    position: relative;
-    background-color: $gray-dark;
-    //background-color: #333;
-    color: #fcfcfc;
-    border-bottom: 1px solid $gray-middlescale;
-
-    .examples__toggle {
-        display: inline-block;
-        float: right;
-        border: 1px solid $gray-lighter;
-        padding: 5px 15px;
-        //width: 100%;
-        text-align: center;
-        background: $brand-primary;
-        color: $gray-lighter;
-        //transition: transform 0.3s;
-        cursor: pointer;
-        font-size: 1.5em;
-        text-decoration: none;
-        &:after {
-            content: '<';
-        }
-    }
-
-    &.is-collapsing {
-        position: absolute;
-        height: 100%;
-        top: 0;
-        right: 0;
-        transition: width 0.5s ease;
-    }
-
-    &.is-expanded {
-        position: absolute;
-        //position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        right: 0;
-        z-index: 1100;
-        transition: all 0.5s ease;
-        .examples__toggle {
-            &:after {
-                content: '>';
-            }
-        }
-
-    }
-
 }
 
 .documentation__endpoints__left {
@@ -113,6 +57,8 @@
 .documentation__endpoints__name {
     font-size: $font-size-lg;
     margin-top: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid $gray-light;
 
     &:first-child {
         margin-top: 0;
@@ -127,4 +73,5 @@
 
 .documentation__endpoints__description {
     color: $gray-middlescale;
+    margin-bottom: 2rem;
 }

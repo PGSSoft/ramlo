@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import "styles/theme";
-@import "styles/mixins";
 @import "styles/bootstrap";
+@import "styles/variables";
+@import "styles/mixins";
 @import "styles/theme-components";
 @import "styles/examples";
 @import "styles/endpoints";
@@ -180,10 +181,11 @@ pre, code {
 .documentation__header {
     position: relative;
     margin: 0 0;
-    padding: 2*$spacer 10px 2*$spacer 20px;
+    padding: $padding-center-sections;
     font-size: $font-size-h2;
     font-weight: 700;
     width: 60%;
+    border-bottom: 1px solid $gray-light;
 
     .text-muted {
         float: right;
@@ -193,13 +195,14 @@ pre, code {
     &:after {
         @include empty-sidebar-right;
         background-color: $gray-dark;
+        border-bottom: 1px solid $gray-middlescale;
     }
 }
 
 .documentation__content {
     position: relative;
     margin: 0 0;
-    padding: 2*$spacer 10px 2*$spacer 20px;
+    padding: $padding-center-sections;
     width: 60%;
     display: inline-block;
 
@@ -230,7 +233,7 @@ pre, code {
     th, td {
         padding: $spacer / 2 $spacer;
         border-top: 0;
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: 1px solid $table-border-color;
     }
 }
 
@@ -242,6 +245,11 @@ pre, code {
             padding-left: $spacer * 2;
         }
     }
+}
+
+.documentation__response {
+    border: 1px solid $table-border-color;
+    padding: 1rem;
 }
 
 .setTitle {
