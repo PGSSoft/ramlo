@@ -41,17 +41,6 @@ if (program.file) {
 
 
 
-    
-    // compile sass styles
-    var scss = sass.renderSync({
-        file: path.join(__dirname, 'src/main.scss'),
-        outputStyle: 'compressed',
-        outFile: path.join(__dirname, 'src/main.css'),
-        sourceMap: false
-    });
-
-    // save css file which will be included in html file
-    fs.writeFileSync(path.join(__dirname, 'src/main.css'), scss.css);
 
     // render html from jade template
     var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), { api: ramlApi, helpers: helpers });
