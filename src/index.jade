@@ -240,85 +240,87 @@ html(lang="en")
 
                                             if endpoint.uriParameters && endpoint.uriParameters["tbody"]
                                                 if endpoint.uriParameters["tbody"].length
-                                                    h2(class='documentation__subheader') URI Parameters
-                                                    table(class='documentation__parameters table')
-                                                        thead
-                                                            tr
-                                                                if endpoint.uriParameters.thead.name
-                                                                    th name
-
-                                                                if endpoint.uriParameters.thead.type
-                                                                    th type
-
-                                                                if endpoint.uriParameters.thead.description
-                                                                    th description
-                                                        tbody
-                                                            each parameter in endpoint.uriParameters["tbody"]
+                                                    div.panel.panel-default
+                                                        h2(class='documentation__subheader') URI Parameters
+                                                        table(class='documentation__parameters table')
+                                                            thead
                                                                 tr
                                                                     if endpoint.uriParameters.thead.name
-                                                                        td= parameter.name
+                                                                        th name
 
                                                                     if endpoint.uriParameters.thead.type
-                                                                        td= parameter.type
+                                                                        th type
 
                                                                     if endpoint.uriParameters.thead.description
-                                                                        td !{parameter.description}
+                                                                        th description
+                                                            tbody
+                                                                each parameter in endpoint.uriParameters["tbody"]
+                                                                    tr
+                                                                        if endpoint.uriParameters.thead.name
+                                                                            td= parameter.name
+
+                                                                        if endpoint.uriParameters.thead.type
+                                                                            td= parameter.type
+
+                                                                        if endpoint.uriParameters.thead.description
+                                                                            td !{parameter.description}
 
                                             if endpoint.queryParameters && endpoint.queryParameters["tbody"]
                                                 if endpoint.queryParameters["tbody"].length
-                                                    h2(class='documentation__subheader') Query Parameters
-                                                    table(class='documentation__parameters table')
-                                                        thead
-                                                            tr
-                                                                if endpoint.queryParameters.thead.name
-                                                                    th name
-
-                                                                if endpoint.queryParameters.thead.type
-                                                                    th type
-
-                                                                if endpoint.queryParameters.thead.description
-                                                                    th description
-
-                                                                if endpoint.queryParameters.thead.default
-                                                                    th default
-
-                                                                if endpoint.queryParameters.thead.minLength
-                                                                    th min
-
-                                                                if endpoint.queryParameters.thead.maxLength
-                                                                    th max
-
-                                                                if endpoint.queryParameters.thead.example
-                                                                    th example
-                                                        tbody
-                                                            each parameter in endpoint.queryParameters["tbody"]
+                                                    div.panel.panel-default
+                                                        h2(class='documentation__subheader') Query Parameters
+                                                        table(class='documentation__parameters table')
+                                                            thead
                                                                 tr
                                                                     if endpoint.queryParameters.thead.name
-                                                                        td
-                                                                            span= parameter.name
-                                                                            if(parameter.isRequired)
-                                                                                span(class='text-primary') *
+                                                                        th name
 
                                                                     if endpoint.queryParameters.thead.type
-                                                                        if parameter.repeat
-                                                                            td [ #{parameter.type} ]
-                                                                        else
-                                                                            td #{parameter.type}
+                                                                        th type
 
                                                                     if endpoint.queryParameters.thead.description
-                                                                        td !{parameter.description}
+                                                                        th description
 
                                                                     if endpoint.queryParameters.thead.default
-                                                                        td= parameter.default
+                                                                        th default
 
                                                                     if endpoint.queryParameters.thead.minLength
-                                                                        td= parameter.minLength
+                                                                        th min
 
                                                                     if endpoint.queryParameters.thead.maxLength
-                                                                        td= parameter.maxLength
+                                                                        th max
 
                                                                     if endpoint.queryParameters.thead.example
-                                                                        td= parameter.example
+                                                                        th example
+                                                            tbody
+                                                                each parameter in endpoint.queryParameters["tbody"]
+                                                                    tr
+                                                                        if endpoint.queryParameters.thead.name
+                                                                            td
+                                                                                span= parameter.name
+                                                                                if(parameter.isRequired)
+                                                                                    span(class='text-primary') *
+
+                                                                        if endpoint.queryParameters.thead.type
+                                                                            if parameter.repeat
+                                                                                td [ #{parameter.type} ]
+                                                                            else
+                                                                                td #{parameter.type}
+
+                                                                        if endpoint.queryParameters.thead.description
+                                                                            td !{parameter.description}
+
+                                                                        if endpoint.queryParameters.thead.default
+                                                                            td= parameter.default
+
+                                                                        if endpoint.queryParameters.thead.minLength
+                                                                            td= parameter.minLength
+
+                                                                        if endpoint.queryParameters.thead.maxLength
+                                                                            td= parameter.maxLength
+
+                                                                        if endpoint.queryParameters.thead.example
+                                                                            td= parameter.example
 
                                             if endpoint.requestBody && endpoint.requestBody["tbody"]
                                                 if endpoint.requestBody["tbody"].length
@@ -418,6 +420,7 @@ html(lang="en")
 
                                         .documentation__endpoints__examples
                                             if endpoint.responseExample
+                                                a(class='examples__toggle')= ''
                                                 h2(class='documentation__subheader')= ' Response examples '
                                                 ul.examples__tabs
                                                     each example, index in endpoint.responseExample

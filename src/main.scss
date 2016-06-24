@@ -4,6 +4,7 @@
 @import "styles/bootstrap";
 @import "styles/theme-components";
 @import "styles/examples";
+@import "styles/endpoints";
 
 body {
     font-family: "Open Sans", sans-serif;
@@ -206,92 +207,6 @@ pre, code {
         @include empty-sidebar-right;
         background-color: $gray-dark;
     }
-}
-
-.documentation__endpoints {
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    $rootElem: &;
-    &:first-of-type {
-        #{$rootElem}__params {
-            border-top: 1px solid $gray-light;
-        }
-        #{$rootElem}__examples {
-            border-top: 1px solid $gray-middlescale;
-        }
-    }
-}
-
-.documentation__endpoints__container {
-    position: relative;
-}
-
-.documentation__endpoints__params {
-    min-height: 100px;
-    width: 60%;
-    position: relative;
-    padding: $spacer * 2 10px $spacer * 2 20px;
-    border-bottom: 1px solid $gray-light;
-}
-
-.documentation__endpoints__examples {
-    min-height: 100px;
-    width: 40%;
-    padding: 0px 10px;
-    padding-top: $spacer * 2;
-    position: relative;
-    background-color: $gray-dark;
-    //background-color: #333;
-    color: #fcfcfc;
-    border-bottom: 1px solid $gray-middlescale;
-}
-
-.documentation__endpoints__left {
-
-}
-
-.documentation__endpoints__right {
-    position: absolute;
-    top: 0;
-    right: $spacer;
-    bottom: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: $gray-lighter;
-        border-radius: 8px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: $gray-light;
-        border-radius: 8px;
-    }
-}
-
-.documentation__endpoints__name {
-    font-size: $font-size-lg;
-    margin-top: 1rem;
-
-    &:first-child {
-        margin-top: 0;
-    }
-
-    .label {
-        width: 76px;
-        text-transform: uppercase;
-        margin: 0 $spacer 0 0;
-    }
-}
-
-.documentation__endpoints__description {
-    color: $gray-middlescale;
 }
 
 .documentation__subheader {
