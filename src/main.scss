@@ -6,6 +6,7 @@
 @import "styles/theme-components";
 @import "styles/examples";
 @import "styles/endpoints";
+@import "styles/schemas";
 
 body {
     font-family: "Open Sans", sans-serif;
@@ -197,6 +198,13 @@ pre, code {
         background-color: $gray-dark;
         border-bottom: 1px solid $gray-middlescale;
     }
+    &-full {
+        width: 100%;
+        &:after {
+            content: none;
+            display: none;
+        }
+    }
 }
 
 .documentation__content {
@@ -250,6 +258,11 @@ pre, code {
 .documentation__response {
     border: 1px solid $table-border-color;
     padding: 1rem;
+}
+
+.documentation__response__code {
+    font-size: $font-size-lg;
+    font-weight: 600;
 }
 
 .setTitle {

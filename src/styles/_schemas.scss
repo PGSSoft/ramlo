@@ -1,0 +1,53 @@
+.documentation__schemas {
+    position: relative;
+    padding: $padding-center-sections;
+    //display: flex;
+    //flex-direction: row;
+    //align-items: stretch;
+    $rootElem: &;
+    border-bottom: 1px solid $gray-light;
+    &:first-of-type {
+        border-top: 1px solid $gray-light;
+    }
+}
+
+.schema {
+
+}
+
+.schema__key {
+
+}
+
+.schema__properties {
+    margin-left: 20px;
+    margin-top: 5px;
+    border-left: 1px solid $gray-light;
+    padding: 0 0 15px 5px;
+}
+
+.schema__properties__header {
+    display: inline-block;
+    border-bottom: 1px solid $gray-light;
+    font-size: 0.75rem;
+    margin: 10px 0 5px;
+    margin-left: -5px;
+    padding-left: inherit;
+    color: $brand-primary;
+
+}
+
+.schema__properties__keys {
+    display: inline-block;
+    width: 150px;
+}
+
+.schema__properties__vals {
+    display: inline-block;
+    min-width: 160px;
+}
+
+.schema__property {
+    font-size: 1rem;
+    line-height: 1.5;
+}
