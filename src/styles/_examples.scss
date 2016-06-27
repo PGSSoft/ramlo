@@ -1,7 +1,7 @@
 .documentation__endpoints__examples {
     min-height: 100px;
     width: 40%;
-    padding: $spacer * 2 10px 0 15px;
+    padding: $spacer * 2 10px $spacer * 2 15px;
     //padding-top: $spacer * 2;
     position: relative;
     background-color: $gray-dark;
@@ -83,8 +83,9 @@ $tabs-base-color: #555;
     }
     input[type="radio"] {
         position: absolute;
-        top: -9999px;
-        left: -9999px;
+        //top: -9999px;
+        //left: -9999px;
+        visibility: hidden;
     }
     label {
         display: block;
@@ -115,7 +116,7 @@ $tabs-base-color: #555;
 }
 
 .examples__contents {
-    max-height: 400px;
+    max-height: calc(400px);
     list-style: none;
     margin: 0;
     padding: 0 0 0 5px;
@@ -123,6 +124,9 @@ $tabs-base-color: #555;
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
+    background-color: rgba($gray-middlescale, 0.16);
+    border: 1px solid #555;
+    transition: all 0.5s;
 
     &::-webkit-scrollbar {
         width: 8px;
@@ -166,7 +170,7 @@ $tabs-base-color: #555;
     }
 
     .example__response {
-        padding-bottom: 30px;
+        padding: 0;
 
         &::-webkit-scrollbar {
             width: 8px;
@@ -199,7 +203,7 @@ $tabs-base-color: #555;
 
 .documentation__endpoints__examples.is-expanded {
     .examples__contents {
-        max-height: calc(100% - 150px);
+        max-height: calc(100% - 120px);
     }
     .example__content {
         .example__response {
