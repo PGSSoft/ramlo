@@ -40,19 +40,16 @@ mixin schemaProperty(propKey, propVal)
             div(class='schema__properties__vals')
                 //printing types of object's properties
                 span()= propVal.type
-                if propVal.type === 'array' && propVal.items.length >= 1
+                if propVal.type === 'array' && propVal.items && propVal.items.length >= 1
                     span()= ' [' + propVal.items[0].type + ']'
                 if propVal.required && propVal.required === true
                     span(class='text-primary') *
 
             //checking for nested objects
-            if propVal.type === 'array' && propVal.items.length >= 1 && propVal.items[0].type === 'object'
+            if propVal.type === 'array' && propVal.items && propVal.items.length >= 1 && propVal.items[0].type === 'object'
                 +schemaHandleArray(propVal.items)
             else if propVal.type === 'object' && propVal.properties
                 +schemaProperties(propVal.properties)
-            //    //else if(propVal.type === 'array' && propVal.items[0].type === 'object' && propVal.items[0].hasOwnProperty('properties'))
-            //else if Object.prototype.toString.call(propVal) === '[object Array]'
-            //    +schemaHandleArray(propVal)
 
 
 mixin schemaHandleArray(array)
@@ -63,12 +60,6 @@ mixin schemaHandleArray(array)
                     if key === 'properties'
                         +schemaProperties(val)
 
-
-mixin schemaInnerObjectProperties(objProps)
-    div(class='schema__property')
-        span= Object.keys(objProps) + '// // ////    '
-        each val, key in objProps
-            span= Object.keys(val) + ';    '
 
 
 mixin schemaProperties(props)
