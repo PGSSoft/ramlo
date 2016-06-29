@@ -120,9 +120,8 @@ html(lang="en")
         style(type='text/css')
             include main.css
         script(src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous")
-        script(type="text/javascript")
-            include index.min.js
-    body
+        script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js", integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS", crossorigin="anonymous")
+    body(data-spy="scroll" data-target="#resources-nav")
         header(class='header')
             .container-fluid
                 h1(class='header__title', title=api.apiProtocol )= api.apiTitle
@@ -154,17 +153,17 @@ html(lang="en")
             - var globId = 0;
             - var responseCodeClass = '';
             .container-fluid
-                .row
-                    .col-md-2.sidebar
-                        section(class='resources sidebar-content')
+                    .row
+                    .col-md-2.sidebar(data-spy="affix" data-offset-top="200")
+                        nav(id="resources-nav").resources.sidebar-content
                             h1(class='resources__header') Resources
-                            ul(class='resources__list')
+                            ul.nav.nav-stacked.resources__list
                                 if Object.keys(api.apiSecuredBy).length > 0
-                                    li= "Authentication"
+                                    li.resources__resource= "Authentication"
                                 each resource in api.apiResources
-                                    details
-                                        summary.resources__resource= resource.name
-                                        ul(class='resources__list__endpoints')
+                                    li.resources__resource
+                                        a(href='##{helpers.uri2Identifier(resource.name)}')=resource.name
+                                        ul(class='nav nav-stacked resources__list__endpoints')
                                             each endpoint in resource.endpoints
                                                 li
                                                     case endpoint.method
@@ -182,7 +181,7 @@ html(lang="en")
 
                         if Object.keys(api.apiSecuredBy).length > 0
                             section(class='documentation row authentication')
-                                h1(class='documentation__header')= "Authentication - " + api.apiSecuredBy.type
+                                h1(class='documentation__header' id="authentication")= "Authentication - " + api.apiSecuredBy.type
                                 if api.apiSecuredBy.description
                                     div(class='documentation__content') !{api.apiSecuredBy.description}
 
@@ -190,11 +189,10 @@ html(lang="en")
 
                         each resource in api.apiResources
                             section(class='documentation row')
-                                h1(class='documentation__header')= resource.name
+                                h1(class='documentation__header' id='#{helpers.uri2Identifier(resource.name)}')= resource.name
                                 div(class='documentation__description')= resource.description
                                 each endpoint in resource.endpoints
-                                    div(class='documentation__endpoints')
-                                        a(name='#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')
+                                    div(class='documentation__endpoints' id='#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')
                                         .documentation__endpoints__params
                                             p(class='documentation__endpoints__name')
                                                 case endpoint.method
@@ -576,3 +574,5 @@ footer(class='footer')
     .container-fluid
         p(class='footer__text') powered by
             a(href='https://github.com/PGSSoft/ramlo') ramlo
+script(type="text/javascript")
+    include index.min.js
