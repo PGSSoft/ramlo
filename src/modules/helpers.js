@@ -1,11 +1,11 @@
 var _ = require('lodash');
 
 function uri2Identifier(uri) {
-    return _.chain(uri).split('/').compact().join('-').value();
+    return _.chain(uri).split('/').compact().join('-').replace(/{/g,"__").replace(/}/g,"__").value();
 }
 
 function uriWithMethodIdentifier(uri, method) {
-    return uri2Identifier(uri).concat('-', method);
+    return uri2Identifier(uri).concat('-', method).replace(/{/g,"__").replace(/}/g,"__");
 }
 
 module.exports = {
