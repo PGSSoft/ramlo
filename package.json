@@ -4,7 +4,9 @@
   "description": "Documentation generator for RESTful API written in RAML",
   "main": "ramlo.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css":"node_modules/.bin/node-sass --output-style compressed src/main.scss > src/main.css",
+    "prepublish":"npm run build-css"
   },
   "repository": {
     "type": "git",
