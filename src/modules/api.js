@@ -16,7 +16,6 @@ var ramlo = {};
 
 function produceDescription(api) {
     var description = api.description();
-
     return description && description.value();
 }
 
@@ -38,7 +37,7 @@ function produceDocumentations(api) {
 
 function produceResources(api) {
     var apiResources = [];
-    var ramlResources = api.allResources();
+    var ramlResources = api.resources();
 
     var namesArr = [];
 
