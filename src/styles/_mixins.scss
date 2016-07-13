@@ -4,7 +4,8 @@
     left: 100%;
     width: 66.67%; // width 2/3 relative to parent, which is 60% - result is 40%
     top: 0;
-    bottom: 0;
+    bottom: -1px;
+    border-bottom: 1px solid $gray-middlescale;
     background-color: $gray-dark;
 }
 

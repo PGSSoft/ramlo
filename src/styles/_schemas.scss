@@ -1,0 +1,72 @@
+.documentation__schemas {
+    position: relative;
+    padding: $padding-center-sections;
+    //display: flex;
+    //flex-direction: row;
+    //align-items: stretch;
+    $rootElem: &;
+    border-bottom: 1px solid $gray-light;
+    &:first-of-type {
+        border-top: 1px solid $gray-light;
+    }
+}
+
+.schema {
+
+}
+
+.schema__key {
+
+}
+
+.schema__properties {
+    margin-left: 20px;
+    margin-top: 5px;
+    border-left: 1px solid $gray-light;
+    padding: 0 0 15px 10px;
+}
+
+.schema__properties__header {
+    display: inline-block;
+    border-bottom: 1px solid $gray-light;
+    font-size: 0.75rem;
+    margin: 10px 0 5px;
+    margin-left: -10px;
+    padding-left: inherit;
+    color: $brand-primary;
+
+    .schema__properties__keys {
+        &:after {
+            content: none;
+        }
+    }
+
+}
+
+.schema__properties__keys {
+    position: relative;
+    display: inline-block;
+    min-width: 150px;
+    padding-right: 10px;
+    &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        margin-left: -10px;
+        width: 10px;
+        background: $gray-light;
+        height: 1px;
+        top: 50%;
+    }
+}
+
+.schema__properties__vals {
+    display: inline-block;
+    min-width: 160px;
+}
+
+.schema__property {
+    position: relative;
+    font-size: 1rem;
+    line-height: 1.5;
+}

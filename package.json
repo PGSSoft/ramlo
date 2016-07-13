@@ -33,7 +33,8 @@
   "preferGlobal": true,
   "bin": "./bin/ramlo.js",
   "engines": {
-    "node": ">= 4.4.x"
+    "node": ">= 5.8.x",
+    "npm": ">= 3.8.x"
   },
   "devDependencies": {
     "bootstrap": "^4.0.0-alpha.2",

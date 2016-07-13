@@ -1,0 +1,71 @@
+mixin schemasPropsTable(properties)
+    div
+        each propObj,index in  properties
+            h5= index
+            table(class='documentation__parameters table')
+                thead
+                    tr
+                        each prop,key in  propObj
+                            th= key
+
+                tbody
+                    tr
+                        each prop,key in  propObj
+                            td
+                                if Object.prototype.toString.call(prop) === '[object Object]'
+                                    +schemasPropsTable(prop)
+
+                                else if Object.prototype.toString.call(prop) === '[object Array]'
+                                    each obj in prop
+                                        ul
+                                            li
+                                            each ob,objKey in obj
+                                                if objKey === 'properties'
+                                                    div
+                                                        +schemasPropsTable(ob)
+                                                else
+                                                    div
+                                                        span= objKey
+                                                        span= " : " + ob
+
+                                else
+                                    span=  prop
+
+
+
+mixin schemaProperty(propKey, propVal)
+    if propVal
+        div(class='schema__property')
+            strong(class='schema__properties__keys')= propKey + ': '
+            div(class='schema__properties__vals')
+                //printing types of object's properties
+                span()= propVal.type
+                if propVal.type === 'array' && propVal.items && propVal.items.length >= 1
+                    span()= ' [' + propVal.items[0].type + ']'
+                if propVal.required && propVal.required === true
+                    span(class='text-primary') *
+
+            //checking for nested objects
+            if propVal.type === 'array' && propVal.items && propVal.items.length >= 1 && propVal.items[0].type === 'object'
+                +schemaHandleArray(propVal.items)
+            else if propVal.type === 'object' && propVal.properties
+                +schemaProperties(propVal.properties)
+
+
+mixin schemaHandleArray(array)
+    ul
+        each item in array
+            li
+                each val, key in item
+                    if key === 'properties'
+                        +schemaProperties(val)
+
+
+
+mixin schemaProperties(props)
+    div(class='schema__properties')
+        p(class='schema__properties__header')
+            span(class='schema__properties__keys')= 'Property: '
+            span(class='schema__properties__vals')= 'Type: '
+        each val, key in props
+            +schemaProperty(key, val)

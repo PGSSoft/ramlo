@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import "styles/theme";
-@import "styles/mixins";
 @import "styles/bootstrap";
+@import "styles/variables";
+@import "styles/mixins";
 @import "styles/theme-components";
 @import "styles/examples";
+@import "styles/endpoints";
+@import "styles/schemas";
 
 body {
     font-family: "Open Sans", sans-serif;
@@ -51,6 +54,7 @@ pre, code {
 
 .sidebar {
     position: relative;
+    border-right: 1px solid #ccc;
     transition: all 0.3s linear;
     $root: &;
     &-content {
@@ -78,24 +82,25 @@ pre, code {
             -webkit-box-shadow: none;
             background: $scrollbar-custom-thumb;
         }
-
     }
     &.is-abs {
         position: absolute;
     }
-    &.is-fixed {
-        #{$root}-content {
+    &.is-fixed,
+    &.affix{
+        nav {
             position: fixed;
             top: 0;
+            left: $grid-gutter-width/2;
             bottom: 0;
             padding-right: 15px;
             overflow-y: scroll;
             width: 16.66667%;
             min-width: 200px;
 
+
             /*below mixin is an optional effect added to sidebar*/
             //@include shrouded-element-fixed(16.66667%);
-
         }
     }
 }
@@ -123,9 +128,33 @@ pre, code {
 
 .resources__resource {
     cursor: pointer;
+    &.active {
+        font-weight: bold;
+    }
+    & > a {
+        text-decoration: none;
+        color: $body-color;
+    }
     &:active, &:focus {
         outline: none;
     }
+    & > a::before{
+        content:"\25b8";
+        padding:0 $spacer/2 0 0;
+    }
+    &.active > a{
+        &::before{
+            content:"\25be";
+        }
+    }
+}
+.resources__resource > .resources__list__endpoints {
+    height:0;
+    overflow:hidden;
+}
+
+.resources__resource.active > .resources__list__endpoints {
+    height:auto;
 }
 
 .resources__list__endpoints {
@@ -136,6 +165,11 @@ pre, code {
 
     li {
         margin: $spacer / 2 0;
+        &.active a {
+            font-weight: 700;
+            color: $pitch-black;
+            text-decoration: none;
+        }
     }
 
     .label {
@@ -149,6 +183,7 @@ pre, code {
         text-decoration: none;
         font-size: 0.875rem;
         transition: all 0.2s linear;
+        font-weight: normal;
         word-break: break-all;
 
         &:hover, &:focus {
@@ -159,11 +194,7 @@ pre, code {
         //    text-decoration: none;
         //}
 
-        &.is-current {
-            font-weight: 700;
-            color: $pitch-black;
-            text-decoration: none;
-        }
+
     }
 }
 
@@ -180,10 +211,11 @@ pre, code {
 .documentation__header {
     position: relative;
     margin: 0 0;
-    padding: 2*$spacer 10px 2*$spacer 20px;
+    padding: $padding-center-sections;
     font-size: $font-size-h2;
     font-weight: 700;
     width: 60%;
+    border-bottom: 1px solid $gray-light;
 
     .text-muted {
         float: right;
@@ -192,104 +224,29 @@ pre, code {
 
     &:after {
         @include empty-sidebar-right;
+        background-color: $gray-dark;
+        border-bottom: 1px solid $gray-middlescale;
+    }
+    &-full {
+        width: 100%;
+        &:after {
+            content: none;
+            display: none;
+        }
     }
 }
 
 .documentation__content {
     position: relative;
     margin: 0 0;
-    padding: 2*$spacer 10px 2*$spacer 20px;
+    padding: $padding-center-sections;
     width: 60%;
     display: inline-block;
 
     &:after {
         @include empty-sidebar-right;
+        background-color: $gray-dark;
     }
-}
-
-.documentation__endpoints {
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    $rootElem: &;
-    &:first-of-type {
-        #{$rootElem}__params {
-            border-top: 1px solid $gray-light;
-        }
-        #{$rootElem}__examples {
-            border-top: 1px solid $gray-middlescale;
-        }
-    }
-}
-
-.documentation__endpoints__container {
-    position: relative;
-}
-
-.documentation__endpoints__params {
-    min-height: 100px;
-    width: 60%;
-    position: relative;
-    padding: $spacer * 2 10px $spacer * 2 20px;
-    border-bottom: 1px solid $gray-light;
-}
-
-.documentation__endpoints__examples {
-    min-height: 100px;
-    width: 40%;
-    padding: 0px 10px;
-    padding-top: $spacer * 2;
-    position: relative;
-    background-color: $gray-dark;
-    color: #fcfcfc;
-    border-bottom: 1px solid $gray-middlescale;
-}
-
-.documentation__endpoints__left {
-
-}
-
-.documentation__endpoints__right {
-    position: absolute;
-    top: 0;
-    right: $spacer;
-    bottom: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: $gray-lighter;
-        border-radius: 8px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: $gray-light;
-        border-radius: 8px;
-    }
-}
-
-.documentation__endpoints__name {
-    font-size: $font-size-lg;
-    margin-top: 1rem;
-
-    &:first-child {
-        margin-top: 0;
-    }
-
-    .label {
-        width: 76px;
-        text-transform: uppercase;
-        margin: 0 $spacer 0 0;
-    }
-}
-
-.documentation__endpoints__description {
-    color: $gray-middlescale;
 }
 
 .documentation__subheader {
@@ -313,7 +270,7 @@ pre, code {
     th, td {
         padding: $spacer / 2 $spacer;
         border-top: 0;
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: 1px solid $table-border-color;
     }
 }
 
@@ -327,14 +284,24 @@ pre, code {
     }
 }
 
-.setTitle{
+.documentation__response {
+    border: 1px solid $table-border-color;
+    padding: 1rem;
+}
+
+.documentation__response__code {
+    font-size: $font-size-lg;
+    font-weight: 600;
+}
+
+.setTitle {
     font-weight: bold;
     padding: 0 15px 0 0;
 }
-.setDesc{
+
+.setDesc {
     color: #999;
 }
-
 
 .footer {
 

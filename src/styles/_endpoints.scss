@@ -1,0 +1,73 @@
+.documentation__endpoints {
+    padding: 0;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    $rootElem: &;
+    &:first-of-type {
+        #{$rootElem}__params {
+            border-top: 1px solid $gray-light;
+        }
+        #{$rootElem}__examples {
+            border-top: 1px solid $gray-middlescale;
+        }
+    }
+}
+
+.documentation__endpoints__container {
+    position: relative;
+}
+
+.documentation__endpoints__params {
+    min-height: 100px;
+    width: 60%;
+    position: relative;
+    padding: $padding-center-sections;
+    border-bottom: 1px solid $gray-light;
+}
+
+.documentation__endpoints__right {
+    position: absolute;
+    top: 0;
+    right: $spacer;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $gray-lighter;
+        border-radius: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $gray-light;
+        border-radius: 8px;
+    }
+}
+
+.documentation__endpoints__name {
+    font-size: $font-size-lg;
+    margin-top: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid $gray-light;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    .label {
+        width: 76px;
+        text-transform: uppercase;
+        margin: 0 $spacer 0 0;
+    }
+}
+
+.documentation__endpoints__description {
+    color: $gray-middlescale;
+    margin-bottom: 2rem;
+}
