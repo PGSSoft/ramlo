@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var path = require('path');
 var fs = require('fs');
 
@@ -7,11 +9,10 @@ var program = require('commander');
 var chalk = require('chalk');
 var sass = require('node-sass');
 var jade = require('jade');
-var uglify = require('uglify-js');
 
-var pkg = require(path.join(__dirname, 'package.json'));
-var api = require('./src/modules/api');
-var helpers = require('./src/modules/helpers');
+var pkg = require(path.join(__dirname, '../package.json'));
+var api = require('../src/modules/api');
+var helpers = require('../src/modules/helpers');
 
 program
     .version(pkg.version)
@@ -41,21 +42,17 @@ if (program.file) {
 
     // compile sass styles
     var scss = sass.renderSync({
-        file: path.join(__dirname, 'src/main.scss'),
+        file: path.join(__dirname, '../src/main.scss'),
         outputStyle: 'compressed',
-        outFile: path.join(__dirname, 'src/main.css'),
+        outFile: path.join(__dirname, '../src/main.css'),
         sourceMap: false
     });
 
-    var minjs = uglify.minify(path.join(__dirname, 'src/index.js'));
-
     // save css file which will be included in html file
-    fs.writeFileSync(path.join(__dirname, 'src/main.css'), scss.css);
-
-    fs.writeFileSync(path.join(__dirname, 'src/index.min.js'), minjs.code);
+    fs.writeFileSync(path.join(__dirname, '../src/main.css'), scss.css);
 
     // render html from jade template
-    var html = jade.renderFile(path.join(__dirname, 'src/index.jade'), { api: ramlApi, helpers: helpers });
+    var html = jade.renderFile(path.join(__dirname, '../src/index.jade'), { api: ramlApi, helpers: helpers });
 
     // save html file with documentation
     fs.writeFileSync(docFile, html);
@@ -63,6 +60,7 @@ if (program.file) {
     console.timeEnd('time');
     console.log(chalk.green('finished'));
 }
-else {
-    program.outputHelp();
+
+if (!process.argv.slice(2).length) {
+    program.help();
 }

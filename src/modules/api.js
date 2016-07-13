@@ -55,7 +55,7 @@ function produceResources(api) {
 
         //make sure there are no duplicates
         if(namesArr.indexOf(name) < 0 ) {
-            
+
             namesArr.push(name);
 
             apiResources.push({

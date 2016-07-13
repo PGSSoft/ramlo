@@ -1,9 +1,14 @@
 {
   "name": "ramlo",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Documentation generator for RESTful API written in RAML",
-  "main": "ramlo.js",
+  "keywords": [
+    "raml"
+  ],
   "scripts": {
+    "build": "node_modules/.bin/node-sass --output-style compressed src/main.scss > src/main.css",
+    "prepublish": "",
+    "release": "",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,27 +22,24 @@
   },
   "homepage": "https://github.com/PGSSoft/ramlo#readme",
   "dependencies": {
-    "bootstrap": "^4.0.0-alpha.2",
     "chalk": "^1.1.3",
     "commander": "^2.9.0",
-    "highlight.js": "^9.4.0",
+    "highlight.js": "^9.5.0",
     "jade": "^1.11.0",
     "lodash": "^4.13.1",
     "markdown": "^0.5.0",
-    "node-sass": "^3.7.0",
-    "raml-1-parser": "^0.2.21",
-    "uglify-js": "^2.6.2"
+    "raml-1-parser": "^0.2.27"
   },
   "preferGlobal": true,
-  "bin": {
-    "ramlo": "ramlo.js"
-  },
+  "bin": "./bin/ramlo.js",
   "engines": {
-    "node": ">= 5.8.x"
+    "node": ">= 4.4.x"
   },
   "devDependencies": {
+    "bootstrap": "^4.0.0-alpha.2",
     "chai": "^3.5.0",
-    "karma": "^0.13.22",
-    "mocha": "^2.5.3"
+    "karma": "^1.1.1",
+    "mocha": "^2.5.3",
+    "node-sass": "^3.8.0"
   }
 }
