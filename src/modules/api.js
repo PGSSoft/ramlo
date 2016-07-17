@@ -243,7 +243,7 @@ function produceRequestBody(method) {
 
     var ramlBody = method.body();
 
-    if (Object.keys(ramlBody).length > 0) {
+    if (Object.keys(ramlBody).length > 0 && _.isFunction(body.schemaContent)) {
 
         //expecting only 1 value to be valid
         //there should NOT be 2 or more "body" declarations
@@ -276,6 +276,9 @@ function produceResponseBody(method) {
             ramlBodies = response.body();
 
             _.forEach(ramlBodies, function (body) {
+                if (!_.isFunction(body.schemaContent)) {
+                    return;
+                }
 
                 //check if NULL before calling produceSchemaParameters()
                 var sch = body.schemaContent();

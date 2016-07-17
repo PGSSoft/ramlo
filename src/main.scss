@@ -49,7 +49,6 @@ pre, code {
     font-weight: 700;
     font-size: 1.25rem;
     line-height: 2;
-    background-color: $gray-lighter;
 }
 
 .sidebar {
@@ -199,13 +198,7 @@ pre, code {
 }
 
 .documentation {
-    border-left: 1px solid $gray-light;
 
-    //border-top: 1px solid $gray-light;
-    &:first-of-type {
-        border-top: 1px solid $gray-light;
-
-    }
 }
 
 .documentation__header {
@@ -215,7 +208,7 @@ pre, code {
     font-size: $font-size-h2;
     font-weight: 700;
     width: 60%;
-    border-bottom: 1px solid $gray-light;
+    background: $gray-lighter;
 
     .text-muted {
         float: right;
