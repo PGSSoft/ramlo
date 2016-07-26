@@ -243,7 +243,7 @@ function produceRequestBody(method) {
 
     var ramlBody = method.body();
 
-    if (Object.keys(ramlBody).length > 0 && _.isFunction(body.schemaContent)) {
+    if (Object.keys(ramlBody).length > 0 && _.isFunction(ramlBody.schemaContent)) {
 
         //expecting only 1 value to be valid
         //there should NOT be 2 or more "body" declarations
