@@ -125,7 +125,7 @@ html(lang="en")
         header(class='header')
             .container-fluid
                 h1(class='header__title', title=api.apiProtocol )= api.apiTitle
-                p(class='header__subtitle')= api.apiDescription
+                div(class='header__subtitle') !{api.apiDescription}
                 span(class='header__uri text-primary #{api.apiDescription ? "pull-xs-right" : ""}')= api.apiBaseUri
                 if api.baseUriParameters.length > 0
                     div
@@ -153,416 +153,416 @@ html(lang="en")
             - var globId = 0;
             - var responseCodeClass = '';
             .container-fluid
-                    .row
-                    .col-md-2.sidebar(data-spy="affix" data-offset-top="200")
-                        nav(id="resources-nav").resources.sidebar-content
-                            h1(class='resources__header') Resources
-                            ul.nav.nav-stacked.resources__list
-                                if Object.keys(api.apiSecuredBy).length > 0
-                                    li.resources__resource= "Authentication"
-                                each resource in api.apiResources
-                                    li.resources__resource
-                                        a(href='##{helpers.uri2Identifier(resource.name)}')=resource.name
-                                        ul(class='nav nav-stacked resources__list__endpoints')
-                                            each endpoint in resource.endpoints
-                                                li
-                                                    case endpoint.method
-                                                        when 'get': span(class='label label-primary')= endpoint.method
-                                                        when 'post': span(class='label label-success')= endpoint.method
-                                                        when 'put': span(class='label label-info')= endpoint.method
-                                                        when 'delete': span(class='label label-danger')= endpoint.method
-                                                        when 'patch': span(class='label label-info')= endpoint.method
-                                                    a(href='#' + '#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')= endpoint.uri
-                    .col-md-10.col-md-offset-2
-                        each documentation in api.apiDocumentations
-                            section(class='documentation row')
-                                h1(class='documentation__header')= documentation.title
-                                div(class='documentation__content') !{documentation.content}
-
-                        if Object.keys(api.apiSecuredBy).length > 0
-                            section(class='documentation row authentication')
-                                h1(class='documentation__header' id="authentication")= "Authentication - " + api.apiSecuredBy.type
-                                if api.apiSecuredBy.description
-                                    div(class='documentation__content') !{api.apiSecuredBy.description}
-
-
-
-                        each resource in api.apiResources
-                            section(class='documentation row')
-                                h1(class='documentation__header' id='#{helpers.uri2Identifier(resource.name)}')= resource.name
-                                div(class='documentation__description')= resource.description
-                                each endpoint in resource.endpoints
-                                    div(class='documentation__endpoints' id='#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')
-                                        .documentation__endpoints__params
-                                            p(class='documentation__endpoints__name')
+                .row
+                .col-md-2.sidebar(data-spy="affix" data-offset-top="200")
+                    nav(id="resources-nav").resources.sidebar-content
+                        h1(class='resources__header') Resources
+                        ul.nav.nav-stacked.resources__list
+                            if Object.keys(api.apiSecuredBy).length > 0
+                                li.resources__resource= "Authentication"
+                            each resource in api.apiResources
+                                li.resources__resource
+                                    a(href='##{helpers.uri2Identifier(resource.name)}')=resource.name
+                                    ul(class='nav nav-stacked resources__list__endpoints')
+                                        each endpoint in resource.endpoints
+                                            li
                                                 case endpoint.method
                                                     when 'get': span(class='label label-primary')= endpoint.method
                                                     when 'post': span(class='label label-success')= endpoint.method
                                                     when 'put': span(class='label label-info')= endpoint.method
                                                     when 'delete': span(class='label label-danger')= endpoint.method
                                                     when 'patch': span(class='label label-info')= endpoint.method
-                                                = endpoint.uri
+                                                a(href='#' + '#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')= endpoint.uri
+                .col-md-10.col-md-offset-2
+                    each documentation in api.apiDocumentations
+                        section(class='documentation row')
+                            h1(class='documentation__header')= documentation.title
+                            div(class='documentation__content') !{documentation.content}
 
-                                            div(class='documentation__endpoints__description') !{endpoint.description}
+                    if Object.keys(api.apiSecuredBy).length > 0
+                        section(class='documentation row authentication')
+                            h1(class='documentation__header' id="authentication")= "Authentication - " + api.apiSecuredBy.type
+                            if api.apiSecuredBy.description
+                                div(class='documentation__content') !{api.apiSecuredBy.description}
 
-                                            if endpoint.uriParameters && endpoint.uriParameters["tbody"]
-                                                if endpoint.uriParameters["tbody"].length
-                                                    h2(class='documentation__subheader') URI Parameters
-                                                    table(class='documentation__parameters table table-bordered')
-                                                        thead
+
+
+                    each resource in api.apiResources
+                        section(class='documentation row')
+                            h1(class='documentation__header' id='#{helpers.uri2Identifier(resource.name)}')= resource.name
+                            div(class='documentation__description')= resource.description
+                            each endpoint in resource.endpoints
+                                div(class='documentation__endpoints' id='#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')
+                                    .documentation__endpoints__params
+                                        p(class='documentation__endpoints__name')
+                                            case endpoint.method
+                                                when 'get': span(class='label label-primary')= endpoint.method
+                                                when 'post': span(class='label label-success')= endpoint.method
+                                                when 'put': span(class='label label-info')= endpoint.method
+                                                when 'delete': span(class='label label-danger')= endpoint.method
+                                                when 'patch': span(class='label label-info')= endpoint.method
+                                            = endpoint.uri
+
+                                        div(class='documentation__endpoints__description') !{endpoint.description}
+
+                                        if endpoint.uriParameters && endpoint.uriParameters["tbody"]
+                                            if endpoint.uriParameters["tbody"].length
+                                                h2(class='documentation__subheader') URI Parameters
+                                                table(class='documentation__parameters table table-bordered')
+                                                    thead
+                                                        tr
+                                                            if endpoint.uriParameters.thead.name
+                                                                th name
+
+                                                            if endpoint.uriParameters.thead.type
+                                                                th type
+
+                                                            if endpoint.uriParameters.thead.description
+                                                                th description
+                                                    tbody
+                                                        each parameter in endpoint.uriParameters["tbody"]
                                                             tr
                                                                 if endpoint.uriParameters.thead.name
-                                                                    th name
+                                                                    td= parameter.name
 
                                                                 if endpoint.uriParameters.thead.type
-                                                                    th type
+                                                                    td= parameter.type
 
                                                                 if endpoint.uriParameters.thead.description
-                                                                    th description
-                                                        tbody
-                                                            each parameter in endpoint.uriParameters["tbody"]
-                                                                tr
-                                                                    if endpoint.uriParameters.thead.name
-                                                                        td= parameter.name
+                                                                    td !{parameter.description}
 
-                                                                    if endpoint.uriParameters.thead.type
-                                                                        td= parameter.type
+                                        if endpoint.queryParameters && endpoint.queryParameters["tbody"]
+                                            if endpoint.queryParameters["tbody"].length
+                                                h2(class='documentation__subheader') Query Parameters
+                                                table(class='documentation__parameters table table-bordered')
+                                                    thead
+                                                        tr
+                                                            if endpoint.queryParameters.thead.name
+                                                                th name
 
-                                                                    if endpoint.uriParameters.thead.description
-                                                                        td !{parameter.description}
+                                                            if endpoint.queryParameters.thead.type
+                                                                th type
 
-                                            if endpoint.queryParameters && endpoint.queryParameters["tbody"]
-                                                if endpoint.queryParameters["tbody"].length
-                                                    h2(class='documentation__subheader') Query Parameters
-                                                    table(class='documentation__parameters table table-bordered')
-                                                        thead
+                                                            if endpoint.queryParameters.thead.description
+                                                                th description
+
+                                                            if endpoint.queryParameters.thead.default
+                                                                th default
+
+                                                            if endpoint.queryParameters.thead.minLength
+                                                                th min
+
+                                                            if endpoint.queryParameters.thead.maxLength
+                                                                th max
+
+                                                            if endpoint.queryParameters.thead.example
+                                                                th example
+                                                    tbody
+                                                        each parameter in endpoint.queryParameters["tbody"]
                                                             tr
                                                                 if endpoint.queryParameters.thead.name
-                                                                    th name
-
-                                                                if endpoint.queryParameters.thead.type
-                                                                    th type
-
-                                                                if endpoint.queryParameters.thead.description
-                                                                    th description
-
-                                                                if endpoint.queryParameters.thead.default
-                                                                    th default
-
-                                                                if endpoint.queryParameters.thead.minLength
-                                                                    th min
-
-                                                                if endpoint.queryParameters.thead.maxLength
-                                                                    th max
-
-                                                                if endpoint.queryParameters.thead.example
-                                                                    th example
-                                                        tbody
-                                                            each parameter in endpoint.queryParameters["tbody"]
-                                                                tr
-                                                                    if endpoint.queryParameters.thead.name
-                                                                        td
-                                                                            span= parameter.name
-                                                                            if(parameter.isRequired)
-                                                                                span(class='text-primary') *
-
-                                                                    if endpoint.queryParameters.thead.type
-                                                                        if parameter.repeat
-                                                                            td [ #{parameter.type} ]
-                                                                        else
-                                                                            td #{parameter.type}
-
-                                                                    if endpoint.queryParameters.thead.description
-                                                                        td !{parameter.description}
-
-                                                                    if endpoint.queryParameters.thead.default
-                                                                        td= parameter.default
-
-                                                                    if endpoint.queryParameters.thead.minLength
-                                                                        td= parameter.minLength
-
-                                                                    if endpoint.queryParameters.thead.maxLength
-                                                                        td= parameter.maxLength
-
-                                                                    if endpoint.queryParameters.thead.example
-                                                                        td= parameter.example
-
-                                            if endpoint.requestBody && endpoint.requestBody["tbody"]
-                                                if endpoint.requestBody["tbody"].length
-                                                    h2(class='documentation__subheader') Request
-                                                    table(class='documentation__parameters table table-bordered')
-                                                        thead
-                                                            tr
-                                                                if endpoint.requestBody.thead.name
-                                                                    th name
-
-                                                                if endpoint.requestBody.thead.type
-                                                                    th type
-
-                                                                if endpoint.requestBody.thead.description
-                                                                    th description
-                                                        tbody
-                                                            each property in endpoint.requestBody.tbody
-                                                                tr
-                                                                    if endpoint.requestBody.thead.name
-                                                                        td= property.name
-                                                                        if property.isRequired
+                                                                    td
+                                                                        span= parameter.name
+                                                                        if(parameter.isRequired)
                                                                             span(class='text-primary') *
 
-                                                                    if endpoint.requestBody.thead.type
-                                                                        td= property.type
+                                                                if endpoint.queryParameters.thead.type
+                                                                    if parameter.repeat
+                                                                        td [ #{parameter.type} ]
+                                                                    else
+                                                                        td #{parameter.type}
 
-                                                                    if endpoint.requestBody.thead.description
-                                                                        td= property.description
+                                                                if endpoint.queryParameters.thead.description
+                                                                    td !{parameter.description}
 
-                                            if endpoint.responseBody
+                                                                if endpoint.queryParameters.thead.default
+                                                                    td= parameter.default
 
-                                                h2(class='documentation__subheader')= 'Response '
-                                                div(class='documentation__response')
-                                                    p(class='documentation__response__code text-success') (200)
+                                                                if endpoint.queryParameters.thead.minLength
+                                                                    td= parameter.minLength
 
-                                                    if endpoint.responseBody["type"]
-                                                        span= "Content-Type: "
-                                                        if endpoint.responseBody["type"].name
-                                                            strong(class="typeName")= endpoint.responseBody["type"].name
-                                                        if endpoint.responseBody["type"].type
-                                                            span(class="typeType")= " | type: "
-                                                            +getTypesType(endpoint.responseBody["type"].type)
-                                                        if endpoint.responseBody["type"].schema
-                                                            div(class="typeType")
-                                                                - var schemalink = '#schemas-' + endpoint.responseBody["type"].schema
-                                                                span= "Schema: "
-                                                                a(href=schemalink class='text-bold')= endpoint.responseBody["type"].schema
+                                                                if endpoint.queryParameters.thead.maxLength
+                                                                    td= parameter.maxLength
 
-                                                        //dumping data for the moment, need to add properties
-                                                        div
-                                                            if endpoint.responseBody["type"].properties
-                                                                h6 Properties
-                                                                +typePropsTable( endpoint.responseBody["type"].properties )
+                                                                if endpoint.queryParameters.thead.example
+                                                                    td= parameter.example
 
-                                                //temporary removal of response body in table
-                                                //if endpoint.responseBody["tbody"]
-                                                //
-                                                //    if endpoint.responseBody["tbody"].length
-                                                //        table(class='documentation__parameters table')
-                                                //            thead
-                                                //                tr
-                                                //                if endpoint.responseBody.thead.name
-                                                //                    th name
-                                                //
-                                                //                if endpoint.responseBody.thead.type
-                                                //                    th type
-                                                //
-                                                //                if endpoint.responseBody.thead.description
-                                                //                    th description
-                                                //            tbody
-                                                //                each property in endpoint.responseBody.tbody
-                                                //                    tr
-                                                //                        if endpoint.responseBody.thead.name
-                                                //                            td= property.name
-                                                //                            if property.isRequired
-                                                //                                span(class='text-primary') *
-                                                //
-                                                //                        if endpoint.responseBody.thead.type
-                                                //                            td= property.type
-                                                //
-                                                //                        if endpoint.responseBody.thead.description
-                                                //                            td= property.description
-                                                //
-                                                //                        if property.nestedProperties.tbody
-                                                //                            if property.nestedProperties.tbody.length
-                                                //                                each nested in property.nestedProperties.tbody
-                                                //                                    tr(class='documentation__parameters__nested')
-                                                //                                        if endpoint.responseBody.thead.name
-                                                //                                            td= nested.name
-                                                //                                            if nested.isRequired
-                                                //                                                span(class='text-primary') *
-                                                //
-                                                //                                        if property.nestedProperties.thead.type
-                                                //                                            td= nested.type
-                                                //
-                                                //                                        if property.nestedProperties.thead.description
-                                                //                                            td= nested.description
+                                        if endpoint.requestBody && endpoint.requestBody["tbody"]
+                                            if endpoint.requestBody["tbody"].length
+                                                h2(class='documentation__subheader') Request
+                                                table(class='documentation__parameters table table-bordered')
+                                                    thead
+                                                        tr
+                                                            if endpoint.requestBody.thead.name
+                                                                th name
 
-                                        .documentation__endpoints__examples
-                                            if endpoint.responseExample
-                                                a(class='examples__toggle')= ''
-                                                h2(class='documentation__subheader')= ' Response examples '
-                                                ul.examples__tabs
-                                                    each example, index in endpoint.responseExample
-                                                        li.example__tab
-                                                            - var check = index === 0;
-                                                            input(type='radio' name='example-tabs#{globId}' id='example-tab#{globId + index}' checked=check)
-                                                            if example.code >= 200 && example.code < 300
-                                                                - responseCodeClass = "response-ok";
-                                                            else if example.code >= 300 && example.code < 400
-                                                                - responseCodeClass = "response-info";
-                                                            else if example.code >= 400 && example.code < 500
-                                                                - responseCodeClass = "response-errc";
-                                                            else if example.code >= 500
-                                                                - responseCodeClass = "response-errs";
-                                                            label(class='#{responseCodeClass}' for='example-tab#{globId + index}') (#{example.code})
-                                                ul.examples__contents
-                                                    each example, index in endpoint.responseExample
+                                                            if endpoint.requestBody.thead.type
+                                                                th type
+
+                                                            if endpoint.requestBody.thead.description
+                                                                th description
+                                                    tbody
+                                                        each property in endpoint.requestBody.tbody
+                                                            tr
+                                                                if endpoint.requestBody.thead.name
+                                                                    td= property.name
+                                                                    if property.isRequired
+                                                                        span(class='text-primary') *
+
+                                                                if endpoint.requestBody.thead.type
+                                                                    td= property.type
+
+                                                                if endpoint.requestBody.thead.description
+                                                                    td= property.description
+
+                                        if endpoint.responseBody
+
+                                            h2(class='documentation__subheader')= 'Response '
+                                            div(class='documentation__response')
+                                                p(class='documentation__response__code text-success') (200)
+
+                                                if endpoint.responseBody["type"]
+                                                    span= "Content-Type: "
+                                                    if endpoint.responseBody["type"].name
+                                                        strong(class="typeName")= endpoint.responseBody["type"].name
+                                                    if endpoint.responseBody["type"].type
+                                                        span(class="typeType")= " | type: "
+                                                        +getTypesType(endpoint.responseBody["type"].type)
+                                                    if endpoint.responseBody["type"].schema
+                                                        div(class="typeType")
+                                                            - var schemalink = '#schemas-' + endpoint.responseBody["type"].schema
+                                                            span= "Schema: "
+                                                            a(href=schemalink class='text-bold')= endpoint.responseBody["type"].schema
+
+                                                    //dumping data for the moment, need to add properties
+                                                    div
+                                                        if endpoint.responseBody["type"].properties
+                                                            h6 Properties
+                                                            +typePropsTable( endpoint.responseBody["type"].properties )
+
+                                            //temporary removal of response body in table
+                                            //if endpoint.responseBody["tbody"]
+                                            //
+                                            //    if endpoint.responseBody["tbody"].length
+                                            //        table(class='documentation__parameters table')
+                                            //            thead
+                                            //                tr
+                                            //                if endpoint.responseBody.thead.name
+                                            //                    th name
+                                            //
+                                            //                if endpoint.responseBody.thead.type
+                                            //                    th type
+                                            //
+                                            //                if endpoint.responseBody.thead.description
+                                            //                    th description
+                                            //            tbody
+                                            //                each property in endpoint.responseBody.tbody
+                                            //                    tr
+                                            //                        if endpoint.responseBody.thead.name
+                                            //                            td= property.name
+                                            //                            if property.isRequired
+                                            //                                span(class='text-primary') *
+                                            //
+                                            //                        if endpoint.responseBody.thead.type
+                                            //                            td= property.type
+                                            //
+                                            //                        if endpoint.responseBody.thead.description
+                                            //                            td= property.description
+                                            //
+                                            //                        if property.nestedProperties.tbody
+                                            //                            if property.nestedProperties.tbody.length
+                                            //                                each nested in property.nestedProperties.tbody
+                                            //                                    tr(class='documentation__parameters__nested')
+                                            //                                        if endpoint.responseBody.thead.name
+                                            //                                            td= nested.name
+                                            //                                            if nested.isRequired
+                                            //                                                span(class='text-primary') *
+                                            //
+                                            //                                        if property.nestedProperties.thead.type
+                                            //                                            td= nested.type
+                                            //
+                                            //                                        if property.nestedProperties.thead.description
+                                            //                                            td= nested.description
+
+                                    .documentation__endpoints__examples
+                                        if endpoint.responseExample
+                                            a(class='examples__toggle')= ''
+                                            h2(class='documentation__subheader')= ' Response examples '
+                                            ul.examples__tabs
+                                                each example, index in endpoint.responseExample
+                                                    li.example__tab
                                                         - var check = index === 0;
-                                                        pre.example__content(class=check ? "is-active" : "" id='example-content#{globId + index}' data-tab='example-tab#{globId + index}')
-                                                            div.example__response !{example.response}
-                                                - globId += endpoint.responseExample.length;
+                                                        input(type='radio' name='example-tabs#{globId}' id='example-tab#{globId + index}' checked=check)
+                                                        if example.code >= 200 && example.code < 300
+                                                            - responseCodeClass = "response-ok";
+                                                        else if example.code >= 300 && example.code < 400
+                                                            - responseCodeClass = "response-info";
+                                                        else if example.code >= 400 && example.code < 500
+                                                            - responseCodeClass = "response-errc";
+                                                        else if example.code >= 500
+                                                            - responseCodeClass = "response-errs";
+                                                        label(class='#{responseCodeClass}' for='example-tab#{globId + index}') (#{example.code})
+                                            ul.examples__contents
+                                                each example, index in endpoint.responseExample
+                                                    - var check = index === 0;
+                                                    pre.example__content(class=check ? "is-active" : "" id='example-content#{globId + index}' data-tab='example-tab#{globId + index}')
+                                                        div.example__response !{example.response}
+                                            - globId += endpoint.responseExample.length;
 
-                        //-- TYPES
-                        if api.apiAllTypes.length > 0
-                            section(class='documentation row' id='allTypes')
-                                h1.documentation__header All Types
-                                div(class="documentation__description")
-                                    span All defined data types listed below
-                                #typesContainer
-                                    each typeObj in api.apiAllTypes
-                                        //generate types table
-                                        +typeTable(typeObj)
+                    //-- TYPES
+                    if api.apiAllTypes.length > 0
+                        section(class='documentation row' id='allTypes')
+                            h1.documentation__header All Types
+                            div(class="documentation__description")
+                                span All defined data types listed below
+                            #typesContainer
+                                each typeObj in api.apiAllTypes
+                                    //generate types table
+                                    +typeTable(typeObj)
 
-                        //-- schemas
-                        if api.apiAllSchemas.length > 0
-                            section(class='documentation row' id='allSchemas')
-                                h1.documentation__header.documentation__header-full All Schemas
-                                div(class="documentation__description")
-                                    span All defined schemas are listed below.
-                                div(class="documentation")
-                                    - var excluded = ["required", "$schema"]
-                                    //generate schemas table
-                                    each schemaObj in api.apiAllSchemas
+                    //-- schemas
+                    if api.apiAllSchemas.length > 0
+                        section(class='documentation row' id='allSchemas')
+                            h1.documentation__header.documentation__header-full All Schemas
+                            div(class="documentation__description")
+                                span All defined schemas are listed below.
+                            div(class="documentation")
+                                - var excluded = ["required", "$schema"]
+                                //generate schemas table
+                                each schemaObj in api.apiAllSchemas
 
-                                        each ob, index in schemaObj
-                                            div(class="documentation__schemas")
-                                                h4(id='schemas-' + index)= index
-                                                each o,key in ob
-                                                    // exclude unwanted keys from listing
-                                                    if excluded.indexOf(key) < 0
-                                                        p(class='schema__key')
-                                                            strong= key + ': '
-                                                            if key != "properties"
-                                                                span= o
-                                                        if key == "properties"
-                                                            // list all schema properties
-                                                            +schemaProperties(o)
-
-
-
-                        //-- SECURITY SCHEMAS
-                        if api.apiSecuritySchemes.length > 0
-                            div(class='securityScheme')
-                            each securityScheme in api.apiSecuritySchemes
-                                if securityScheme.type
-                                    h2(id=securityScheme.type)= securityScheme.type
-                                if securityScheme.description
-                                    p(class='description')= securityScheme.description
-
-                                if securityScheme.settings
-                                    h4 Settings
-                                    ul
-                                        if securityScheme.settings.requestTokenUri
-                                            li
-                                                span(class='setTitle')='requestTokenUri:'
-                                                span(class='setDesc')= securityScheme.settings.requestTokenUri
-
-                                        if securityScheme.settings.authorizationUri
-                                            li
-                                                span(class='setTitle')='authorizationUri:'
-                                                span(class='setDesc')= securityScheme.settings.authorizationUri
-
-                                        if securityScheme.settings.tokenCredentialsUri
-                                            li
-                                                span(class='setTitle')='tokenCredentialsUri:'
-                                                span(class='setDesc')= securityScheme.settings.tokenCredentialsUri
-
-                                        if securityScheme.settings.signatures
-                                            li
-                                                span(class='setTitle')='signatures:'
-                                                span(class='setDesc')= securityScheme.settings.signatures
+                                    each ob, index in schemaObj
+                                        div(class="documentation__schemas")
+                                            h4(id='schemas-' + index)= index
+                                            each o,key in ob
+                                                // exclude unwanted keys from listing
+                                                if excluded.indexOf(key) < 0
+                                                    p(class='schema__key')
+                                                        strong= key + ': '
+                                                        if key != "properties"
+                                                            span= o
+                                                    if key == "properties"
+                                                        // list all schema properties
+                                                        +schemaProperties(o)
 
 
-                                        if securityScheme.settings.accessTokenUri
-                                            li
-                                                span(class='setTitle')='accessTokenUri:'
-                                                span(class='setDesc')= securityScheme.settings.accessTokenUri
 
-                                        if securityScheme.settings.authorizationGrants
-                                            li
-                                                span(class='setTitle')='authorizationGrants:'
-                                                span(class='setDesc')= securityScheme.settings.authorizationGrants
+                    //-- SECURITY SCHEMAS
+                    if api.apiSecuritySchemes.length > 0
+                        div(class='securityScheme')
+                        each securityScheme in api.apiSecuritySchemes
+                            if securityScheme.type
+                                h2(id=securityScheme.type)= securityScheme.type
+                            if securityScheme.description
+                                p(class='description')= securityScheme.description
 
-                                        if securityScheme.settings.scopes
-                                            li
-                                                span(class='setTitle')='scopes:'
-                                                span(class='setDesc')= securityScheme.settings.scopes
+                            if securityScheme.settings
+                                h4 Settings
+                                ul
+                                    if securityScheme.settings.requestTokenUri
+                                        li
+                                            span(class='setTitle')='requestTokenUri:'
+                                            span(class='setDesc')= securityScheme.settings.requestTokenUri
+
+                                    if securityScheme.settings.authorizationUri
+                                        li
+                                            span(class='setTitle')='authorizationUri:'
+                                            span(class='setDesc')= securityScheme.settings.authorizationUri
+
+                                    if securityScheme.settings.tokenCredentialsUri
+                                        li
+                                            span(class='setTitle')='tokenCredentialsUri:'
+                                            span(class='setDesc')= securityScheme.settings.tokenCredentialsUri
+
+                                    if securityScheme.settings.signatures
+                                        li
+                                            span(class='setTitle')='signatures:'
+                                            span(class='setDesc')= securityScheme.settings.signatures
 
 
-                                if securityScheme.describedBy
-                                    div(class='documentation__endpoints__description')
-                                        h4 Described By
+                                    if securityScheme.settings.accessTokenUri
+                                        li
+                                            span(class='setTitle')='accessTokenUri:'
+                                            span(class='setDesc')= securityScheme.settings.accessTokenUri
 
-                                            if securityScheme.describedBy.headers
-                                                h2(class='documentation__subheader') Headers
-                                                each auth,index in securityScheme.describedBy.headers
+                                    if securityScheme.settings.authorizationGrants
+                                        li
+                                            span(class='setTitle')='authorizationGrants:'
+                                            span(class='setDesc')= securityScheme.settings.authorizationGrants
 
-                                                    table(class='documentation__parameters table')
-                                                        thead
-                                                            tr
-                                                                th name
-                                                                if auth.type
-                                                                    th type
-                                                                if auth.description
-                                                                    th description
-                                                        tbody
-                                                            tr
-                                                                th= index
-                                                                if auth.type
-                                                                    td= auth.type
+                                    if securityScheme.settings.scopes
+                                        li
+                                            span(class='setTitle')='scopes:'
+                                            span(class='setDesc')= securityScheme.settings.scopes
 
-                                                                if auth.description
-                                                                    td= auth.description
 
-                                            if securityScheme.describedBy.queryParameters
-                                                h2(class='documentation__subheader') Query Parameters
+                            if securityScheme.describedBy
+                                div(class='documentation__endpoints__description')
+                                    h4 Described By
 
-                                                each auth,index in securityScheme.describedBy.queryParameters
+                                        if securityScheme.describedBy.headers
+                                            h2(class='documentation__subheader') Headers
+                                            each auth,index in securityScheme.describedBy.headers
 
-                                                    table(class='documentation__parameters table')
-                                                        thead
-                                                            tr
-                                                                th name
-                                                                if auth.type
-                                                                    th type
-                                                                if auth.description
-                                                                    th description
-                                                        tbody
-                                                            tr
-                                                                th= index
-                                                                if auth.type
-                                                                    td= auth.type
-                                                                if auth.description
-                                                                    td= auth.description
+                                                table(class='documentation__parameters table')
+                                                    thead
+                                                        tr
+                                                            th name
+                                                            if auth.type
+                                                                th type
+                                                            if auth.description
+                                                                th description
+                                                    tbody
+                                                        tr
+                                                            th= index
+                                                            if auth.type
+                                                                td= auth.type
 
-                                            if securityScheme.describedBy.responses
-                                                h2(class='documentation__subheader') Responses
+                                                            if auth.description
+                                                                td= auth.description
 
-                                                each auth,index in securityScheme.describedBy.responses
+                                        if securityScheme.describedBy.queryParameters
+                                            h2(class='documentation__subheader') Query Parameters
 
-                                                    table(class='documentation__parameters table')
-                                                        thead
-                                                            tr
-                                                                th name
-                                                                if auth.type
-                                                                    th type
-                                                                if auth.description
-                                                                    th description
-                                                        tbody
-                                                            tr
-                                                                th= index
-                                                                if auth.type
-                                                                    td= auth.type
+                                            each auth,index in securityScheme.describedBy.queryParameters
 
-                                                                if auth.description
-                                                                    td= auth.description
+                                                table(class='documentation__parameters table')
+                                                    thead
+                                                        tr
+                                                            th name
+                                                            if auth.type
+                                                                th type
+                                                            if auth.description
+                                                                th description
+                                                    tbody
+                                                        tr
+                                                            th= index
+                                                            if auth.type
+                                                                td= auth.type
+                                                            if auth.description
+                                                                td= auth.description
+
+                                        if securityScheme.describedBy.responses
+                                            h2(class='documentation__subheader') Responses
+
+                                            each auth,index in securityScheme.describedBy.responses
+
+                                                table(class='documentation__parameters table')
+                                                    thead
+                                                        tr
+                                                            th name
+                                                            if auth.type
+                                                                th type
+                                                            if auth.description
+                                                                th description
+                                                    tbody
+                                                        tr
+                                                            th= index
+                                                            if auth.type
+                                                                td= auth.type
+
+                                                            if auth.description
+                                                                td= auth.description
 
 
 

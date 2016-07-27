@@ -15,8 +15,8 @@ var markdown = require('markdown').markdown;
 var ramlo = {};
 
 function produceDescription(api) {
-    // var description = api.description();
-    // return description && description.value();
+    var description = api.description();
+    return description && markdown.toHTML(description.value());
     return '';  // @TODO: remove temporary workaround for "TypeError: api.description is not a function"
 }
 
@@ -678,6 +678,8 @@ module.exports = function (ramlFile) {
 
     ramlo.ramlVersion = api.RAMLVersion();
     ramlo.apiTitle = api.title();
+    ramlo.apiVersion = api.version();
+
     ramlo.apiProtocol = produceProtocols(api);
     ramlo.apiDescription = produceDescription(api);
     ramlo.apiSecuritySchemes = produceAllSecuritySchemes(api);
@@ -690,7 +692,7 @@ module.exports = function (ramlFile) {
     ramlo.typeNamesArray = typeNamesArray;
     ramlo.apiAllSchemas = schemas;
 
-    //console.log(ramlo.apiSecuritySchemes);
+    //console.log(ramloApi.apiSecuritySchemes);
 
     return ramlo;
 };
