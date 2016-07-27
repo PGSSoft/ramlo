@@ -1,92 +1,77 @@
-
-var ramlo  = require('../src/modules/api.js');
+var ramloApi = require('../src/modules/api.js');
 var assert = require('chai').assert;
 var expect = require('chai').expect;
-var fs     = require('fs');
+var fs = require('fs');
 
 var test1 = "test/test1/api.raml";
-var annotations = "test/annotations/api.raml"; // ? ERROR: strange infinite loop on test, but no crash on api
+var annotations = "test/annotations/api.raml"; // ? ERROR: strange infinite loop on test, but no crash on api - that's what happens when you use the same variable for inner loop :)
 var libraries = "test/libraries/api.raml"; //
 var overlays = "test/overlays/api.raml"; //working correctly
 var extended = "test/extended/api.raml"; // ? missing protocols, mediaType, securedBy
 
 var test = annotations;
 
+// separate tests
+var rootTest = require('./roots/test');
+
 //make sure the path of the file is correct before running the test
+if (fs.existsSync(test)) {
+    describe('Ramlo', function () {
 
-if (fs.existsSync( test )) {
+        var rm = ramloApi(test);
 
-    describe('Ramlo', function() {
-
-        var rm = ramlo( test );
-console.log(rm);
-        describe('load raml', function () {
-
-            it("should return an object", function(){
-                expect(typeof rm).to.equal('object');
-            });
-            
-            it("should have property apiTitle", function(){
-                expect(rm).to.have.ownProperty("apiTitle");
-            });
-            it("should have property apiDocumentations", function(){
-                expect(rm).to.have.ownProperty("apiDocumentations");
-            });
-            it("should have property apiDescription", function(){
-                expect(rm).to.have.ownProperty("apiDescription");
-            });
-            it("should have property apiDescription", function(){
-                expect(rm).to.have.ownProperty("apiDescription");
-            });
-            it("should have property apiBaseUri", function(){
-                expect(rm).to.have.ownProperty("apiBaseUri");
-            });
-            it("should have property apiResources", function(){
-                expect(rm).to.have.ownProperty("apiResources");
-            });
-
-        });
+        rootTest();
 
         describe("check types", function () {
-            it("title should be PetShop", function(){
-                //expect(rm.apiTitle).to.equal("PetShop");
+
+            it("apiDescription should be string", function () {
+                //expect(rm.apiDescription).to.equal('');
+                expect(rm.apiDescription).to.be.a('string');
             });
 
-            it("apiDescription", function(){
-                expect(rm.apiDescription).to.equal(null);
-            });
-
-            it("apiResources", function(){
+            it("apiResources should be array", function () {
                 expect(rm.apiResources).to.be.a('array');
             });
 
-            it("apiDocumentations should be array", function(){
-                expect( rm.apiDocumentations ).to.be.a("array");
+            it("apiDocumentations should be array", function () {
+                expect(rm.apiDocumentations).to.be.a("array");
             });
         });
 
         describe("check apiResources", function () {
 
-            for(var i = 0; i < rm.apiResources.length ; i++){
+            for (var i = 0; i < rm.apiResources.length; i++) {
 
                 var o = rm.apiResources[i];
 
-                it("should have property apiDescription", function(){
+                it("should have property uri", function () {
                     expect(o).to.have.ownProperty("uri");
+
                 });
-                it("should have property apiDescription", function(){
+                it("should have property name", function () {
                     expect(o).to.have.ownProperty("name");
                 });
-                it("should have property apiBaseUri", function(){
+                it("should have property description", function () {
                     expect(o).to.have.ownProperty("description");
                 });
-                it("should have property apiResources", function(){
+                it("should have property endpoints", function () {
                     expect(o).to.have.ownProperty("endpoints");
                 });
 
-                for(var i in o.endpoints){
-                    //console.log(o.endpoints[i]);
+//console.log(o.endpoints);
+                for (var j in o.endpoints) {
+                    console.log(o.endpoints[j]);
                 }
+            }
+
+        });
+
+        describe("check apiDocumentations", function () {
+
+            for (var i = 0; i < rm.apiDocumentations.length; i++) {
+
+                var o = rm.apiDocumentations[i];
+
             }
 
         });
@@ -94,6 +79,6 @@ console.log(rm);
     });
 
 }
-else{
-    console.log("file doesnt exist");
+else {
+    console.log("file doesn't exist");
 }
