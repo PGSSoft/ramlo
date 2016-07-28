@@ -25,6 +25,14 @@ ramlo -f api.raml
 
 The output of this command is a HTML file called `api.html` which should have RESTful API documentation generated based on provided RAML file.
 
+## Testing
+```
+npm run test
+```
+or (if you have mocha installed globally):
+```
+mocha test
+```
 ## Example
 If you do not have any API documented in RAML you can look at my other project called [Manageably](https://github.com/kamilzasada/manageably-doc).
 
