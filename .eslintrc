@@ -1,0 +1,39 @@
+{
+    "extends": [
+    ],
+    "ecmaFeatures": {
+    },
+    "parserOptions": {
+        "ecmaVersion": 5
+    },
+    "plugins": [
+    ],
+    "globals": {
+        "inject": true,
+        "_": true
+    },
+    "env": {
+        "es6": false,
+        "jasmine": true,
+        "node": true,
+        "browser": true
+    },
+    "rules": {
+        "indent": [2, 4, {"SwitchCase": 1, "VariableDeclarator": {"var": 2, "let": 2, "const": 3}}],
+        "strict": 0,
+        "quotes": [2, "single"],
+        "semi": [2, "always"],
+        "no-multiple-empty-lines": [2, {"max": 1}],
+        "comma-dangle": [2, "never"],
+        "no-use-before-define": [2, "nofunc"],
+        "object-curly-spacing": 0,
+        "space-before-function-paren": 0,
+        "space-after-keywords": 0,
+        "func-names": 0,
+        "eol-last": 0,
+        "default-case": 0,
+        "guard-for-in": 0,
+        "block-scoped-var": 2,
+        "no-debugger": 2
+    }
+}
