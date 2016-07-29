@@ -3,82 +3,51 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var fs = require('fs');
 
-var test1 = "test/test1/api.raml";
-var annotations = "test/annotations/api.raml"; // ? ERROR: strange infinite loop on test, but no crash on api - that's what happens when you use the same variable for inner loop :)
-var libraries = "test/libraries/api.raml"; //
-var overlays = "test/overlays/api.raml"; //working correctly
-var extended = "test/extended/api.raml"; // ? missing protocols, mediaType, securedBy
+var _ = require('lodash');
 
-var test = annotations;
+var test = 'test/spec/api.raml';
 
-// separate tests
-var rootTest = require('./roots/test');
+var referenceRamlo = require('./referenceOutput');
 
 //make sure the path of the file is correct before running the test
+//module.exports = function () {
 if (fs.existsSync(test)) {
-    describe('Ramlo', function () {
+    describe('API basic information', function () {
 
         var rm = ramloApi(test);
 
-        rootTest();
+        it('Ramlo should return an object', function () {
+            expect(typeof rm).to.equal('object');
+        });
 
-        describe("check types", function () {
+        _.forOwn(referenceRamlo, function (val, key) {
+            // Each property has its own test suite
+            it('Should have valid property ' + key, function () {
 
-            it("apiDescription should be string", function () {
-                //expect(rm.apiDescription).to.equal('');
-                expect(rm.apiDescription).to.be.a('string');
-            });
+                //#1 - does the property exist
+                expect(rm).to.have.ownProperty(key);
+                var prop = rm[key];
+                var type = _.isArray(val) ? 'array' : typeof val;
 
-            it("apiResources should be array", function () {
-                expect(rm.apiResources).to.be.a('array');
-            });
+                //#2 - is the property of proper type
+                expect(prop).to.be.a(type);
 
-            it("apiDocumentations should be array", function () {
-                expect(rm.apiDocumentations).to.be.a("array");
+                //#3 - is the property value equal to reference (skipped if reference is empty)
+                if (!(_.isNil(val) || _.isEmpty(val)))
+                    expect(prop).to.equal(val);
             });
         });
 
-        describe("check apiResources", function () {
-
-            for (var i = 0; i < rm.apiResources.length; i++) {
-
-                var o = rm.apiResources[i];
-
-                it("should have property uri", function () {
-                    expect(o).to.have.ownProperty("uri");
-
-                });
-                it("should have property name", function () {
-                    expect(o).to.have.ownProperty("name");
-                });
-                it("should have property description", function () {
-                    expect(o).to.have.ownProperty("description");
-                });
-                it("should have property endpoints", function () {
-                    expect(o).to.have.ownProperty("endpoints");
-                });
-
-//console.log(o.endpoints);
-                for (var j in o.endpoints) {
-                    console.log(o.endpoints[j]);
-                }
-            }
-
-        });
-
-        describe("check apiDocumentations", function () {
-
-            for (var i = 0; i < rm.apiDocumentations.length; i++) {
-
-                var o = rm.apiDocumentations[i];
-
-            }
-
-        });
+        //describe('check prop values', function () {
+        //    it('apiDescription should be formatted in markdown', function () {
+        //        expect(rm.apiDescription).to.contain('<p>').and.contain('</p>');
+        //    });
+        //});
 
     });
 
 }
 else {
-    console.log("file doesn't exist");
+    console.log("the file doesn't exist");
 }
+//};
