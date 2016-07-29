@@ -691,8 +691,7 @@ module.exports = function (ramlFile) {
     ramlo.apiAllTypes = types;
     ramlo.typeNamesArray = typeNamesArray;
     ramlo.apiAllSchemas = schemas;
-
-    //console.log(ramloApi.apiSecuritySchemes);
+    //ramlo.mediaType = api.mediaType(); // TODO RAML specification not covered: add the default mediaType property
 
     return ramlo;
 };
