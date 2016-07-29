@@ -1,36 +1,27 @@
-Pet:
-    properties:
-      name: string
-      kind: string
-      price: number
-      metrics?: Metrics
-      color:
-        enum:
-          - Black
-          - White
-          - Colored
-    example:
-      name: "Snoopy"
-      kind: "Mammal"
-      price: 100
-      color: Black
-Org:
-    type: object
-    properties:
-      onCall: AlertableAdmin
-      Head: Manager
 Person:
     type: object
     discriminator: kind
     properties:
+      kind: string
       firstname: string
       lastname:  string
+      age:       number
       title?:    string
-Phone:
-    type: string
-    pattern: "[0-9|-]+"
-    minLength: 5
-    maxLength: 16
+    example:
+      firstname: "Rick"
+      lastname: "Grimes"
+      age: 33
+Employee:
+    type: Person
+    properties:
+      employeeID: number
+      position:
+          enum:
+            - Leader
+            - Senior Worker
+            - Worker
+            - Intern
+      contact: Contact
 Manager:
     type: Person
     properties:
@@ -46,6 +37,8 @@ AlertableAdmin:
     properties:
       phone: Phone
 Alertable: Manager | AlertableAdmin
+
+
 userPicture:
     type: file
     fileTypes: ['image/jpeg', 'image/png']
@@ -54,8 +47,22 @@ customFile:
     type: file
     fileTypes: ['*/*'] # any file type allowed
     maxLength: 1048576
+Email:
+    type: string
+    pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
+    maxLength: 255
 Emails:
     type: array
     items: Email
     minItems: 1
     uniqueItems: true
+Phone:
+    type: string
+    pattern: "[0-9|-]+"
+    minLength: 5
+    maxLength: 16
+Contact:
+    type: object
+    properties:
+        mail?: Email
+        phone: Phone
