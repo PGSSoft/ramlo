@@ -52,27 +52,87 @@ if (fs.existsSync(test)) {
 
         // Checking data types with example type 'Person' and extending types
         describe('API Data Types', function () {
-            var foundType = null;
-            it('Should contain data types array', function () {
-                expect(rm).to.have.ownProperty('apiAllTypes');
-                expect(rm.apiAllTypes).to.be.a('array');
+            var testType = null;
+            before(function () {
+                testType = _.find(rm.apiAllTypes, 'Person');
+            });
+            describe('General', function () {
+                it('Should contain data types array', function () {
+                    expect(rm).to.have.ownProperty('apiAllTypes');
+                    expect(rm.apiAllTypes).to.be.a('array');
+                });
+
+                it('Data types should contain Person type object', function () {
+                    //testType = _.find(rm.apiAllTypes, 'Person');
+                    expect(testType).to.be.a('object');
+                    expect(testType.Person).to.be.a('object');
+                });
+
+            });
+            describe('Object type', function () {
+                var person;
+                before(function () {
+                    person = testType.Person;
+                });
+                describe('Type facets', function () {
+                    it('Person type should have all standard facets', function () {
+                        expect(person).to.have.ownProperty('properties');
+                        expect(person).to.have.ownProperty('minProperties');
+                        expect(person).to.have.ownProperty('maxProperties');
+                        expect(person).to.have.ownProperty('additionalProperties');
+                        expect(person).to.have.ownProperty('discriminator');
+                        expect(person).to.have.ownProperty('discriminatorValue');
+                    });
+                });
+                describe('Properties', function () {
+                    var props;
+                    it('Person type should contain valid properties', function () {
+                        props = _.get(testType, 'Person.properties');
+                        var allProps = ['firstname', 'lastname', 'age', 'title', 'country', 'test?'];
+                        expect(props).to.be.a('object');
+                        expect(props).to.contain.all.keys(allProps);
+                    });
+                    it('Required properties should have required flag checked', function () {
+                        _.forEach(['firstname', 'lastname', 'age', 'test?'], function (attr) {
+                            var field = props[attr];
+                            expect(field).to.haveOwnProperty('required');
+                            expect(field.required).to.equal(true);
+                        });
+                    });
+                    it('Optional properties shouldn\'t have required flag', function () {
+                        _.forEach(['title', 'country'], function (attr) {
+                            var field = props[attr];
+                            expect(field).to.haveOwnProperty('required');
+                            expect(field.required).to.equal(false);
+                        });
+                    });
+                });
+
+                describe('Type specialization', function () {
+
+                });
+                describe('Discriminator', function () {
+                    it('Type should have existing discriminator', function () {
+                        var discriminator = person.discriminator;
+                        expect(person.properties).to.haveOwnProperty(discriminator);
+                    });
+                });
             });
 
-            it('Data types should contain Person type object', function () {
-                foundType = _.find(rm.apiAllTypes, 'Person');
-                expect(foundType).to.be.a('object');
+            describe('Array types', function () {
+
+            });
+            describe('Scalar types', function () {
+
+            });
+            describe('Examples', function () {
+                it('Person type should contain example', function () {
+                    var example = _.get(testType, 'Person.example');
+                    expect(example).to.be.a('object');
+                    expect(example).to.contain.all.keys(['firstname', 'lastname']);
+                });
             });
 
-            it('Person type should contain valid properties', function () {
-                var props = _.get(foundType, 'Person.properties');
-                expect(props).to.be.a('object');
-                expect(props).to.contain.all.keys(['firstname', 'lastname', 'title']);
-            });
-            it('Person type should contain example', function () {
-                var example = _.get(foundType, 'Person.example');
-                expect(example).to.be.a('object');
-                expect(example).to.contain.all.keys(['firstname', 'lastname']);
-            });
         });
 
         //Checking resources
@@ -88,5 +148,5 @@ if (fs.existsSync(test)) {
     });
 }
 else {
-    console.log("the file doesn't exist");
+    console.log('The file doesn\'t exist');
 }

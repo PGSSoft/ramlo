@@ -1,12 +1,24 @@
 Person:
     type: object
+    minProperties: 1
+    maxProperties: 9
+    additionalProperties: false
     discriminator: kind
+    discriminatorValue: Person
     properties:
       kind: string
       firstname: string
       lastname:  string
       age:       number
       title?:    string
+      country:
+        type: string
+        required: false
+      test?:
+        type: number
+        required: true
+
+
     example:
       firstname: "Rick"
       lastname: "Grimes"
