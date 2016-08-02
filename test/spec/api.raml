@@ -21,3 +21,18 @@ securitySchemes:
 securedBy: [ oauth_2_0, oauth_1_0 ]
 
 types: !include ../types/types.raml
+
+/companies:
+    get:
+        description: 'Return list of all companies.'
+        responses:
+            200:
+    post:
+        description: 'Saves a new company.'
+    /{id}:
+        get:
+            description: 'Find a company with a specified id.'
+        /employees:
+            get:
+                description: 'Return list of all employees in this company.'
+

@@ -17,6 +17,7 @@ Person:
       test?:
         type: number
         required: true
+      optional??: string
 
 
     example:
@@ -34,6 +35,7 @@ Employee:
             - Worker
             - Intern
       contact: Contact
+      age: boolean
 Manager:
     type: Person
     properties:
@@ -67,6 +69,12 @@ Emails:
     type: array
     items: Email
     minItems: 1
+    uniqueItems: true
+Mailbox:
+    type: array
+    items: Email
+    minItems: 0
+    maxItems: 999
     uniqueItems: true
 Phone:
     type: string

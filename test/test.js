@@ -88,7 +88,7 @@ if (fs.existsSync(test)) {
                     var props;
                     it('Person type should contain valid properties', function () {
                         props = _.get(testType, 'Person.properties');
-                        var allProps = ['firstname', 'lastname', 'age', 'title', 'country', 'test?'];
+                        var allProps = ['firstname', 'lastname', 'age', 'title', 'country', 'test?', 'optional?'];
                         expect(props).to.be.a('object');
                         expect(props).to.contain.all.keys(allProps);
                     });
@@ -100,15 +100,22 @@ if (fs.existsSync(test)) {
                         });
                     });
                     it('Optional properties shouldn\'t have required flag', function () {
-                        _.forEach(['title', 'country'], function (attr) {
+                        _.forEach(['title', 'country', 'optional?'], function (attr) {
                             var field = props[attr];
                             expect(field).to.haveOwnProperty('required');
                             expect(field.required).to.equal(false);
                         });
                     });
+                    //TODO check the validity of additionalProperties
                 });
 
                 describe('Type specialization', function () {
+                    var extendType = _.find(rm.apiAllTypes, 'Employee');
+                    it('Data types should contain the Employee type', function () {
+                        expect(extendType).to.be.a('object');
+                    });
+                    it('Employee subtype should extend Person type');
+                    it('Employee should override the Person\'s properties');
 
                 });
                 describe('Discriminator', function () {
@@ -116,14 +123,32 @@ if (fs.existsSync(test)) {
                         var discriminator = person.discriminator;
                         expect(person.properties).to.haveOwnProperty(discriminator);
                     });
+                    it('Type should have valid discriminatorValue', function () {
+                        expect(person.discriminatorValue).to.be.a('string');
+                    });
                 });
             });
 
             describe('Array types', function () {
-
+                var mailbox;
+                before(function () {
+                    mailbox = _.find(rm.apiAllTypes, 'Mailbox').Mailbox;
+                });
+                describe('Array facets', function () {
+                    it('Mailbox should be an array', function () {
+                        expect(mailbox).to.haveOwnProperty('type');
+                        expect(mailbox.type).to.contain('array');
+                    });
+                    it('Mailbox type should have all standard facets', function () {
+                        expect(mailbox).to.have.ownProperty('items');
+                        expect(mailbox).to.have.ownProperty('minItems');
+                        expect(mailbox).to.have.ownProperty('maxItems');
+                        expect(mailbox).to.have.ownProperty('uniqueItems');
+                    });
+                });
             });
             describe('Scalar types', function () {
-
+                //TODO Basic tests for all scalar types
             });
             describe('Examples', function () {
                 it('Person type should contain example', function () {
@@ -131,13 +156,23 @@ if (fs.existsSync(test)) {
                     expect(example).to.be.a('object');
                     expect(example).to.contain.all.keys(['firstname', 'lastname']);
                 });
+                it('Mailbox array example');
+                it('String pattern example');
+                it('File type example');
+                it('Union type example');
             });
 
         });
 
+        ////
         //Checking resources
         describe('API Resources', function () {
-
+            var testResource = null;
+            before(function () {
+            });
+            describe('Resources basics', function () {
+                it('Resource future tests');
+            });
         });
 
         //Checking documentations including endpoints
