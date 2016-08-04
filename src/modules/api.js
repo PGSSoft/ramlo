@@ -171,6 +171,7 @@ function produceQueryParameters(method) {
         var description = parameter.description();
         var minLength = "";
         var maxLength = "";
+        var repeat;
 
         //check if name exists
         if (apiQueryParameters.thead.name == false && parameter.name() != null) {
@@ -219,6 +220,10 @@ function produceQueryParameters(method) {
         }
 
 
+        if (parameter.repeat && _.isFunction(parameter.repeat)) {
+            repeat = parameter.repeat();
+        }
+
         apiQueryParameters["tbody"].push({
             name: parameter.name(),
             type: parameter.type(),
@@ -228,7 +233,7 @@ function produceQueryParameters(method) {
             default: parameter.default(),
             minLength: minLength,
             maxLength: maxLength,
-            repeat: parameter.repeat()
+            repeat: repeat
         });
     });
 
@@ -243,7 +248,7 @@ function produceRequestBody(method) {
 
     var ramlBody = method.body();
 
-    if (Object.keys(ramlBody).length > 0 && _.isFunction(body.schemaContent)) {
+    if (Object.keys(ramlBody).length > 0 && _.isFunction(ramlBody.schemaContent)) {
 
         //expecting only 1 value to be valid
         //there should NOT be 2 or more "body" declarations
