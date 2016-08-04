@@ -27,12 +27,41 @@ types: !include ../types/types.raml
         description: 'Return list of all companies.'
         responses:
             200:
+              body:
+                application/json:
+                  example: !include ../examples/companies-example.json
     post:
         description: 'Saves a new company.'
     /{id}:
+        uriParameters:
+            id:
+                description: 'Company unique id'
+                type: integer
+
         get:
             description: 'Find a company with a specified id.'
-        /employees:
+        put:
+            description: ''
+        delete:
+            description: ''
+        /employees-{ext}:
+            uriParameters:
+                ext:
+                    enum: [ .json, .xml ]
+                    description: Use .json to specify application/json or .xml to specify text/xml
             get:
                 description: 'Return list of all employees in this company.'
-
+            post:
+                description: 'Saves a new employee.'
+            /{employeeId}
+                uriParameters:
+                    employeeId:
+                        type: integer
+                get:
+                    description: Get a specific employee
+                /contact
+                    get:
+                        description: Get the contact info of the employee
+                /projects
+                    get:
+                        description: Get the current projects list of this employee

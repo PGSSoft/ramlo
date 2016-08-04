@@ -165,19 +165,75 @@ if (fs.existsSync(test)) {
         });
 
         ////
-        //Checking resources
+        //Checking resources (including endpoints)
         describe('API Resources', function () {
             var testResource = null;
+            var companies;
             before(function () {
+                //console.log(rm.apiResources);
+                //console.log(rm.apiResources[0].endpoints);
+                companies = _.find(rm.apiResources, {uri: '/companies'});
             });
             describe('Resources basics', function () {
-                it('Resource future tests');
+                before(function () {
+                });
+                it('All resources begin with a "/"', function () {
+                    _.forEach(rm.apiResources, function (res) {
+                        _.forEach(res.endpoints, function (endpoint) {
+                            expect(endpoint).to.haveOwnProperty('uri');
+                            expect(endpoint.uri.charAt(0)).to.equal('/');
+                        });
+                    });
+                });
+                it('Resources should have sample Resource "/companies"', function () {
+                    expect(companies).to.be.a('object');
+                });
+                it('Companies resource should have displayName', function () {
+                    expect(companies).to.haveOwnProperty('name');
+                });
+                it('Companies resource should have description', function () {
+                    expect(companies).to.haveOwnProperty('description');
+                });
+                it('Companies resource should have methods get, and post', function () {
+                    expect(companies).to.haveOwnProperty('endpoints');
+                    expect(_.find(companies.endpoints, {method: 'get'})).to.be.a('object');
+                    expect(_.find(companies.endpoints, {method: 'post'})).to.be.a('object');
+                });
+                //TODO test for traits and resource types in resources
+                //TODO test for security schemes
+                //TODO annotations in resources
+
+            });
+            describe('Template URIs and URI parameters', function () {
+                it('Resources should have a valid URI parameter', function () {
+
+                });
+                it('Resources should have an "ext" reserved URI parameter');
+            });
+            describe('Nested resources', function () {
+                it('Resource companies contains all the nested resources', function () {
+                    expect(_.filter(companies.endpoints, {uri: '/companies/{id}', method: 'get'})).to.be.a('array');
+                    expect(_.filter(companies.endpoints, {
+                        uri: '/companies/{id}/employees-{ext}',
+                        method: 'get'
+                    })).to.be.a('array');
+                    expect(_.filter(companies.endpoints, {
+                        uri: '/companies/{id}/employees-{ext}/{employeeId}'
+                    })).to.be.a('array');
+                    expect(_.filter(companies.endpoints, {
+                        uri: '/companies/{id}/employees-{ext}/{employeeId}/projects'
+                    })).to.be.a('array');
+                });
             });
         });
 
-        //Checking documentations including endpoints
-        describe('API Documentations', function () {
+        //Checking methods
+        describe('API Methods', function () {
+            describe('Methods basics', function () {
+                it('Should handle all types of methods', function () {
 
+                });
+            });
         });
 
     });
