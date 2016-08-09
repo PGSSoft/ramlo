@@ -1,0 +1,36 @@
+{
+    "companies": [
+        {
+            "id": "5094",
+            "name": "PGS Software",
+            "employees": [
+                {
+                    "firstname": "Jan",
+                    "lastname": "Kowalski"
+                },
+                {
+                    "firstname": "Małgorzata",
+                    "lastname": "Nowak"
+                }
+            ]
+        },
+        {
+            "id": "4877",
+            "name": "Big Mega IT Company",
+            "employees": [
+                {
+                    "firstname": "Piotr",
+                    "lastname": "Abacki"
+                },
+                {
+                    "firstname": "Matylda",
+                    "lastname": "Cabacka"
+                },
+                {
+                    "firstname": "Romuald",
+                    "lastname": "Kabacki"
+                }
+            ]
+        }
+    ]
+}

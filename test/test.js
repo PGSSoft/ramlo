@@ -148,7 +148,7 @@ if (fs.existsSync(test)) {
                 });
             });
             describe('Scalar types', function () {
-                //TODO Basic tests for all scalar types
+                //TODO Basic tests for all scalar types, e.g. regex checking in strings, file type checking etc.
             });
             describe('Examples', function () {
                 it('Person type should contain example', function () {
@@ -173,6 +173,7 @@ if (fs.existsSync(test)) {
                 //console.log(rm.apiResources);
                 //console.log(rm.apiResources[0].endpoints);
                 companies = _.find(rm.apiResources, {uri: '/companies'});
+                //console.log(companies);
             });
             describe('Resources basics', function () {
                 before(function () {
@@ -211,6 +212,7 @@ if (fs.existsSync(test)) {
                 it('Resources should have an "ext" reserved URI parameter');
             });
             describe('Nested resources', function () {
+                var testResource = null;
                 it('Resource companies contains all the nested resources', function () {
                     expect(_.filter(companies.endpoints, {uri: '/companies/{id}', method: 'get'})).to.be.a('array');
                     expect(_.filter(companies.endpoints, {
@@ -229,11 +231,31 @@ if (fs.existsSync(test)) {
 
         //Checking methods
         describe('API Methods', function () {
+            var companiesMethods;
+            var companyMethods;
+            before(function () {
+                var endpoints = _.find(rm.apiResources, {uri: '/companies'}).endpoints;
+                companiesMethods = _.filter(endpoints, {uri: '/companies'});
+                companyMethods = _.filter(endpoints, {uri: '/companies/{id}'});
+                console.log(companyMethods);
+            });
             describe('Methods basics', function () {
                 it('Should handle all types of methods', function () {
-
+                    expect(_.find(companiesMethods, {method: 'get'})).to.be.a('object');
+                    expect(_.find(companiesMethods, {method: 'post'})).to.be.a('object');
+                    expect(_.find(companyMethods, {method: 'put'})).to.be.a('object');
+                    expect(_.find(companyMethods, {method: 'patch'})).to.be.a('object');
+                    expect(_.find(companyMethods, {method: 'delete'})).to.be.a('object');
                 });
+                it('Should support the headers property');
+                it('Should support query strings and parameters');
+                it('Should handle request bodies');
             });
+
+        });
+
+        describe('API Responses', function () {
+
         });
 
     });

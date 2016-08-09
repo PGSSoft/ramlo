@@ -27,9 +27,9 @@ types: !include ../types/types.raml
         description: 'Return list of all companies.'
         responses:
             200:
-              body:
-                application/json:
-                  example: !include ../examples/companies-example.json
+                body:
+                    application/json:
+                        example: !include ../examples/companies-example.json
     post:
         description: 'Saves a new company.'
     /{id}:
@@ -41,6 +41,8 @@ types: !include ../types/types.raml
         get:
             description: 'Find a company with a specified id.'
         put:
+            description: ''
+        patch:
             description: ''
         delete:
             description: ''
