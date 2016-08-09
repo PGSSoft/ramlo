@@ -15,7 +15,7 @@ var markdown = require('markdown').markdown;
 var ramlo = {};
 
 function produceDescription(api) {
-    var description = api.description();
+    var description = api.description && api.description();
     return description && markdown.toHTML(description.value());
     return '';  // @TODO: remove temporary workaround for 'TypeError: api.description is not a function'
 }
@@ -331,7 +331,7 @@ function produceResponseExample(method) {
                         apiExamples = apiExamples.concat(apiExample);
                     }
                     catch (err) {
-
+                        console.log(err);
                     }
                 }
             });
