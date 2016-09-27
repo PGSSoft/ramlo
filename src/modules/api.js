@@ -329,6 +329,11 @@ function produceResponseExample(method) {
                     response: body.toJSON().example,
                     code: response.code().value()
                 };
+
+                if(typeof apiExample.response === "object"){
+                    apiExample.response = JSON.stringify(body.toJSON().example, null, '  ');
+                }
+
                 if (apiExample.response !== undefined) {
                     try {
                         apiExample.response = apiExample.response && hljs.highlight('json', apiExample.response).value;
