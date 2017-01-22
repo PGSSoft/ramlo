@@ -172,6 +172,8 @@ html(lang="en")
                                                         when 'put': span(class='label label-info')= endpoint.method
                                                         when 'delete': span(class='label label-danger')= endpoint.method
                                                         when 'patch': span(class='label label-info')= endpoint.method
+                                                        when 'options': span(class='label label-info')= endpoint.method
+                                                        when 'head': span(class='label label-primary')= endpoint.method
                                                     a(href='#' + '#{helpers.uriWithMethodIdentifier(endpoint.uri, endpoint.method)}')= endpoint.uri
                     .col-md-10.col-md-offset-2
                         each documentation in api.apiDocumentations
@@ -201,6 +203,8 @@ html(lang="en")
                                                     when 'put': span(class='label label-info')= endpoint.method
                                                     when 'delete': span(class='label label-danger')= endpoint.method
                                                     when 'patch': span(class='label label-info')= endpoint.method
+                                                    when 'options': span(class='label label-info')= endpoint.method
+                                                    when 'head': span(class='label label-primary')= endpoint.method
                                                 = endpoint.uri
 
                                             div(class='documentation__endpoints__description') !{endpoint.description}
